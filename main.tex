@@ -30,36 +30,36 @@
 % **************************************************
 % Information and Commands for Reuse
 % **************************************************
-\newcommand{\thesisTitle}{The Clean Thesis Style}
-\newcommand{\thesisName}{Ricardo Langner}
-\newcommand{\thesisSubject}{Documentation}
-\newcommand{\thesisDate}{August 26, 2015}
-\newcommand{\thesisVersion}{My First Draft}
+\newcommand{\thesisTitle}{Pricing TARN Using Numerical Methods}
+\newcommand{\thesisName}{Valentin Bandelier}
+\newcommand{\thesisSubject}{Master Thesis}
+\newcommand{\thesisDate}{\today}
+\newcommand{\thesisVersion}{0.1}
 
-\newcommand{\thesisFirstReviewer}{Jane Doe}
-\newcommand{\thesisFirstReviewerUniversity}{\protect{Clean Thesis Style University}}
-\newcommand{\thesisFirstReviewerDepartment}{Department of Clean Thesis Style}
+\newcommand{\Supervisor}{Fabio Nobile}
+\newcommand{\SupervisorDepartment}{\protect{EPFL}}
+\newcommand{\SupervisorUniversity}{Institute of Mathematics - MATH}
 
-\newcommand{\thesisSecondReviewer}{John Doe}
-\newcommand{\thesisSecondReviewerUniversity}{\protect{Clean Thesis Style University}}
-\newcommand{\thesisSecondReviewerDepartment}{Department of Clean Thesis Style}
+\newcommand{\coSupervisor}{Julien Hugonnier}
+\newcommand{\coSupervisorDepartment}{\protect{EPFL}}
+\newcommand{\coSupervisorUniversity}{Swiss Finance Institute - SFI}
 
-\newcommand{\thesisFirstSupervisor}{Jane Doe}
-\newcommand{\thesisSecondSupervisor}{John Smith}
+\newcommand{\Assistant}{Francesco Statti}
 
-\newcommand{\thesisUniversity}{\protect{Clean Thesis Style University}}
-\newcommand{\thesisUniversityDepartment}{Department of Clean Thesis Style}
-\newcommand{\thesisUniversityInstitute}{Institut for Clean Thesis Dev}
-\newcommand{\thesisUniversityGroup}{Clean Thesis Group (CTG)}
-\newcommand{\thesisUniversityCity}{City}
-\newcommand{\thesisUniversityStreetAddress}{Street address}
-\newcommand{\thesisUniversityPostalCode}{Postal Code}
+\newcommand{\thesisUniversity}{\protect{Swiss Federal Institute of Technology Lausanne - EPFL}}
+\newcommand{\thesisUniversityDepartment}{School of Basic Sciences - SB}
+\newcommand{\thesisUniversityInstitute}{Institute of Mathematics - MATH}
+\newcommand{\thesisUniversityGroup}{Scientific computing and uncertainty quantification - CADMOS Chair CSQI}
+\newcommand{\thesisUniversityCity}{Lausanne}
+\newcommand{\thesisUniversityStreetAddress}{Route Cantonale}
+\newcommand{\thesisUniversityPostalCode}{1015}
 
 % **************************************************
 % Load and Configure Packages
 % **************************************************
 \usepackage[utf8]{inputenc}		% defines file's character encoding
 \usepackage[english]{babel} % babel system, adjust the language of the content
+\usepackage{amsmath,amssymb}
 \usepackage[					% clean thesis style
 	figuresep=colon,%
 	sansserif=false,%
@@ -126,11 +126,13 @@
 \setcounter{page}{1}			% set page counter
 \pagestyle{maincontentstyle} 	% fancy header and footer
 
-\input{content/chapter-introduction} % INCLUDE: introduction
-\input{content/chapter-related-work} % INCLUDE: related work
-\input{content/chapter-system}	% INCLUDE: system
-\input{content/chapter-concepts} % INCLUDE: concepts
-\input{content/chapter-conclusion} % INCLUDE: conclusion
+\input{content/chapter-monte-carlo}
+\input{content/chapter-finite-difference}
+%\input{content/chapter-introduction} % INCLUDE: introduction
+%\input{content/chapter-related-work} % INCLUDE: related work
+%\input{content/chapter-system}	% INCLUDE: system
+%\input{content/chapter-concepts} % INCLUDE: concepts
+%\input{content/chapter-conclusion} % INCLUDE: conclusion
 \cleardoublepage
 
 % --------------------------
