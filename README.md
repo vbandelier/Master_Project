@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Master Project in Financial Mathematics, EPFL
 # Princing TARN Using Numerical Methods
 The goal of this project is to find some efficient numerical methods in order to price Target Accrual Redemption Notes (TARN).
