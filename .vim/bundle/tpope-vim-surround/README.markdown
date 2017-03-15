@@ -95,3 +95,5 @@ License
 
 Copyright (c) Tim Pope.  Distributed under the same terms as Vim itself.
 See `:help license`.
+
+TEST
