@@ -1,10 +1,10 @@
-function [ Price ] = MCTarnPricing(S_0,X,r_d,r_f,sigma,dt,Target,N_fixDates,N_sim,gainFun,KO_type)
-    S = S_0*[ones(1,N_sim);cumprod(exp((r_d-r_f-0.5*sigma^2)*dt+...
-                               sigma*sqrt(dt)*randn(N_fixDates,N_sim)),1)];    
+function [ Price ] = MCTarnPricing(S_0,X,r_d,r_f,sigma,period,Target,N_fixDates,N_sim,gainFun,KO_type)
+    S = S_0*[ones(1,N_sim);cumprod(exp((r_d-r_f-0.5*sigma^2)*period+...
+                               sigma*sqrt(period)*randn(N_fixDates,N_sim)),1)];    
     V = 0;
     for i = 1:N_sim
         A = 0;
-        t = dt;
+        t = period;
         for j = 1:N_fixDates
             if( A < Target )
                 Gain = gainFun(S(j+1,i),X);
@@ -21,7 +21,7 @@ function [ Price ] = MCTarnPricing(S_0,X,r_d,r_f,sigma,dt,Target,N_fixDates,N_si
                 else
                     V = V + exp(-r_d*t)*Gain;
                 end
-                t = t+dt;
+                t = t+period;
             end
         end
     end
