@@ -1,5 +1,4 @@
 function [ Price ] = FDTarnPricing(S_0,X,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
-
 T = N_fixDates*period;
 
 S_min = 0;
@@ -56,7 +55,6 @@ for k = 1:N_fixDates
         % step 4
         Unew(m,:) = U(m,:)+C;
     end
-
     for j = 1:Na
         % init matrix containing the solution at each time step
         V = zeros(Nx+1,Nt+1);
@@ -66,8 +64,9 @@ for k = 1:N_fixDates
                 V(:,m) = B\F; 
             end
         U(:,j) = V(:,end);
+    surf(U);
+    getframe(gcf);
     end
-    spy(U>1e-5)
 end
 %%
 Price = interp1(S,U(:,1),S_0);

@@ -28,12 +28,12 @@ KO_type = ['noGain  ';...
 %% Tarn Pricing
 Prices_MC = zeros(4,3);
 Prices_FD = zeros(4,3);
-for i = 1:4
+for i = 2
     Targ = Target(i);
-    for j = 1:3
+    for j = 1
         KO = KO_type(j,:);
         tic
-        Prices_MC(i,j) = MCTarnPricing(S_0,X,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
+        %Prices_MC(i,j) = MCTarnPricing(S_0,X,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
         toc
         tic
         Prices_FD(i,j) = FDTarnPricing(S_0,X,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta,tol);
