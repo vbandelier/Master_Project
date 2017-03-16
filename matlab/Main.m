@@ -43,4 +43,4 @@ end
 %% Results
 printmat(Prices_FD, 'FD Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
 printmat(Prices_MC, 'MC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
-Differences = Prices_FD-Prices_MC
+Differences = Prices_FD-Prices_MC;
