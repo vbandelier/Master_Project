@@ -1,8 +1,8 @@
-function [ Price ] = FDTarnPricing(S_0,X,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
+function [ Price ] = FDTarnPricing(S_0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
 T = N_fixDates*period;
 
 S_min = 0;
-S_max = X*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/X));
+S_max = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
 
 % set grid and grid-size.
 h = (S_max-S_min)/Nx;
@@ -38,20 +38,20 @@ U = zeros(Nx+1,Na);
 Unew = U;
 for k = 1:N_fixDates
     for m = 1:Nx+1
-        Ctild = max(S(m)-X,0);
+        Ctild = max(S(m)-K,0);
         switch KO_type
              case 'fullGain'
                 W = 1;
              case 'noGain  '
                 W = 0;
              case 'partGain'
-                W = (Targ-A)/(S(m)-X);
+                W = (Targ-A)/(S(m)-K);
         end
         C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
         % step 2
         Aplus  = A + C;
         % step 3
-        U(m,:) = spline(A,U(m,:),Aplus).*(Aplus<Targ);
+        U(m,:) = interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ);
         % step 4
         Unew(m,:) = U(m,:)+C;
     end
@@ -64,8 +64,8 @@ for k = 1:N_fixDates
                 V(:,m) = B\F; 
             end
         U(:,j) = V(:,end);
-    surf(U);
-    getframe(gcf);
+%     surf(U);
+%     getframe(gcf);
     end
 end
 %%
