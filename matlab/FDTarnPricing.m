@@ -51,7 +51,7 @@ for k = 1:N_fixDates
         % step 2
         Aplus  = A + C;
         % step 3
-        U(m,:) = spline(A,U(m,:),Aplus).*(Aplus<=Targ);
+        U(m,:) = spline(A,U(m,:),Aplus).*(Aplus<Targ);
         % step 4
         Unew(m,:) = U(m,:)+C;
     end
@@ -64,6 +64,7 @@ for k = 1:N_fixDates
                 V(:,m) = B\F; 
             end
         U(:,j) = V(:,end);
+    figure(k);
     surf(U);
     getframe(gcf);
     end
