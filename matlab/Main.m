@@ -1,5 +1,6 @@
 clear
 clc
+rng(0)
 %% Parameters
 S_0 = 1.05;
 X  = 1.0;

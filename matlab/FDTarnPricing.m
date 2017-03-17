@@ -64,7 +64,6 @@ for k = 1:N_fixDates
                 V(:,m) = B\F; 
             end
         U(:,j) = V(:,end);
-    figure(k);
     surf(U);
     getframe(gcf);
     end
