@@ -1,4 +1,4 @@
-function [ Price ] = FDTarnPricing(S_0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
+function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
 T = N_fixDates*period;
 
 S_min = 0;
@@ -69,4 +69,4 @@ for k = 1:N_fixDates
     end
 end
 %%
-Price = interp1(S,U(:,1),S_0);
+Price = interp1(S,U(:,1),S0);
