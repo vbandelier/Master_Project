@@ -38,7 +38,7 @@ for k = 1:N_fixDates
     end
     for j = 1:Na
         % Step 3 :
-        Qint = griddedInterpolant(X,Qnew(:,j));
+        Qint = griddedInterpolant(X,Qnew(:,j),'cubic');
         % step 4 :
         %% q = 6 :
         xi = [-2.35061,  -1.33585,  -0.436077,  0.436077,   1.33585,    2.35061];
