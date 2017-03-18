@@ -2,19 +2,19 @@
 clear 
 clc
 %  European Option
-S0 = 100;
-K  = 100;
+S0 = 40;
+K  = 40;
 sigma = 0.2;
-r = 0;
+r = 0.06;
 q = 0;
 T = 1;
  
 M = 100;
-N = 1;
+N = 50;
  
 % BLS price
-[c,~] = blsprice(S0,K,r,T,sigma,q); 
- 
+[c,p] = blsprice(S0,K,r,T,sigma,q); 
+
 % Step 1
 Smin = S0 * exp(-5*sigma*sqrt(T));
 Smax = S0 * exp(5*sigma*sqrt(T));
@@ -32,7 +32,7 @@ tau = (r-q-0.5*sigma^2)*dt;
 nu = sigma*sqrt(dt);
  
 % Step 2
-Q = max(S-K,0);
+Q = max(K-S,0);
 
 for k = 1:N
 % Step 3
@@ -44,11 +44,10 @@ w  = [0.00453001, 0.157067, 0.72463,  0.72463,  0.157067, 0.00453001];
 
 Qnew = zeros(size(Q));
 for m = 1:M+1
-    Qnew(m) = exp(-r*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m))');
+    Qnew(m) = exp(-r*dt)/sqrt(pi) * (w*Qint(tau*xi+nu+X(m))');
 end
  
-Q = Qnew;
+Q = max(Qnew,max(S-K,0));
 end
 
 price = interp1(S,Q,S0);
- 
