@@ -36,7 +36,7 @@ Q = max(K-S,0);
 
 for k = 1:N
 % Step 3
-Qint = griddedInterpolant(X,Q,'spline');
+Qint = griddedInterpolant(X,Q,'cubic');
  
 % Step 4
 xi = [-2.35061,  -1.33585, -0.436077, 0.436077, 1.33585,  2.35061];
