@@ -16,8 +16,8 @@ Vtop = Vtop(i);
 w = sqrt(pi)*Vtop.^2;
 
 % step 1 :
-S_min = K*exp(-(r_d-r_f)*T-0.5*sigma^2*T+sigma*sqrt(T)*norminv(tol/K));
-S_max = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
+Smin = K*exp(-(r_d-r_f)*T-0.5*sigma^2*T+sigma*sqrt(T)*norminv(tol/K));
+Smax = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
 
 Xmin = log(Smin/S0);
 Xmax = log(Smax/S0);

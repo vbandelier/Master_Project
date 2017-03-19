@@ -1,14 +1,14 @@
 function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
 T = N_fixDates*period;
 
-S_min = K*exp(-(r_d-r_f)*T-0.5*sigma^2*T+sigma*sqrt(T)*norminv(tol/K));
-S_max = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
+Smin = K*exp(-(r_d-r_f)*T-0.5*sigma^2*T+sigma*sqrt(T)*norminv(tol/K));
+Smax = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
 
 % set grid and grid-size.
-h = (S_max-S_min)/Nx;
+h = (Smax-Smin)/Nx;
 dt = period/Nt;
 
-S = S_min + (0:Nx)*h;
+S = Smin + (0:Nx)*h;
 %t = 0 + (0:Nt)*dt;
 A = linspace(0,Targ,Na);
 
@@ -40,11 +40,11 @@ for k = 1:N_fixDates
     for m = 1:Nx+1
         Ctild = max(S(m)-K,0);
         switch KO_type
-             case 'fullGain'
+            case 'fullGain'
                 W = 1;
-             case 'noGain  '
+            case 'noGain  '
                 W = 0;
-             case 'partGain'
+            case 'partGain'
                 W = (Targ-A)/(S(m)-K);
         end
         C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
@@ -59,13 +59,13 @@ for k = 1:N_fixDates
         % init matrix containing the solution at each time step
         V = zeros(Nx+1,Nt+1);
         V(:,1) = Unew(:,j);
-            for m = 2:Nt+1
-                F = (speye(Nx+1,Nx+1)+(1-theta)*Amat)*V(:,m-1);
-                V(:,m) = B\F; 
-            end
+        for m = 2:Nt+1
+            F = (speye(Nx+1,Nx+1)+(1-theta)*Amat)*V(:,m-1);
+            V(:,m) = B\F;
+        end
         U(:,j) = V(:,end);
-%     surf(U);
-%     getframe(gcf);
+        %     surf(U);
+        %     getframe(gcf);
     end
 end
 %%
