@@ -10,13 +10,21 @@ q = 0.03;
 T = 1;
 
 M = 300;
-Ns = (1:100)*10;
+Nt = (1:100)*10;
+q_order = 16;
+
+u = sqrt((1:q_order-1)/2);
+[V,Lambda] = eig(diag(u,1)+diag(u,-1));
+[xi,i] = sort(diag(Lambda));
+Vtop = V(1,:);
+Vtop = Vtop(i);
+w = sqrt(pi)*Vtop.^2;
  
 % BLS price
 [c,p] = blsprice(S0,K,r,T,sigma,q); 
 price = zeros(1,10);
-for i = 1:100
-    N = Ns(i)
+for i = 1:length(Nt)
+    N = Nt(i)
 % Step 1
 Smin = S0 * exp(-5*sigma*sqrt(T));
 Smax = S0 * exp(5*sigma*sqrt(T));
@@ -41,23 +49,9 @@ for k = 1:N
 Qint = griddedInterpolant(X,Q,'cubic');
  
 % Step 4
-%% q = 3 :
-% xi = [-1.22474,  0,       1.22474];
-% w  = [ 0.295409, 1.18164, 0.295409];
-
-%% q = 6 :
-xi = [-2.35061,  -1.33585,  -0.436077,  0.436077,   1.33585,    2.35061];
-w  = [0.00453001, 0.157067,  0.72463,   0.72463,    0.157067,   0.00453001];
-
-%% q = 10 :
-% xi = [-3.43616,     -2.53273,   -1.75668,   -1.03661,   -0.342901, ...
-%       0.342901,      1.03661,    1.75668,    2.53273,    3.43616];
-% w  = [7.64043e-6,    0.00134365, 0.0338744,  0.240139,   0.610863, ...
-%       0.610863,      0.240139,   0.0338744,  0.00134365, 7.64043e-6];
-
 Qnew = zeros(size(Q));
 for m = 1:M+1
-    Qnew(m) = exp(-r*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m))');
+    Qnew(m) = exp(-r*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m)));
 end
 
 Q = Qnew;%max(Qnew,max(K-S,0));

@@ -1,4 +1,4 @@
-function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type)
+function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,q_order)
 T = N_fixDates*period;
 dt = period;
 
@@ -6,6 +6,15 @@ tau = sigma*sqrt(dt);
 nu =(r_d-r_f-0.5*sigma^2)*dt;
 
 A = linspace(0,Targ,Na);
+
+% Hermite polynomials of order q_order :
+u = sqrt((1:q_order-1)/2);
+[V,Lambda] = eig(diag(u,1)+diag(u,-1));
+[xi,i] = sort(diag(Lambda));
+Vtop = V(1,:);
+Vtop = Vtop(i);
+w = sqrt(pi)*Vtop.^2;
+
 % step 1 :
 Smin = S0 * exp(min(nu*T-3*sigma*T,-3*sigma*T));
 Smax = S0 * exp(max(nu*T+3*sigma*T,3*sigma*T));
@@ -40,11 +49,8 @@ for k = 1:N_fixDates
         % Step 3 :
         Qint = griddedInterpolant(X,Qnew(:,j),'cubic');
         % step 4 :
-        %% q = 6 :
-        xi = [-2.35061,  -1.33585,  -0.436077,  0.436077,   1.33585,    2.35061];
-        w  = [0.00453001, 0.157067,  0.72463,   0.72463,    0.157067,   0.00453001];
         for m = 1:Nx+1
-            Q(m,j) = exp(-r_d*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m))');
+            Q(m,j) = exp(-r_d*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m)));
         end
     end
 end
