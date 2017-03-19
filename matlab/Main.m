@@ -35,18 +35,18 @@ for i = 1:4
     for j = 1:3
         KO = KO_type(j,:);
         tic
-        Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
+        Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO)
         toc
         tic
-        Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta,tol);
+        Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta,tol)
         toc
         tic
-        Prices_GHQC(i,j) = GHQCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
+        Prices_GHQC(i,j) = GHQCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order)
         toc
     end
 end
 %% Results
-printmaﬂt(Prices_GHQC, 'GHQC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
+printmat(Prices_GHQC, 'GHQC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
 printmat(Prices_FD, 'FD Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
 printmat(Prices_MC, 'MC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
 
