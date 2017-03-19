@@ -1,9 +1,6 @@
-function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,q_order,tol)
+function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,q_order)
 T = N_fixDates*period;
 dt = period;
-
-tau = sigma*sqrt(dt);
-nu =(r_d-r_f-0.5*sigma^2)*dt;
 
 A = linspace(0,Targ,Na);
 
@@ -16,8 +13,10 @@ Vtop = Vtop(i);
 w = sqrt(pi)*Vtop.^2;
 
 % step 1 :
-Smin = K*exp(-(r_d-r_f)*T-0.5*sigma^2*T+sigma*sqrt(T)*norminv(tol/K));
-Smax = K*exp(0.5*sigma^2*T - sigma*sqrt(T)*norminv(tol/K));
+tau = sigma*sqrt(dt);
+nu =(r_d-r_f-0.5*sigma^2)*dt;
+Smin = S0 * exp(min(nu*T-3*sigma*T,-3*sigma*T));
+Smax = S0 * exp(max(nu*T+3*sigma*T,3*sigma*T));
 
 Xmin = log(Smin/S0);
 Xmax = log(Smax/S0);
