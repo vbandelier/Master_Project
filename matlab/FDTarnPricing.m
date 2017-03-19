@@ -1,10 +1,8 @@
 function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
 T = N_fixDates*period;
 
-tau = sigma*sqrt(dt);
-nu =(r_d-r_f-0.5*sigma^2)*dt;
-Smin = S0 * exp(min(nu*T-3*sigma*T,-3*sigma*T));
-Smax = S0 * exp(max(nu*T+3*sigma*T,3*sigma*T));
+Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
+Smax = S0 * exp(max((r_d-r_f-0.5*sigma^2)*T+3*sigma*T,3*sigma*T));
 
 % set grid and grid-size.
 h = (Smax-Smin)/Nx;

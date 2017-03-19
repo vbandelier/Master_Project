@@ -15,8 +15,8 @@ w = sqrt(pi)*Vtop.^2;
 % step 1 :
 tau = sigma*sqrt(dt);
 nu =(r_d-r_f-0.5*sigma^2)*dt;
-Smin = S0 * exp(min(nu*T-3*sigma*T,-3*sigma*T));
-Smax = S0 * exp(max(nu*T+3*sigma*T,3*sigma*T));
+Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
+Smax = S0 * exp(max((r_d-r_f-0.5*sigma^2)*T+3*sigma*T,3*sigma*T));
 
 Xmin = log(Smin/S0);
 Xmax = log(Smax/S0);
