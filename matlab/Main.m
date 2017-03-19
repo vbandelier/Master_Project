@@ -3,7 +3,7 @@ clc
 rng(0)
 %% Parameters
 S_0 = 1.05;
-K  = 1.0;
+K   = 1.0;
 r_d = 0;
 r_f = 0;
 sigma = 0.2;
