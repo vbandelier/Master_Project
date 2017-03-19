@@ -1,4 +1,4 @@
-function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta,tol)
+function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta)
 T = N_fixDates*period;
 
 Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));

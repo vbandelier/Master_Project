@@ -18,7 +18,6 @@ q_order = 100;
 
 Target= [0.3 0.5 0.7 0.9];
 
-tol = 1e-5;
 theta=0.5;
 
 gainFun = @(s,x) max(s-x,0).*ones(size(s));
@@ -35,7 +34,7 @@ for i = 1:4
     for j = 1:3
         KO = KO_type(j,:);
         Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
-        Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta,tol);
+        Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta);
         Prices_GHQC(i,j) = GHQCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
     end
 end
