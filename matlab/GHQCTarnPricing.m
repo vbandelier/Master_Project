@@ -1,4 +1,4 @@
-function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,q_order)
+function [ Price ] = GHQCTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,q_order,tol)
 T = N_fixDates*period;
 dt = period;
 
