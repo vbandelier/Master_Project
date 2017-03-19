@@ -11,7 +11,7 @@ T = 1;
 
 M = 300;
 Nt = (1:100)*10;
-q_order = 16;
+q_order = 20;
 
 u = sqrt((1:q_order-1)/2);
 [V,Lambda] = eig(diag(u,1)+diag(u,-1));
