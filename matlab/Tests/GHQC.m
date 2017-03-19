@@ -10,8 +10,8 @@ q = 0.03;
 T = 1;
 
 M = 300;
-Nt = (1:30)*10;
-q_orders = (1:30);
+Nt = 1;
+q_orders = (2:100);
 
 % BLS price
 [c,p] = blsprice(S0,K,r,T,sigma,q); 
@@ -52,7 +52,7 @@ Q = max(K-S,0);
 
 for k = 1:N
 % Step 3
-Qint = griddedInterpolant(X,Q,'cubic');
+Qint = griddedInterpolant(X,Q,'linear');
  
 % Step 4
 Qnew = zeros(size(Q));
@@ -68,8 +68,9 @@ end
 end
 
 %% Plots
-plot(Nt,p*ones(100,1))
+plot(q_orders,p*ones(size(q_orders)),'-k','linewidth',2)
 hold on
-for k = 1:length(q_orders)
-    plot(Nt,price(:,k))
-end
+plot(q_orders,price)
+% for k = 1:length(q_orders)
+%     plot(Nt,price(:,:))
+% end
