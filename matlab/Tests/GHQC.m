@@ -10,21 +10,27 @@ q = 0.03;
 T = 1;
 
 M = 300;
-Nt = (1:100)*10;
-q_order = 20;
+Nt = (1:30)*10;
+q_orders = (1:30);
 
+% BLS price
+[c,p] = blsprice(S0,K,r,T,sigma,q); 
+price = zeros(length(Nt),length(q_orders));
+%% Test for convergence in q_order
+for iq = 1:length(q_orders)
+    q_order = q_orders(iq)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 u = sqrt((1:q_order-1)/2);
 [V,Lambda] = eig(diag(u,1)+diag(u,-1));
 [xi,i] = sort(diag(Lambda));
 Vtop = V(1,:);
 Vtop = Vtop(i);
 w = sqrt(pi)*Vtop.^2;
- 
-% BLS price
-[c,p] = blsprice(S0,K,r,T,sigma,q); 
-price = zeros(1,10);
-for i = 1:length(Nt)
-    N = Nt(i)
+
+%% Test for convergence in time
+for it = 1:length(Nt)
+     N = Nt(it)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Step 1
 Smin = S0 * exp(-5*sigma*sqrt(T));
 Smax = S0 * exp(5*sigma*sqrt(T));
@@ -57,10 +63,13 @@ end
 Q = Qnew;%max(Qnew,max(K-S,0));
 end
 
-price(i) = interp1(S,Q,S0);
+price(it,iq) = interp1(S,Q,S0);
+end
 end
 
-%%
-plot(price)
+%% Plots
+plot(Nt,p*ones(100,1))
 hold on
-plot(1:100,p*ones(100,1))
+for k = 1:length(q_orders)
+    plot(Nt,price(:,k))
+end
