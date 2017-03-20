@@ -16,7 +16,7 @@ Na = 50;
 N_sim = 1e6;
 q_order = 100;
 
-Target= [0.3 0.5 0.7 0.9];
+Targets= [0.3 0.5 0.7 0.9];
 
 theta=0.5;
 
@@ -29,8 +29,9 @@ KO_type = ['noGain  ';...
 Prices_GHQC = zeros(4,3);
 Prices_FD = zeros(4,3);
 Prices_MC = zeros(4,3);
+%%
 for i = 1:4
-    Targ = Target(i);
+    Targ = Targets(i);
     for j = 1:3
         KO = KO_type(j,:);
         tic
@@ -41,13 +42,14 @@ for i = 1:4
     end
 end
 %% Results
-printmat(Prices_GHQC, 'GHQC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
-printmat(Prices_FD, 'FD Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
-printmat(Prices_MC, 'MC Prices', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
+MC = reshape(Prices_MC,12,1);
+FD = reshape(Prices_FD,12,1);
+GHQC = reshape(Prices_GHQC,12,1);
 
-Diff1 = abs(Prices_FD-Prices_MC);
-Diff2 = abs(Prices_GHQC-Prices_MC);
-Diff3 = abs(Prices_FD-Prices_GHQC);
-printmat(Diff1, 'MC vs FD  ', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
-printmat(Diff2, 'MC vs GHQC', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
-printmat(Diff3, 'FD vs GHQC', '0.3 0.5 0.7 0.9', 'noGain partGain fullGain')
+KO_Type = {'No Gain';'No Gain';'No Gain';'No Gain';...
+    'Part Gain';'Part Gain';'Part Gain';'Part Gain';...
+    'Full Gain';'Full Gain';'Full Gain';'Full Gain'};
+
+Target = repmat(Targets,1,3)';
+
+Table = table(KO_Type,Target,MC,FD,GHQC)
