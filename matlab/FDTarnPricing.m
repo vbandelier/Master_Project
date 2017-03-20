@@ -64,8 +64,6 @@ for k = 1:N_fixDates
             V(:,m) = B\F;
         end
         U(:,j) = V(:,end);
-        %     surf(U);
-        %     getframe(gcf);
     end
 end
 %%
