@@ -10,8 +10,8 @@ Section Introduction
 %Taylor Expansion
 Recall that the Taylor expansion for a function $f\in C^\infty$ infinitely many differentiable is given by
 \begin{align*}
-f(x) &= f(a) + (x-a)\frac{\partial f}{\partial x}(x) + \frac{(x-a)^2}{2!}\frac{\partial^2 f}{\partial x^2}(x) + \cdots + \frac{(x-a)^n}{n!}\frac{\partial^n f}{\partial x^n}(x)+\cdots\\
-&=\sum_{k = 0}^\infty \frac{(x-a)^k}{k!}\frac{\partial^k f}{\partial x^k}(x).
+f(x) &= f(a) + (x-a)\frac{\partial f}{\partial x}(a) + \frac{(x-a)^2}{2!}\frac{\partial^2 f}{\partial x^2}(a) + \cdots + \frac{(x-a)^n}{n!}\frac{\partial^n f}{\partial x^n}(a)+\cdots\\
+&=\sum_{k = 0}^\infty \frac{(x-a)^k}{k!}\frac{\partial^k f}{\partial x^k}(a).
 \end{align*}
 
 If $f$ is only $(n+1)$ times continuously differentiable, i.e. $f\in C^{(n+1)}$, we can write
@@ -44,10 +44,10 @@ which is known as \textit{backward difference} approximation of the first deriva
 %Central Difference Approximation of First Derivative
 Now assume that $f\in C^3$. Then with a second order Taylor expansion, we have
 \begin{equation}\label{forwardTaylor2}
-f(x) = f(x + h) + h \frac{\partial f}{\partial x}(x) + \frac{h^2}{2}\frac{\partial^2 f}{\partial x^2}(x) +O(h^2),
+f(x+h) = f(x) + h \frac{\partial f}{\partial x}(x) + \frac{h^2}{2}\frac{\partial^2 f}{\partial x^2}(x) +O(h^2),
 \end{equation}
 \begin{equation}\label{backwardTaylor2}
-f(x) = f(x - h) - h \frac{\partial f}{\partial x}(x) + \frac{h^2}{2}\frac{\partial^2 f}{\partial x^2}(x) +O(h^2).
+f(x-h) = f(x) - h \frac{\partial f}{\partial x}(x) + \frac{h^2}{2}\frac{\partial^2 f}{\partial x^2}(x) +O(h^2).
 \end{equation}
 
 Subtracting equation \eqref{backwardTaylor2} from  \eqref{forwardTaylor2} we get
