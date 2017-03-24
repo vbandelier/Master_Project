@@ -1,5 +1,5 @@
-## Master Project in Financial Mathematics, EPFL
-# Pricing TARN Using Numerical Methods
+# Master Project in Financial Mathematics, EPFL
+## Pricing TARN Using Numerical Methods
 The goal of this project is to find some efficient numerical methods in order to price Target Accrual Redemption Notes (TARN).
 For the moment I have implemented the Monte Carlo (MC), Finite Difference (FD) Gauss-Hermite Quadrature with Cubic interpolation (GHQC) methods on a Black-Scholes model with constant paramters.
 
