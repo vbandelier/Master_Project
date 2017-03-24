@@ -49,11 +49,9 @@ for k = 1:N_fixDates
         end
         C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
         % step 2
-        Aplus  = A + C;
-        % step 3
-        U(m,:) = interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ);
-        % step 4
-        Unew(m,:) = U(m,:)+C;
+        Aplus  = sort(A + C);
+        % step 3/4
+        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
     for j = 1:Na
         % init matrix containing the solution at each time step

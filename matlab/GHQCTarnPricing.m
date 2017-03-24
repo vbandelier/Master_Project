@@ -40,9 +40,8 @@ for k = 1:N_fixDates
                 W = (Targ-A)/(S(m)-K);
         end
         C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
-        Aplus  = A + C;
-        Q(m,:) = interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ);
-        Qnew(m,:) = Q(m,:)+C;
+        Aplus  = sort(A + C);
+        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
     for j = 1:Na
         % Step 3 :
