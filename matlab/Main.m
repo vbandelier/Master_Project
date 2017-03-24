@@ -1,4 +1,3 @@
-tic
 clear
 clc
 rng(0)
@@ -11,10 +10,10 @@ sigma = 0.2;
 
 N_fixDates = 20;
 Period = 30/365;
-Nx = 500;
+Nx = 200;
 Nt = 15;
 Na = 50;
-N_sim = 1e6;
+N_sim = 1e5;
 q_order = 100;
 
 Targets= [0.3 0.5 0.7 0.9];
@@ -35,9 +34,15 @@ for i = 1:4
     Targ = Targets(i);
     for j = 1:3
         KO = KO_type(j,:);
+        tic
         Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
+        toc
+        tic
         Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta);
+        toc
+        tic
         Prices_GHQC(i,j) = GHQCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
+        toc
     end
 end
 %% Results
@@ -52,4 +57,3 @@ KO_Type = {'No Gain';'No Gain';'No Gain';'No Gain';...
 Target = repmat(Targets,1,3)';
 
 Table = table(KO_Type,Target,MC,FD,GHQC)
-toc
