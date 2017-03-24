@@ -34,6 +34,7 @@ for i = 1:4
     Targ = Targets(i);
     for j = 1:3
         KO = KO_type(j,:);
+        figure(i*10+j)
         tic
         Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
         toc
