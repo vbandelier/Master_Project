@@ -12,7 +12,7 @@ N_fixDates = 20;
 Period = 30/365;
 Nx = 200;
 Nt = 15;
-Na = 50;
+Na = 500;
 N_sim = 1e5;
 q_order = 100;
 
@@ -30,9 +30,9 @@ Prices_GHQC = zeros(4,3);
 Prices_FD = zeros(4,3);
 Prices_MC = zeros(4,3);
 %%
-for i = 1:4
+for i = 4
     Targ = Targets(i);
-    for j = 1:3
+    for j = 1
         KO = KO_type(j,:);
         figure(i*10+j)
         tic

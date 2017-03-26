@@ -52,8 +52,8 @@ for k = 1:N_fixDates
         end
     end
     %% Plot surface
-%     surf(U);
-%     getframe(gcf);
+    surf(Q);
+    getframe(gcf);
 end
 %%
 Price = interp1(S,Q(:,1),S0);
