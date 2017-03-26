@@ -2,7 +2,7 @@ clear
 clc
 rng(0)
 %% Parameters
-S_0 = 1.05;
+S0 = 1.05;
 K   = 1.0;
 r_d = 0;
 r_f = 0;
@@ -12,7 +12,7 @@ N_fixDates = 20;
 Period = 30/365;
 Nx = 200;
 Nt = 15;
-Na = 500;
+Na = 50;
 N_sim = 1e5;
 q_order = 100;
 
@@ -32,16 +32,16 @@ Prices_MC = zeros(4,3);
 %%
 for i = 4
     Targ = Targets(i);
-    for j = 1
+    for j = 3
         KO = KO_type(j,:);
         tic
-        Prices_MC(i,j) = MCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
+        Prices_MC(i,j) = MCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
         toc
         tic
-        Prices_FD(i,j) = FDTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta);
+        Prices_FD(i,j) = FDTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta);
         toc
         tic
-        Prices_GHQC(i,j) = GHQCTarnPricing(S_0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
+        Prices_GHQC(i,j) = GHQCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
         toc
     end
 end

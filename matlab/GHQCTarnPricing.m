@@ -51,9 +51,9 @@ for k = 1:N_fixDates
             Q(m,j) = exp(-r_d*dt)/sqrt(pi) * (w*Qint(sqrt(2)*tau*xi+nu+X(m)));
         end
     end
-    %% Plot surface
-    surf(Q);
-    getframe(gcf);
+     %% Plot surface
+%     surf(Q);
+%     getframe(gcf);
 end
 %%
 Price = interp1(S,Q(:,1),S0);
