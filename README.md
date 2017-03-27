@@ -32,7 +32,6 @@ Results under BS model: (MC = 1e6 simulations ; FD = 1000 x 1000 x 200 grid ; GH
 
       KO_Type      Target      MC         FD        GHQC       QUAD  
     ___________    ______    _______    _______    _______    _______
-
     'No Gain'      0.3       0.19556    0.20579    0.20539    0.20580
     'No Gain'      0.5       0.32866    0.33755    0.33746    0.33753
     'No Gain'      0.7       0.45018    0.45960    0.45975    0.45960
