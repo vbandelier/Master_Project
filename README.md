@@ -7,22 +7,24 @@ However there is a problem with a special case, called No Gain Knock-Out type, f
 
 The next step is to find other methods, more efficient than these ones if possible and extend them to more complex models as Local Volatility or Stochastic Volatility models.
 
-First Results :
+Results :
 
-      KO_Type      Target      MC         FD        GHQC        TR   
+      KO_Type      Target      MC         FD        GHQC       QUAD  
     ___________    ______    _______    _______    _______    _______
 
-    'No Gain'      0.3       0.19556   (0.20435)  (0.20539)  (0.21365)
-    'No Gain'      0.5       0.32866   (0.33737)  (0.33700)  (0.35668)
-    'No Gain'      0.7       0.45018   (0.45957)  (0.45944)  (0.49360)
-    'No Gain'      0.9       0.56325   (0.57295)  (0.57276)  (0.62135)
-    'Part Gain'    0.3       0.24450    0.24437    0.24448   (0.25802)
-    'Part Gain'    0.5       0.38177    0.38157    0.38173   (0.40901)
-    'Part Gain'    0.7       0.50614    0.5058     0.50602   (0.54871)
-    'Part Gain'    0.9       0.61945    0.61963    0.61989   (0.67902)
-    'Full Gain'    0.3       0.29772    0.29742    0.29752   (0.31752)
-    'Full Gain'    0.5       0.43875    0.43861    0.43824   (0.47385)
-    'Full Gain'    0.7       0.56455    0.56429    0.56413   (0.61725)
-    'Full Gain'    0.9       0.67921    0.67966    0.67933   (0.74975)
+    'No Gain'      0.3       0.19561   (0.20435)  (0.20539)  (0.20483)
+    'No Gain'      0.5       0.32874   (0.33737)  (0.33700)  (0.33642)
+    'No Gain'      0.7       0.45053   (0.45957)  (0.45944)  (0.45937)
+    'No Gain'      0.9       0.56282   (0.57295)  (0.57276)  (0.57167)
+    'Part Gain'    0.3       0.24546    0.24437    0.24448    0.24434
+    'Part Gain'    0.5       0.38126    0.38157    0.38173    0.38152
+    'Part Gain'    0.7       0.50601    0.50580    0.50602    0.50575
+    'Part Gain'    0.9       0.61843    0.61963    0.61989    0.61958
+    'Full Gain'    0.3       0.29740    0.29742    0.29752    0.29731
+    'Full Gain'    0.5       0.43987    0.43861    0.43824    0.43790
+    'Full Gain'    0.7       0.56485    0.56429    0.56413    0.56406
+    'Full Gain'    0.9       0.67954    0.67966    0.67933    0.67843
+    
+            CPU Time (sec) :   6.41       1.01       3.44       0.54         
 
 Valentin Bandelier
