@@ -7,25 +7,27 @@ However there is a problem with a special case, called No Gain Knock-Out type, f
 
 The next step is to find other methods, more efficient than these ones if possible and extend them to more complex models as Local Volatility or Stochastic Volatility models.
 
-Results under BS model:
+Results under BS model: (MC = 2e5 simulations ; FD = 500 x 500 x 100 grid ; GHQC, QUAD = 500 x 100 grid)
 
       KO_Type      Target      MC         FD        GHQC       QUAD  
     ___________    ______    _______    _______    _______    _______
-    'No Gain'      0.3       0.19561    0.20435    0.20539    0.20483 
-    'No Gain'      0.5       0.32874    0.33737    0.33700    0.33642 
-    'No Gain'      0.7       0.45053    0.45957    0.45944    0.45937
-    'No Gain'      0.9       0.56282    0.57295    0.57276    0.57167
+    'No Gain'      0.3       0.19553    0.20580    0.20564    0.20568
+    'No Gain'      0.5       0.32856    0.33747    0.33760    0.33735
+    'No Gain'      0.7       0.45098    0.45959    0.45965    0.45961
+    'No Gain'      0.9       0.56267    0.57236    0.57218    0.57221
     
-    'Part Gain'    0.3       0.24546    0.24437    0.24448    0.24434
-    'Part Gain'    0.5       0.38126    0.38157    0.38173    0.38152
-    'Part Gain'    0.7       0.50601    0.50580    0.50602    0.50575
-    'Part Gain'    0.9       0.61843    0.61963    0.61989    0.61958
+    'Part Gain'    0.3       0.24473    0.24454    0.24450    0.24453
+    'Part Gain'    0.5       0.38194    0.38181    0.38176    0.38179
+    'Part Gain'    0.7       0.50609    0.50610    0.50604    0.50607
+    'Part Gain'    0.9       0.62088    0.61998    0.61990    0.61994
     
-    'Full Gain'    0.3       0.29740    0.29742    0.29752    0.29731
-    'Full Gain'    0.5       0.43987    0.43861    0.43824    0.43790
-    'Full Gain'    0.7       0.56485    0.56429    0.56413    0.56406
-    'Full Gain'    0.9       0.67954    0.67966    0.67933    0.67843
+    'Full Gain'    0.3       0.29801    0.29777    0.29760    0.29765
+    'Full Gain'    0.5       0.43822    0.43862    0.43856    0.43843
+    'Full Gain'    0.7       0.56411    0.56441    0.56443    0.56438
+    'Full Gain'    0.9       0.67758    0.67895    0.67869    0.67876
     -----------------------------------------------------------------
-            CPU Time (sec) :   6.41       1.01       3.44       0.54         
+            CPU Time (sec) :  12.42       4.31      15.52       1.42    
+          
+Results under BS model: (MC = 1e6 simulations ; FD = 1000 x 1000 x 200 grid ; GHQC, QUAD = 1000 x 200 grid)
 
 Valentin Bandelier
