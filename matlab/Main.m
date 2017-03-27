@@ -29,26 +29,30 @@ KO_type = ['noGain  ';...
 Prices_GHQC = zeros(4,3);
 Prices_FD = zeros(4,3);
 Prices_MC = zeros(4,3);
+Prices_TR = zeros(4,3);
 %%
-for i = 4
-    Targ = Targets(i);
-    for j = 3
-        KO = KO_type(j,:);
+figure
+k = 1;
+for j = 1:3
+    KO = KO_type(j,:);
+    for i = 1:4
+        subplot(3,4,k)  
+        hold on
+        Targ = Targets(i);
         tic
         Prices_MC(i,j) = MCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,KO);
-        toc
-        tic
         Prices_FD(i,j) = FDTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,KO,theta);
-        toc
-        tic
         Prices_GHQC(i,j) = GHQCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO,q_order);
+        Prices_TR(i,j) = TRTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,KO);
         toc
+        k = k+1;
     end
 end
 %% Results
 MC = reshape(Prices_MC,12,1);
 FD = reshape(Prices_FD,12,1);
 GHQC = reshape(Prices_GHQC,12,1);
+TR = reshape(Prices_TR,12,1);
 
 KO_Type = {'No Gain';'No Gain';'No Gain';'No Gain';...
     'Part Gain';'Part Gain';'Part Gain';'Part Gain';...
@@ -56,4 +60,4 @@ KO_Type = {'No Gain';'No Gain';'No Gain';'No Gain';...
 
 Target = repmat(Targets,1,3)';
 
-Table = table(KO_Type,Target,MC,FD,GHQC)
+Table = table(KO_Type,Target,MC,FD,GHQC,TR)

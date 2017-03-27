@@ -57,3 +57,4 @@ for k = 1:N_fixDates
 end
 %%
 Price = interp1(S,Q(:,1),S0);
+plot(S,Q(:,1))

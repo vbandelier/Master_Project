@@ -1,20 +1,6 @@
-clear
-clc
-
-Nx = 200;
-Na = 50;
-
-S0 = 1.05;
-K   = 1.0;
-r_d = 0;
-r_f = 0;
-sigma = 0.2;
-Targ = 0.9;
-KO_type = 'noGain  ';
-
-N_fixDates = 20;
-dt = 30/365;
-T = N_fixDates*dt;
+function [ Price ] = TRTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type)
+T = N_fixDates*period;
+dt = period;
 
 A = linspace(0,Targ,Na);
 
@@ -22,8 +8,8 @@ tau = sigma*sqrt(dt);
 nu =(r_d-r_f-0.5*sigma^2)*dt;
 Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
 Smax = S0 * exp(max((r_d-r_f-0.5*sigma^2)*T+3*sigma*T,3*sigma*T));
-Xmin = log(Smin/S0);
-Xmax = log(Smax/S0);
+Xmin = log(Smin);
+Xmax = log(Smax);
 
 h = (Xmax-Xmin)/Nx;
 X = Xmin + (0:Nx)*h;
@@ -52,8 +38,9 @@ for k = 1:N_fixDates
         Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
     for j = 1:Na
-        Q(:,j) = exp(-r_d*dt)*h*(F*Qnew(:,j)-0.5*(Qnew(1,j).*F(:,1)+Qnew(end,j).*F(:,end)));
+        Q(:,j) = exp(-r_d*dt)*h*(F*Qnew(:,j)-0.5*(F(:,1)*Qnew(1,j)+F(:,end)*Qnew(end,j)));
     end
 end
 %%
 Price = interp1(S,Q(:,1),S0);
+plot(S,Q(:,1))

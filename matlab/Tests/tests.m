@@ -22,12 +22,16 @@ tau = sigma*sqrt(dt);
 nu =(r_d-r_f-0.5*sigma^2)*dt;
 Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
 Smax = S0 * exp(max((r_d-r_f-0.5*sigma^2)*T+3*sigma*T,3*sigma*T));
-Xmin = log(Smin/S0);
-Xmax = 1.5;
+Xmin = log(Smin);
+Xmax = log(Smax);
 
 h = (Xmax-Xmin)/Nx;
 X = Xmin + (0:Nx)*h;
 S = S0*exp(X);
+
+w = repmat([2 4],1,Nx/2);
+w(1) = 1;
+w = [w 1];
 
 f = @(x,y) normpdf(x,y+nu,tau);
 
@@ -52,7 +56,7 @@ for k = 1:N_fixDates
         Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
     for j = 1:Na
-        Q(:,j) = exp(-r_d*dt)*h*(F*Qnew(:,j)-0.5*(Qnew(1,j).*F(:,1)+Qnew(end,j).*F(:,end)));
+        Q(:,j) = exp(-r_d*dt)*h/3*(F*(w'.*Qnew(:,j)));
     end
 end
 %%
