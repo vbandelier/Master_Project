@@ -15,13 +15,12 @@ h = (Xmax-Xmin)/Nx;
 X = Xmin + (0:Nx)*h;
 S = S0*exp(X);
 
-f = @(x,y) normpdf(x,y+nu,tau);
+f = @(x,y) normpdf(x,y-nu,tau);
 
 F = f(X',X);
 
-w = repmat([2 4],1,Nx/2);
-w(1) = 1;
-w = [w 1];
+Simpson_weights = repmat([2,4],1,Nx/2);
+w = [1 Simpson_weights]/3;
 
 % step 2 :
 Q = zeros(Nx+1,Na);
@@ -42,7 +41,7 @@ for k = 1:N_fixDates
         Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
     for j = 1:Na
-        Q(:,j) = exp(-r_d*dt)*h/3*(F*(w'.*Qnew(:,j)));
+        Q(:,j) = exp(-r_d*dt)*h*(F*(w'.*Qnew(:,j)));
     end
 end
 %%
