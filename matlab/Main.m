@@ -11,10 +11,10 @@ sigma = 0.2;
 N_fixDates = 20;
 Period = 30/365;
 
-Nx = 1000;
-Nt = 50;
-Na = 200;
-N_sim = 1e6;
+Nx = 500;
+Nt = 25;
+Na = 100;
+N_sim = 1e5;
 q_order = 100;
 
 Targets= [0.3 0.5 0.7 0.9];
