@@ -4,8 +4,8 @@ rng(0)
 %% Parameters
 S0 = 1.05;
 K   = 1.0;
-r_d = 0;
-r_f = 0;
+r_d = -0.012;
+r_f = 0.007;
 sigma = 0.2;
 
 N_fixDates = 20;

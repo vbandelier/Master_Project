@@ -15,9 +15,9 @@ h = (Xmax-Xmin)/Nx;
 X = Xmin + (0:Nx)*h;
 S = S0*exp(X);
 
-f = @(x,y) normpdf(x,y-nu,tau);
+f = @(x,y) normpdf(x,y+nu,tau);
 
-F = f(X',X);
+F = f(X,X');
 
 Simpson_weights = repmat([2,4],1,Nx/2);
 w = [1 Simpson_weights]/3;
