@@ -30,6 +30,3 @@ Y = (exp(-r*T)*S0*y);
 
 Price = interp1(K,Y,100);
 [Call,Put]=blsprice(S0,100,r,T,sigma,q);
-
-
-
