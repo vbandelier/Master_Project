@@ -51,6 +51,6 @@ Results under BS model: (MC = 1e6 simulations ; FD = 1000 x 1000 x 200 grid ; GH
             CPU Time (sec) :  61.75      24.17      60.76       4.12 
 
 ## Plots
-![alt text](matlab/PlotResults.png)
+![alt text](matlab/PlotResults.jpg)
 
 Valentin Bandelier
