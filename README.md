@@ -7,6 +7,7 @@ However there is a problem with a special case, called No Gain Knock-Out type, f
 
 The next step is to find other methods, more efficient than these ones if possible and extend them to more complex models as Local Volatility or Stochastic Volatility models.
 
+## Results
 Results under BS model: (MC = 2e5 simulations ; FD = 500 x 500 x 100 grid ; GHQC, QUAD = 500 x 100 grid)
 
       KO_Type      Target      MC         FD        GHQC       QUAD  
@@ -48,5 +49,8 @@ Results under BS model: (MC = 1e6 simulations ; FD = 1000 x 1000 x 200 grid ; GH
     'Full Gain'    0.9       0.67921    0.67896    0.67897    0.67892
     -----------------------------------------------------------------
             CPU Time (sec) :  61.75      24.17      60.76       4.12 
+
+## Plots
+![alt text](matlab/PlotResults.png)
 
 Valentin Bandelier
