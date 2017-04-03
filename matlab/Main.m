@@ -4,8 +4,8 @@ rng(0)
 %% Parameters
 S0 = 1.05;
 K   = 1.0;
-r_d = -0.012;
-r_f = 0.007;
+r_d = 0;
+r_f = 0;
 sigma = 0.2;
 
 N_fixDates = 20;
@@ -15,7 +15,7 @@ Nx = 500;
 Nt = 25;
 N = 2^10;
 Na = 100;
-N_sim = 1e5;
+N_sim = 2e5;
 q_order = 100;
 alpha = 0; % Damping Factor
 
@@ -39,8 +39,8 @@ figure
 k = 1;
 for j = 1:3
     KO = KO_type(j,:);
-    for i = 2
-        subplot(1,3,k)  
+    for i = 1:4
+        subplot(3,4,k)  
         hold on
         Targ = Targets(i);
         tic
