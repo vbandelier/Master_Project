@@ -8,7 +8,8 @@ However there is a problem with a special case, called No Gain Knock-Out type, f
 The next step is to find other methods, more efficient than these ones if possible and extend them to more complex models as Local Volatility or Stochastic Volatility models.
 
 ## Results
-Results under BS model: (MC = 2e5 simulations ; FD = 500 x 500 x 100; GHQC = 500 x 100; QUAD,CONV = 1024 x 100)
+Results under BS model: 
+(MC = 2e5 simulations ; FD = 500 x 500 x 100; GHQC = 500 x 100; QUAD,CONV = 1024 x 100)
 
       KO_Type      Target      MC         FD        GHQC       QUAD       CONV  
     ___________    ______    _______    _______    _______    _______    _______
@@ -30,7 +31,8 @@ Results under BS model: (MC = 2e5 simulations ; FD = 500 x 500 x 100; GHQC = 500
     ----------------------------------------------------------------------------
             CPU Time (sec) :  12.13       3.90      14.26       3.10       2.78
           
-Results under BS model: (MC = 1e6 simulations ; FD = 1000 x 1000 x 200; GHQC = 1000 x 200; QUAD,CONV = 4096 x 200)
+Results under BS model: 
+(MC = 1e6 simulations ; FD = 1000 x 1000 x 200; GHQC = 1000 x 200; QUAD,CONV = 4096 x 200)
 
       KO_Type      Target      MC         FD        GHQC       QUAD       CONV  
     ___________    ______    _______    _______    _______    _______    _______
