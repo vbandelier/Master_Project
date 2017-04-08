@@ -11,11 +11,11 @@ sigma = 0.2;
 N_fixDates = 20;
 Period = 30/365;
 
-Nx = 1000;
-Nt = 50;
+Nx = 500;
+Nt = 25;
 N = 2^12;
-Na = 200;
-N_sim = 1e6;
+Na = 100;
+N_sim = 2e5;
 q_order = 100;
 alpha = -2; % Damping Factor
 

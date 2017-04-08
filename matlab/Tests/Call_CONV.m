@@ -9,7 +9,7 @@ sigma = 0.2;
 T = 1;
 
 alpha = 0;
-N = 2^10;
+N = 2^20;
 L = 20*sigma*sqrt(T);
 dx = L/N;
 du = 2*pi/L;

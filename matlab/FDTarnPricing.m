@@ -49,7 +49,7 @@ for k = 1:N_fixDates
         end
         C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
         % step 2
-        Aplus  = sort(A + C);
+        Aplus  = A + Ctild;
         % step 3/4
         Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+C;
     end
