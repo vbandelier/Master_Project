@@ -54,7 +54,5 @@ Results under BS model:
     ----------------------------------------------------------------------------
             CPU Time (sec) :  61.75      22.11      55.82      34.77      12.55
 
-## Plots
-![alt text](matlab/PlotResults.jpg)
 
 Valentin Bandelier
