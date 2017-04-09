@@ -1,10 +1,11 @@
-function [ Price ] = CONVTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type,alpha)
+function [ Price ] = CONVTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,gainFun,lossFun,g,KO_type,alpha)
 T = N_fixDates*period;
 dt = period;
 
 A = linspace(0,Targ,Na);
 
-Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
+%Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
+Smin = S0 * exp(-5*sigma*T);
 Smax = S0 * exp(max((r_d-r_f-0.5*sigma^2)*T+3*sigma*T,3*sigma*T));
 Xmin = log(Smin);
 Xmax = log(Smax);
@@ -29,7 +30,8 @@ Q = zeros(Nx,Na);
 Qnew = Q;
 for k = 1:N_fixDates
     for m = 1:Nx
-        Ctild = max(S(m)-K,0);
+        Cgtild = gainFun(S(m),K);
+        Cltild = -g*lossFun(S(m),K);
         switch KO_type
             case 'fullGain'
                 W = 1;
@@ -38,9 +40,10 @@ for k = 1:N_fixDates
             case 'partGain'
                 W = (Targ-A)/(S(m)-K);
         end
-        C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
-        Aplus  = A + Ctild;
-        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
+        Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Aplus  = A + Cgtild;
+        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+Cgain+Closs;
     end
     for j = 1:Na
         % Step 1 :
@@ -50,7 +53,7 @@ for k = 1:N_fixDates
         res2 = res1 .* phi(-(u-1i*alpha));
 
         % Step 3 :
-        res3 = real(exp(-alpha.*x).*(-1).^(0:Nx-1).* fft(res2));
+        res3 = real(exp(-r_d*dt)*exp(-alpha.*x).*(-1).^(0:Nx-1).* fft(res2));
         
         Q(:,j)=res3;
     end

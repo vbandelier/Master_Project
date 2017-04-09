@@ -1,4 +1,4 @@
-function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,KO_type,theta)
+function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,gainFun,lossFun,g,KO_type,theta)
 T = N_fixDates*period;
 
 Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
@@ -38,7 +38,8 @@ U = zeros(Nx+1,Na);
 Unew = U;
 for k = 1:N_fixDates
     for m = 1:Nx+1
-        Ctild = max(S(m)-K,0);
+        Cgtild = gainFun(S(m),K);
+        Cltild = -g*lossFun(S(m),K);
         switch KO_type
             case 'fullGain'
                 W = 1;
@@ -47,11 +48,12 @@ for k = 1:N_fixDates
             case 'partGain'
                 W = (Targ-A)/(S(m)-K);
         end
-        C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
+        Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
         % step 2
-        Aplus  = A + Ctild;
+        Aplus  = A + Cgtild;
         % step 3/4
-        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+C;
+        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Cgain+Closs;
     end
     for j = 1:Na
         % init matrix containing the solution at each time step

@@ -1,4 +1,4 @@
-function [ Price ] = QUADTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,KO_type)
+function [ Price ] = QUADTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Na,gainFun,lossFun,g,KO_type)
 T = N_fixDates*period;
 dt = period;
 
@@ -27,7 +27,8 @@ Q = zeros(Nx+1,Na);
 Qnew = Q;
 for k = 1:N_fixDates
     for m = 1:Nx+1
-        Ctild = max(S(m)-K,0);
+        Cgtild = gainFun(S(m),K);
+        Cltild = -g*lossFun(S(m),K);
         switch KO_type
             case 'fullGain'
                 W = 1;
@@ -36,9 +37,10 @@ for k = 1:N_fixDates
             case 'partGain'
                 W = (Targ-A)/(S(m)-K);
         end
-        C = Ctild .* ( ( (A+Ctild)<Targ )+W .*( (A+Ctild)>=Targ ) );
-        Aplus  = A + Ctild;
-        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+C;
+        Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Aplus  = A + Cgtild;
+        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+Cgain+Closs;
     end
     for j = 1:Na
         Q(:,j) = exp(-r_d*dt)*h*(F*(w'.*Qnew(:,j)));
