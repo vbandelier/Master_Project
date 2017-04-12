@@ -19,7 +19,7 @@ A stochastic process $W = \{W_t,t\geq 0\}$, with $W_0=0$, is a \textbf{Wiener pr
 \end{my_list_num}
 \end{defn}
 
-This motion was discovered by Brown in 1827 and taken back by \citeauthor{Bachelier} \citeyearpar{Bachelier} to model the stock market prices. Only in 1923 the Brownian was defined and constructed rigorously by R. Wiener.
+This motion was discovered by Brown in 1827 and taken back by \citeauthor{Bac00} \citeyearpar{Bac00} to model the stock market prices. Only in 1923 the Brownian was defined and constructed rigorously by R. Wiener.
 
 \begin{defn}[Poisson process]\label{def:poisson}
 Let $(\tau_i)_{i\geq 1}$ be a sequence of independent exponential random variables with parameter $\lambda$ and $T_n = \sum_{i=1}^n \tau_i$. The process $N = \{N_t,t\geq 0\}$, with $N_0=0$, defined by
@@ -88,7 +88,7 @@ In term of this triplet the characteristic function of the L\'evy process equals
 \Phi(u) &= \mathbb{E}\left[\exp(i u X_t)\right]\nonumber\\
 &= \exp\left(t\left(i\mu u -\frac{1}{2}\sigma^2u^2"\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\nu(dx)\right)\right)\right).
 \end{align}
-(The proof can be find in \citeauthor{Tankov} \citeyearpar{Tankov})
+(The proof can be find in \citeauthor{TC03} \citeyearpar{TC03})
 \end{thm}
 
 At the end of the story, we can conclude from equation \eqref{eq:LK} that every L\'evy processes are a combination of three independent processes: a linear deterministic process where $\mu$ is called the \textit{drift} term, a Wiener process with a \textit{diffusion} coefficient $\sigma$ and a \textit{pure jump} process whose dynamics is dictated by the L\'evy measure $\nu(dx)$. In fact the measure $\nu(dx)$ defines how happen the jumps, which occur according to a compound Poisson process with intensity $\lambda = \int_\mathbb{R}\nu(dx)$.
