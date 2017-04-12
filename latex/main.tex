@@ -30,7 +30,7 @@
 % **************************************************
 % Information and Commands for Reuse
 % **************************************************
-\newcommand{\thesisTitle}{Pricing TARN Using Numerical Methods}
+\newcommand{\thesisTitle}{Pricing FX-TARN Under L\'evy Processes \texorpdfstring{\\ Using Numerical Methods}{}}
 \newcommand{\thesisName}{Valentin Bandelier}
 \newcommand{\thesisSubject}{Master Thesis}
 \newcommand{\thesisDate}{\today}
@@ -59,7 +59,7 @@
 % **************************************************
 \usepackage[utf8]{inputenc}		% defines file's character encoding
 \usepackage[english]{babel} % babel system, adjust the language of the content
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage[					% clean thesis style
 	figuresep=colon,%
 	sansserif=false,%
@@ -86,6 +86,10 @@
 	bookmarksnumbered=true,		%
 	bookmarksopen=true			%
 }
+
+\usepackage{thmbox}
+\newtheorem[L, leftmargin=1.5em, rightmargin=1.5em, thickness=1.3pt]{thm}{Theorem}[chapter]
+\newtheorem[hskip=1em, leftmargin=1.5em, rightmargin=1.5em,thickness=1.3pt]{defn}[thm]{Definition}
 
 % **************************************************
 % Document CONTENT
@@ -126,9 +130,9 @@
 \setcounter{page}{1}			% set page counter
 \pagestyle{maincontentstyle} 	% fancy header and footer
 
-\input{content/chapter-monte-carlo}
-\input{content/chapter-finite-difference}
-%\input{content/chapter-introduction} % INCLUDE: introduction
+\input{content/chapter-introduction}
+\input{content/chapter-Levy-processes}
+\input{content/chapter-numerical-methods}
 %\input{content/chapter-related-work} % INCLUDE: related work
 %\input{content/chapter-system}	% INCLUDE: system
 %\input{content/chapter-concepts} % INCLUDE: concepts
@@ -143,8 +147,8 @@
 \renewcommand{\bibfont}{\normalfont\small}
 \setlength{\biblabelsep}{0pt}
 \setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
-\printbibliography[nottype=online]
-\printbibliography[heading=subbibliography,title={Webseiten},type=online,prefixnumbers={@}]
+\printbibliography%[nottype=online]
+%\printbibliography[heading=subbibliography,title={Webseiten},type=online,prefixnumbers={@}]
 }
 \cleardoublepage
 

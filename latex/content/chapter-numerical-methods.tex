@@ -1,12 +1,17 @@
-\chapter{Finite Difference Method}
-\label{sec:FD}
+\chapter{Numerical Methods}
+\label{sec:methods}
 
-\cleanchapterquote{Citation}{Author}{(Author description)}
+\cleanchapterquote{FFT is the most important numerical algorithm of our lifetime.}{Gilbert Strang}{(1934)}
 
 Section Introduction
 
-\section{Taylor Expansion}
-\label{sec:FD:Taylor}
+\section{Monte Carlo}
+\label{sec:methods:MC}
+
+\section{Finite Difference Method}
+\label{sec:methods:FD}
+
+\subsection*{Taylor Expansion}
 %Taylor Expansion
 Recall that the Taylor expansion for a function $f\in C^\infty$ infinitely many differentiable is given by
 \begin{align*}
@@ -18,7 +23,7 @@ If $f$ is only $(n+1)$ times continuously differentiable, i.e. $f\in C^{(n+1)}$,
 $$f(x)=\sum_{k = 0}^{n+1} \frac{(x-a)^k}{k!}\frac{\partial^k f}{\partial x^k}(x)+O((x-a)^{n+1}),$$
 where $O((x-a)^{n+1})$ represents the remainder in Landau notation.
 
-\subsection{Forward and Backward Difference Approximation of First Derivative}
+\subsection*{Forward and Backward Difference Approximation of First Derivative}
 %Forward and Backward Difference Approximation of First Derivative
 In order to approximate $\frac{\partial f}{\partial t}(x)$ assume that $f$ is twice continuously differentiable, i.e. $f\in C^2$.  By a first order Taylor expansion we can write
 \begin{equation}\label{forwardTaylor}
@@ -40,7 +45,7 @@ On the other hand, the equation \eqref{backwardTaylor} gives us
 \end{equation}
 which is known as \textit{backward difference} approximation of the first derivative.
 
-\subsection{Central Difference Approximation of First Derivative}
+\subsection*{Central Difference Approximation of First Derivative}
 %Central Difference Approximation of First Derivative
 Now assume that $f\in C^3$. Then with a second order Taylor expansion, we have
 \begin{equation}\label{forwardTaylor2}
@@ -58,7 +63,7 @@ Therefore we obtain the \textit{central difference} approximation of the first d
 \frac{\partial f}{\partial x}(x) = \frac{f(x+h)-f(x-h)}{2h} + O(h^2).
 \end{equation}
 
-\subsection{Central Difference Approximation of Second Derivative}
+\subsection*{Central Difference Approximation of Second Derivative}
 %Central Difference Approximation of Second Derivative
 Finally summing equations \eqref{forwardTaylor2} and \eqref{backwardTaylor2} we get
 $$2f(x) = f(x+h)+f(x-h)+ h^2 \frac{\partial^2 f}{\partial x^2}(x) + O(h^2).$$ 
@@ -68,7 +73,7 @@ Then the \textit{central difference} approximation of the second derivative is g
 \frac{\partial^2 f}{\partial x^2}(x) = \frac{f(x+h)-2f(x)+f(x-h)}{h^2}+O(h^2).
 \end{equation}
 
-\section{Option Pricing under the Generalized Black-Scholes model}
+\subsection*{Option Pricing under the Generalized Black-Scholes model}
 \label{sec:FD:GBS_PDE}
 %Option Pricing under the Generalized Black-Scholes model
 Consider the Generalized Black-Scholes model, which includes the \textit{local volatility} $\sigma(S,t)$ and term structures of \textit{interest rate} $r(t)$ and \textit{dividend rate} $q(t)$. The price of an asset $S$ under such model follows the \textit{stochastic differential equation} (SDE):
@@ -95,7 +100,7 @@ S_j = S_{\min}+(j-1)h; & h=\frac{S_{\max}-S_{\min}}{N}; & j = 1,\ldots,N+1 \\ t_
 \end{Bmatrix},$$
 where $N$ is the number of subintervals in the $S$-direction and $M$ is the number of subintervals in the $\tau$-direction.
 
-\subsection{Forward Euler Approximation}
+\subsection*{Forward Euler Approximation}
 %Forward Euler Approximation
 The Forward Euler approximation constructs the \textit{explicit} discretization of the Generalized Black-Scholes PDE. In other words, we approximate the theta term $\frac{\partial v}{\partial t}(S,t)$ using a \textit{forward difference} approximation \eqref{fwd}:
 $$\frac{\partial v}{\partial t}(S,t) \approx \frac{v(S,t+\Delta t)-v(S,t)}{\Delta t}.$$
@@ -104,8 +109,11 @@ $$\frac{\partial v}{\partial S}(S,t) \approx \frac{v(S+h,t)-v(S-h,t)}{2h}$$
 and the \textit{central difference} approximation of the second derivative \eqref{cf2} for the gamma term $\frac{\partial^2 v}{\partial S^2}(S,t)$ gives
 $$\frac{\partial^2 v}{\partial S^2}(S,t) \approx \frac{v(S+h,t)-2 v(S,t)+v(S-h,t)}{h^2}.$$
 
-\subsection{Backward Euler Approximation}
+\subsection*{Backward Euler Approximation}
 %Backward Euler Approximation
 
-\subsection{$\theta$-Method and Crank-Nicolson Approximation}
+\subsection*{$\theta$-Method and Crank-Nicolson Approximation}
 %Theta-Method and Crank-Nicolson Approximation
+
+\section{The Convolution Method}
+\label{sec:methods:conv}

@@ -1,49 +1,59 @@
-% !TEX root = ../thesis-example.tex
-%
 \chapter{Introduction}
 \label{sec:intro}
 
-\cleanchapterquote{You can’t do better design with a computer, but you can speed up your work enormously.}{Wim Crouwel}{(Graphic designer and typographer)}
+\cleanchapterquote{Finance is the art of passing currency from hand to hand until it finally disappears.}{Robert W. Sarnoff}{(1918-1997)}
 
-\Blindtext[2][2]
+This thesis presents different numerical methods for pricing FX-TARN under L\'evy processes. In general, options with path dependents payoff, such as this product, are evaluated by Monte Carlo simulations. We will describe two other methods based on Finite Difference (FD) and Fast Fourier Transform (FFT). The initial chapter starts, in Section \ref{sec:intro:motivation}, with an historic of existing works that allowed this project to born. Then, in Section \ref{sec:intro:description}, the FX-TARN product is presented.  
 
-\section{Postcards: My Address}
-\label{sec:intro:address}
-
-\textbf{Ricardo Langner} \\
-Alfred-Schrapel-Str. 7 \\
-01307 Dresden \\
-Germany
-
-
-\section{Motivation and Problem Statement}
+\section{Motivation}
 \label{sec:intro:motivation}
 
-\Blindtext[3][1] \cite{Jurgens:2000,Jurgens:1995,Miede:2011,Kohm:2011,Apple:keynote:2010,Apple:numbers:2010,Apple:pages:2010}
+\section{FX-TARN Description}
+\label{sec:intro:description}
+A FX Target Accrual Redemption Note (FX-TARN) is a financial product that allows an investor to accumulate an amount of cash until a certain \textit{target accrual level} $U$ over a predefined schedule. More precisely, a bank sells a series of FX call options (resp. FX put options) with strike $K$ to a client and at the same time buys a series of FX put options (resp. FX call options) with the same strike $K$ from the client. Sometimes, the client leg that the bank buys is combined to a leverage factor $g$ called \textit{gear factor}. The scheduling is defined by a number of fixing dates $t_1,t_2,\ldots,t_N$ that corresponds to the option expiry dates. Finally, the product knock-out if the total sum of payouts (from the bank's point of view) exceeds the given target $U$. There is three types of knock-out when the target $U$ is breach that we will see in the next section:
+\begin{my_list_item}
+\item \textbf{No Gain :} the last payment is disallowed when the target $U$ is breached,
+\item \textbf{Part Gain :} only a part of the payment is allowed such that only the target is paid,
+\item \textbf{Full Gain :} the last payment is allowed when the target $U$ is breached. 
+\end{my_list_item}
 
-\section{Results}
-\label{sec:intro:results}
+\subsection*{Payoff Definition}
+\label{sec:intro:Payoff}
+Define the following notations:
+\begin{my_list_item}
+\item $S(t)$ : FX rate at time $t$,
+\item $K$ : strike,
+\item $t_0$ : today's date,
+\item $t_1,t_2,\ldots,t_M$ : fixing dates,
+\item $U$ : target accrual level,
+\item $A(t)$ : accumulated gains at time $t$,
+\item $N_f$ : notional foreign amount.
+\end{my_list_item}
 
-\Blindtext[1][2]
+On each fixing date $t_n, n = 1,\ldots,N,$ if the target level $U$ is not breached by the accumulated amount $A(t_m)$, the gain per unit of notional foreign amount from the point of view of the investor is given by
+\[\tilde{C}_n = \beta(S(t_n)-K)\times \mathbf{1}_{\{\beta S(t_n)\geq \beta K\}}, \]
+and the loss
+\[\tilde{C}_n^\ast = -g \times \beta(K-S(t_n))\times \mathbf{1}_{\{\beta S(t_n)\leq \beta K\}}, \]
+where $\beta$ is the strategy, i.e. $\beta = 1$ the investor buys call options, $\beta = -1$ the investor buys put options.
 
-\subsection{Some References}
-\label{sec:intro:results:refs}
-\cite{WEB:GNU:GPL:2010,WEB:Miede:2011}
+Denote $t_{\tilde{N}}$ the first fixing date before maturity on which the target level $U$ is breached by the total accumulated gain (without the loss part), i.e.
+\[\tilde{N}=\min\{n: A(t_n)\geq U\},\qquad n = 1,2,\ldots,N.\]
+If the target $U$ is not breached, set $\tilde{N} = N$. For $t_n \leq t_{\tilde{N}}$ we can write the actual payment as
+\[C_n(S(t_n),A(t_{n-1})) = \tilde{C}_n\times (\mathbf{1}_{A(t_{n-1})+\tilde{C}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}),\]
+and $C_n=0$ for $t_n>t_{\tilde{N}}$. As a loss can not occur at the same time as a gain and consequently does not depend on the knock-out condition, we can set
+\[C^\ast_n = \tilde{C}_n^\ast.\]
+$A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_{n-1}$ and $W_n$ is the weight corresponding to the type of knock-out when the target is breached. Therefore, the accumulated gain $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
+\[A(t_n)= A(t_{n-1}) + C_n(S(t_n),A(t_{n-1})).\]
+We can model the weights $W_n$ for the different types of knock-out as follow:
+\[W_n = \begin{cases}
+0, &\text{for No Gain,} \\
+\frac{U-A(t_{n-1})}{\beta\times(S(t_n)-K)}, & \text{for Part Gain,}\\
+1, &\text{for Full Gain.}
+\end{cases}\]
 
-\section{Thesis Structure}
-\label{sec:intro:structure}
+Finally, the net present value of FX-TARN in domestic currency for FX rate realization $\mathbf{S} = (S(t_1),S(t_2),\ldots,S(t_N))$ is
+\[P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,\]
+where $B_d(t_0,t_n)^{-1}$ is the domestic discounting factor from $t_n$ to $t_0$.
 
-\textbf{Chapter \ref{sec:related}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:system}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:concepts}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:concepts}} \\[0.2em]
-\blindtext
-
-\textbf{Chapter \ref{sec:conclusion}} \\[0.2em]
-\blindtext
+\subsection*{Example}
+\label{sec:TARN:Example}
