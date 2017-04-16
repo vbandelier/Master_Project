@@ -74,7 +74,7 @@
 
 % OPTION colortheme
 % --> values = bluemagenta|bluegreen
-\define@choicekey*[ct]{cthesis}{colortheme}[\val\themenr]{bluemagenta,bluegreen}[bluemagenta]{\def\cthesis@colortheme{\themenr}}
+\define@choicekey*[ct]{cthesis}{colortheme}[\val\themenr]{bluemagenta,bluegreen,mycolor}[bluemagenta]{\def\cthesis@colortheme{\themenr}}
 \setkeys[ct]{cthesis}{colortheme=bluemagenta}
 
 % OPTION bibsys
@@ -172,6 +172,11 @@
 	\ct@cthesis@updatecolors%
 }
 
+% sets the my color theme (color1/color2)
+\def\cthesissetcolormycolor{%
+	\cthesissetcolor{cmyk}{0.86, .41, .60, .23}{0.86, .41, .60, .23}%
+}
+
 % sets the blue-magenta color theme (blue/magenta)
 \def\cthesissetcolorbluemagenta{%
 	\cthesissetcolor{cmyk}{1, .50, .10, .01}{.18, .98, .18, 0}%
@@ -196,7 +201,7 @@
 	\cthesissetcolorbluegreen
 \else
 	% all other cases
-	\cthesissetcolorbluemagenta
+	\cthesissetcolormycolor
 \fi
 
 

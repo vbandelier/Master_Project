@@ -34,7 +34,7 @@
 \newcommand{\thesisName}{Valentin Bandelier}
 \newcommand{\thesisSubject}{Master Thesis}
 \newcommand{\thesisDate}{\today}
-\newcommand{\thesisVersion}{0.1}
+\newcommand{\thesisVersion}{0.3}
 
 \newcommand{\Supervisor}{Fabio Nobile}
 \newcommand{\SupervisorDepartment}{\protect{EPFL}}
@@ -67,7 +67,7 @@
 	hangsection=true,%
 	hangsubsection=true,%
 	colorize=full,%
-	colortheme=bluemagenta,%
+	colortheme=mycolor,%
 % LLT: Use biber if using UTF8 encoding
 % 	bibsys=bibtex,%
 	bibsys=biber,%
@@ -80,7 +80,8 @@
 	pdfsubject={\thesisSubject},% 	- subject (PDF meta)
 	pdfauthor={\thesisName},	% 	- author (PDF meta)
 	plainpages=false,			% 	-
-	colorlinks=false,			% 	- colorize links?
+	colorlinks=true,	   		% 	- colorize links?
+    allcolors = [rgb]{0,0.5,0.5},
 	pdfborder={0 0 0},			% 	-
 	breaklinks=true,			% 	- allow line break inside links
 	bookmarksnumbered=true,		%
@@ -88,8 +89,9 @@
 }
 
 \usepackage{thmbox}
-\newtheorem[L, leftmargin=1.5em, rightmargin=1.5em, thickness=1.3pt]{thm}{Theorem}[chapter]
-\newtheorem[hskip=1em, leftmargin=1.5em, rightmargin=1.5em,thickness=1.3pt]{defn}[thm]{Definition}
+\newtheorem[L, leftmargin=1.5em, rightmargin=1.5em, thickness=1pt]{thm}{Theorem}[chapter]
+\newtheorem[hskip=1em, leftmargin=1.5em, rightmargin=1.5em,thickness=1pt]{prop}[thm]{Proposition}
+\newtheorem[hskip=1em, leftmargin=1.5em, rightmargin=1.5em,thickness=1pt]{defn}[thm]{Definition}
 
 % **************************************************
 % Document CONTENT
@@ -132,6 +134,7 @@
 
 \input{content/chapter-introduction}
 \input{content/chapter-Levy-processes}
+\input{content/chapter-models}
 \input{content/chapter-numerical-methods}
 %\input{content/chapter-related-work} % INCLUDE: related work
 %\input{content/chapter-system}	% INCLUDE: system

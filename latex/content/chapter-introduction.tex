@@ -3,7 +3,9 @@
 
 \cleanchapterquote{Finance is the art of passing currency from hand to hand until it finally disappears.}{Robert W. Sarnoff}{(1918-1997)}
 
-This thesis presents different numerical methods for pricing FX-TARN under L\'evy processes. In general, options with path dependents payoff, such as this product, are evaluated by Monte Carlo simulations. We will describe two other methods based on Finite Difference (FD) and Fast Fourier Transform (FFT). The initial chapter starts, in Section \ref{sec:intro:motivation}, with an historic of existing works that allowed this project to born. Then, in Section \ref{sec:intro:description}, the FX-TARN product is presented.  
+This thesis presents different numerical methods for pricing FX-TARN under L\'evy processes. In general, options with path dependents payoff, such as this product, are evaluated by Monte Carlo simulations. We will describe two other methods based on Finite Difference (FD) and Fast Fourier Transform (FFT). The initial chapter starts, in Section \ref{sec:intro:motivation}, with an historic of existing works that allowed this project to born. Then, in Section \ref{sec:intro:description}, the FX-TARN product is presented. In section \ref{sec:intro:term_sheet}, an example of term sheet illustrates this exotic product.
+
+Finally, the chapter concludes with an overview of the thesis in section \ref{sec:intro:overview}.
 
 \section{Motivation}
 \label{sec:intro:motivation}
@@ -55,5 +57,8 @@ Finally, the net present value of FX-TARN in domestic currency for FX rate reali
 \[P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,\]
 where $B_d(t_0,t_n)^{-1}$ is the domestic discounting factor from $t_n$ to $t_0$.
 
-\subsection*{Example}
-\label{sec:TARN:Example}
+\section{Example of Term Sheet}
+\label{sec:intro:term_sheet}
+
+\section{Overview of the Thesis}
+\label{sec:intro:overview}
