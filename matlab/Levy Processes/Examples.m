@@ -1,6 +1,5 @@
 clear 
 clc
-close all
 
 T = 1;
 N = 1e3;
