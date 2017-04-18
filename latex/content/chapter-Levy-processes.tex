@@ -3,11 +3,11 @@
 
 \cleanchapterquote{Paul L\'evy was a painter in the probabilistic world.}{Michel Lo\`eve}{(1907-1979)}
 
-The L\'evy processes play a central role in mathematical finance. They can describe the reality of financial markets in more accurate way than models based on the geometric Brownian motion used in particular in Black-Scholes model. Indeed we can observe in the real world that the asset price processes have jumps. Moreover, the log returns of the underlying have empirical distribution with fat tails and skewness which deviates from normality supposed by Black and Scholes. We begin this chapter, in section \ref{sec:Levy:definitions}, with the definition of a L\'evy process and expose its fundamental properties. Next, in section \ref{sec:Levy:theorems}, we presents two main results about L\'evy processes which are the L\'evy-Khinchine formula and the L\'evy-Itô decomposition. In section \ref{sec:Levy:Levy_measure}, the L\'evy measure and  path properties of a L\'evy process are exposed. Finally, the section \ref{sec:Levy:exponential_processes} presents the class of exponential L\'evy processes used to describe the asset price in financial modeling.
+The L\'evy processes play a central role in mathematical finance. They can describe the reality of financial markets in a more accurate way than models based on the geometric Brownian motion used in particular in Black-Scholes model. Indeed we can observe in the real world that the asset price processes have some jumps. Moreover, the log returns of the underlying have empirical distribution with fat tails and skewness which deviates from normality supposed by Black and Scholes. We begin this chapter, in section \ref{sec:Levy:definitions}, with the definition of a L\'evy process and expose its fundamental properties. Next, in section \ref{sec:Levy:theorems}, we presents two main results about L\'evy processes which are the L\'evy-Khinchine formula and the L\'evy-Itô decomposition. In section \ref{sec:Levy:Levy_measure}, the L\'evy measure and  path properties of a L\'evy process are exposed. Finally, the section \ref{sec:Levy:exponential_processes} presents the class of exponential L\'evy processes used to describe the asset price in financial modeling.
 
 \section{Definitions and properties}
 \label{sec:Levy:definitions}
-The L\'evy processes, which are the continuous-time case of random walks, are ingredients for building continuous-time stochastic models. The simplest L\'evy process is the linear drift. The Wiener process, Poisson process and compound Poisson process are the most famous examples of L\'evy processes. We will see later in this chapter that the sum of a linear drift, a Wiener process and a compound Poisson process is again a L\'evy process. It is called a \textit{L\'evy jump-diffusion} process.
+The L\'evy processes, which are the continuous-time case of random walks, are ingredients for building continuous-time stochastic models. The simplest L\'evy process is the linear drift. The Wiener process, Poisson process, and compound Poisson process are the most famous examples of L\'evy processes. We will see later in this chapter that the sum of a linear drift, a Wiener process, and a compound Poisson process is again a L\'evy process. It is called a \textit{L\'evy jump-diffusion} process.
 
 \begin{defn}[Wiener Process]\label{def:wiener}
 A stochastic process $W = \{W_t,t\geq 0\}$, with $W_0=0$, is a \textbf{Wiener process}, also called a standard Brownian motion, on a probability space $(\Omega,\mathcal{F},\mathbb{P})$ if:
@@ -36,18 +36,18 @@ This process has the following properties:
 When the process is characterized by a constant intensity parameter $\lambda$, we say that the process is homogeneous. If the intensity parameter varies with time $t$ as $\lambda(t)$, the process is said to be non-homogeneous.
 \end{defn}
 
-The Poisson process, which bears the name of the French physicist and mathematician Sim\'eon Denis Poisson, defines a counting process. It counts the number of random times $(T_n)$ which occur in $[0,t]$. Therefore, this is an increasing pure jump process. The jumps of size 1 occur at times $T_n$ and the intervals between two jumps are exponentially distributed. If we compare definitions \ref{def:wiener} and \ref{def:poisson}, we can see that only property 4 differs between the two processes, only the distribution changes. The main idea of a L\'evy process is to ignore the distribution of increments.
+The Poisson process, which bears the name of the French physicist and mathematician Sim\'eon Denis Poisson, defines a counting process. It counts the number of random times $(T_n)$ which occur in $[0,t]$. Therefore, this is an increasing pure jump process. The jumps of size 1 occur at times $T_n$ and the intervals between two jumps are exponentially distributed. If we compare definitions \ref{def:wiener} and \ref{def:poisson}, we can see that only the fourth property differs between the two processes, only the distribution changes. The main idea of a L\'evy process is to ignore the distribution of increments.
 
 \begin{defn}[L\'evy process]
 A cadlag stochastic process $X =\{X_t,t\geq 0\}$ on $(\Omega,\mathcal{F},\mathbb{P})$ with real values is called a \textbf{L\'evy process} if it has the following properties:
 \begin{my_list_num}
 \item $X$ has independent increments, i.e. $(X_{t+s}-X_t)$ is independent of $\mathcal{F}_t$ for any $s>0$. 
 \item $X$ has stationary increments, i.e. the distribution of $(X_{t+s}-X_t)$ does not depend on $t$. 
-\item $X$ is stochastically continuous, i.e. $\forall \epsilon>0: \lim_{s \to 0}\mathbb{P}(|X_{t+s}-X_t|<\epsilon)=0.$
+\item $X$ is stochastically continuous, i.e. $$\forall \epsilon>0: \lim_{s \to 0}\mathbb{P}(|X_{t+s}-X_t|<\epsilon)=0.$$
 \end{my_list_num}
 \end{defn}
 
-The third condition does not imply that the sample paths are continuous. In fact the Brownian motion is the only (non-deterministic) L\'evy process with continuous sample paths. This condition serves to exclude jumps at non-random times. In other words, for a given $t$, the probability of seeing a jump at $t$ is zero, discontinuities occur at random time. The compound Poisson process is a good example of L\'evy process.
+The third condition does not imply that the sample paths are continuous. In fact, the Brownian motion is the only (non-deterministic) L\'evy process with continuous sample paths. This condition serves to exclude jumps at non-random times. In other words, for a given $t$, the probability of seeing a jump at $t$ is zero, discontinuities occur at random time. The compound Poisson process is a good example of a L\'evy process.
 
 \begin{defn}[Compound Poisson process]
 A \textbf{compound Poisson process} with intensity $\lambda > 0$ and jump size distribution $f$ is a stochastic process $X=\{X_t,t\geq 0\}$ defined as 
@@ -57,10 +57,10 @@ where jumps size $Y_i$ are i.i.d. with the density function $f$ and $N=\{N_t,t\g
 We can easily deduce the following properties from this definition:
 \begin{my_list_num}
 \item The sample paths of $X$ are cadlag piecewise constant functions.
-\item The jump times $(T_i)_{i\geq 1}$ have the same law as the jump times of the Poisson process $N_t$. They can be expressed as partial sums of independent exponential random variable with parameter $\lambda$.
+\item The jump times $(T_i)_{i\geq 1}$ have the same law as the jump times of the Poisson process $N_t$. They can be expressed as partial sums of an independent exponential random variable with parameter $\lambda$.
 \item The jump sizes $(Y_i)_{i\geq1}$ are i.i.d. with law $f$.
 \end{my_list_num}
-We can also see that the Poisson process itself can be seen as a compound Poisson process with $Y_i \equiv 1$. This explains the origin of the name of the definition. Finally the compound Poisson process allows us to work with a process with jump sizes can have an arbitrary distribution.
+We can also see that the Poisson process itself can be seen as a compound Poisson process with $Y_i \equiv 1$. This explains the origin of the name of the definition. Finally, the compound Poisson process allows us to work with jump sizes which have an arbitrary distribution.
 
 \section{L\'evy-Khinchine formula and L\'evy-Itô decomposition}
 \label{sec:Levy:theorems}
@@ -101,7 +101,7 @@ $$\int_\mathbb{R} \min\{1,|x|^2\}\nu(dx)<\infty.$$
 In term of this triplet the characteristic function of the L\'evy process equals:
 \begin{align}\label{eq:LK}
 \Phi(u) &= \mathbb{E}\left[\exp(i u X_t)\right]\nonumber\\
-&= \exp\left(t\left(i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\nu(dx)\right)\right)\right).
+&= \exp\left(t\left(i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx)\right)\right).
 \end{align}
 (The proof can be find in \citeauthor{TC03} \citeyearpar{TC03})
 \end{thm}
@@ -112,7 +112,7 @@ The triplet $(\mu,\sigma,\nu)$ is called the \textit{L\'evy} or \textit{characte
 Consider a triplet $(\mu,\sigma,\nu)$ where $\mu\in\mathbb{R}$, $\sigma\geq 0$ and $\nu$ is a measure satisfying $\nu(\{0\}) = 0$ and
 $$\int_\mathbb{R} \min\{1,|x|^2\}\nu(dx)<\infty.$$
 Then, there exists exists a probability space $(\Omega,\mathcal{F},\mathbb{P})$ on which four independent L\'evy processes exist, $X^{(1)},X^{(2)},X^{(3)}$ and $X^{(4)}$, where $X^{(1)}$ is a constant drift, $X^{(2)}$ is a Wiener process, $X^{(3)}$ is a compound Poisson process and $X^{(4)}$ is a square integrable (pure jump) martingale with an a.s. countable number of jumps of magnitude less than 1 on each finite time interval. Taking $X = X^{(1)}+X^{(2)}+X^{(3)}+X^{(4)}$, we have that there exists a probability space on which a L\'evy process $X = \{X_t,0\leq t \leq T\}$ with characteristic exponent
-$$\Psi(u) = i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\nu(dx)\right),$$
+$$\Psi(u) = i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx),$$
 for all $u\in\mathbb{R}$, is defined.
 
 (See \citeauthor{Kyp06} \citeyearpar{Kyp06} for the proof)
@@ -149,7 +149,7 @@ Let $X =\{X_t,t\geq 0\}$ be a L\'evy process with triplet $(\mu,\sigma,\nu)$.
 (See Theorem 21.3 in \citeauthor{Sat99} \citeyearpar{Sat99} for the proof)
 \end{prop}
 
-Then the L\'evy jump models can be classified into two categories from their L\'evy measure: jump-diffusion or pure jump models. The jump-diffusions models are modeled by a Gaussian part (Wiener process) plus a jump part (compound Poisson process) with finitely many jumps in every time interval, i.e. finite activity models. The second category consists of models with infinite number of jumps in every interval, i.e. infinite activity models. In these models, there is no Gaussian part since the dynamics of jumps are already rich enough to generate nontrivial small time behavior. Merton model and Variance Gamma model are respectively good examples of jump-diffusion and pure jump models. We can see in figure \ref{fig:Levy:densities} that the L\'evy density in Variance Gamma model allows infinite number of jumps, while the Merton model has a finite number of jumps on every time interval.
+Then the L\'evy jump models can be classified into two categories from their L\'evy measure: jump-diffusion or pure jump models. The jump-diffusions models are modeled by a Gaussian part (Wiener process) combined with a jump part (compound Poisson process), that has finitely many jumps in every time interval, i.e. finite activity models. The second category consists of models with an infinite number of jumps in every interval, i.e. infinite activity models. In these models, there is no need of Gaussian part because the dynamics of jumps are already rich enough to generate nontrivial small time behavior. Merton model and Variance Gamma model are respectively good examples of jump-diffusion and pure jump models. We can see in figure \ref{fig:Levy:densities} that the L\'evy density in Variance Gamma model allows infinite number of jumps, while the Merton model has a finite number of jumps on every time interval.
 
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/Levy_densities}
@@ -160,8 +160,21 @@ Then the L\'evy jump models can be classified into two categories from their L\'
 \section{Exponential L\'evy processes}
 \label{sec:Levy:exponential_processes}
 
-In finance, the standard is not to model the stock price process directly as a L\'vy process, but as an exponential of a L\'vy process. Hence, the stock price is given by
-$$S_t = S_0 e^{X_t}.$$
-The log returns $\log(S_{t+s}/S_t)$ of such model 
+In finance, it is common to model the stock price process as exponentials of a L\'evy process:
+$$S_t = S_0 e^{X_t}. $$
+The advantage of this representation is that the log returns $\log(S_{t+s}/S_t)$, for $s,t>0,$ follow the distribution of increments of length $s$ dictate by the L\'evy process $X=\{X_t,t\geq0\}$. Thus they have independent and stationary increments. If we choose $X_0=0$, we get $e^{X_0}=1$ and therefore $S_0=S_0e^{X_0}=S_0$. 
 
- 
+In order to avoid an arbitrage opportunity, the discounted stock price process $\hat{S}=\{\hat{S}_t = e^{-rt}S_t,t\geq0\}$ has to be a martingale under an equivalent martingale measure $\mathbb{Q}$, called the \textit{risk neutral measure}. In other words, we are looking for a measure $\mathbb{Q}$ such that
+$$\mathbb{E}^\mathbb{Q}\left[\hat{S}_T|\mathcal{F}_t\right]=\hat{S_t}.$$
+A first approach is proposed by \citeauthor{Ger94} \citeyearpar{Ger94} using the Esscher transform. This method is a bit complicated and doesn't seem corresponding to the measure chosen by the market. See \citeauthor{Sch03} \citeyearpar{Sch03} for more details.
+
+A second approach consists to correct the mean of the exponential L\'evy process to obtain an equivalent martingale measure $\mathbb{Q}$. This measure is known as the \textit{mean-correcting martingale measure}. The idea behind this method is to change the drift (or add a drift if there is no drift in the process) so that the discounted stock price $\hat{S} = \{\hat{S}_t=e^{-rt}S_t, t\geq 0\}$ becomes a martingale.
+
+
+% In the case of  a jump-diffusion model, we have
+% $$S_t = S_0\exp\left(\mu t+\sigma W_t + \sum_{i=1}^{N_t}Y_i\right)=S_0\exp\left(\mu t+\sigma W_t + J_t\right),$$
+% where $J_t$ is the compound Poisson process that dictates the jumps.
+
+% Intuitively, between the jumps, the process evolves like a geometric Brownian motion (Black-Scholes model), and after each jump, $S_t$ is multiplied by the factor $e^{Y_i}$. Thus we can see it as a generalization of the Black-Scholes model:
+% $$\frac{dS_t}{S_{t^-}}=\tilde{\mu} dt + \sigma dW_t + dJ_t.$$
+% The notation $S_{t^-}$ is used to say that whenever there is a jump, we have to take the value just before the jump in the formula.
