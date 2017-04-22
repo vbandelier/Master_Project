@@ -1,13 +1,144 @@
-\chapter{Financial Models}
+\chapter{Financial Mathematic Models}
 \label{sec:models}
 
 \cleanchapterquote{Citation.}{Author}{(1***-1***)}
 
+In this chapter, we will take a look on some popular models in financial mathematics. To begin, in section \ref{sec:models:BS} we will describe the Black-Scholes model \citeyearpar{BS73} and compute its risk-neutral characteristic function. In section \ref{sec:models:jump_diffusion} we will talk about \textit{jump-diffusion models}. These models evolve with a diffusion process, punctuated by jumps at random intervals. We can model this behavior with a Wiener process and a compound Poisson process to characterized the jumps with size distribution $f_J$. In fact, we will talk about two examples: the Merton model \citeyearpar{Mer76} and the Kou model \citeyearpar{Kou02}. Finally, the section \ref{sec:models:pure_jump} is devoted to \textit{pure jump models}. This category of models is characterized by infinite number of jumps in any time interval, called \textit{infinite activity} models. These particular models don't need a Brownian part because the dynamic of the process is already modeled by an infinity of small jumps. However, we will see that it is possible to construct these models by a Brownian subordination. At the end of this chapter we will have seen two examples which are the Normal Inverse Gaussian (NIG) model and the Variance Gamma (VG) model.
+
 \section{Black-Scholes model}
 \label{sec:models:BS}
+The most famous of all asset price model is the Black-Scholes model \citeyearpar{BS73}. In this model, the stock price $S=\{S_t,t\geq0\}$ follows a geometric Brownian motion, i.e.
+$$dS_t = \mu S_t dt + \sigma S_t dW_t,$$
+where $\mu$ and $\sigma$ are respectively the drift and the volatility of the process. This stochastic differential equation has a unique solution which is
+$$S_t = S_0e^{\left(\mu-\frac{1}{2}\sigma^2\right)t+\sigma W_t}.$$
+In fact this model is based on an exponential L\'evy process $X=\{X_t,t\geq0\}$ defined by
+$$X_t = \left(\mu - \frac{1}{2}\sigma^2\right)t + \sigma W_t.$$
+Hence his characteristic triplet is $\left(\mu-\frac{1}{2}\sigma^2,\sigma,0\right)$.
 
+\subsubsection*{Risk-neutral Characteristic Function}
+Recall that $X_t$ in this model is described by the characteristic triplet $(\gamma, \sigma, 0)$ with $\gamma=\left(\mu-\frac{1}{2}\sigma^2\right)$. Thus the L\'evy-Khintchine formula \ref{thm:Levy:LK} gives us the characteristic function of $X_t$
+$$\Phi_t(u)= \exp\left\{t\left(\left(\mu-\frac{1}{2}\sigma^2\right)iu -\frac{1}{2}\sigma^2 u^2\right)\right\}.$$
+Hence the characteristic exponent of $X_1$ evaluated at $-i$ is
+$$ \Psi(-i) = \mu -\frac{1}{2}\sigma^2+\frac{1}{2}\sigma^2 =\mu .$$
+With equation \eqref{eq:rn_drift}, we obtain the risk-neutral drift
+$$\gamma^\ast = r-q-\frac{1}{2}\sigma^2,$$
+and the risk-neutral characteristic function is given by
+$$\Phi_t^{\text{RN}}(u) = \exp\left\{t\left(i\gamma^\ast u -\frac{1}{2}\sigma^2u^2\right)\right\}.$$
+Finally the risk-neutral stock price process is defined by
+\begin{align*}
+S_t&=S_0\exp\left\{\left(r-q-\frac{1}{2}\sigma^2\right)t+\sigma W_t\right\}\\
+&=S_0\exp\left\{X_t^\text{BS}(r,q,\sigma)\right\}
+\end{align*}
 \section{Jump-diffusion models}
 \label{sec:models:jump_diffusion}
 
+Consider now the L\'evy jump-diffusion process $X=\{X_t,t\geq0\}$. It is modeled by a drifted Brownian motion and a compound Poisson process. Therefore we can write it in the form
+$$X_t = \gamma t +\sigma W_t +\sum_{i=1}^{N_t}Y_i,$$
+with $\gamma \in \mathbb{R}, \sigma \in \mathbb{R}_+, W = \{W_t,t\geq0\}$ is a Wiener process, $N =\{N_t,t\geq0\}$ is a Poisson process with parameter $\lambda$ and $Y=\{Y_t,t\geq0\}$ is an i.i.d sequence of random variables with density $f_J$.
+
+The characteristic function of $X_t$ is given by
+\begin{align*}
+\Phi_t(u) &= \mathbb{E}\left[e^{iuX_t}\right]\\
+&=\mathbb{E}\left[\exp\left\{iu\left(\gamma t + \sigma W_t+\sum_{i=1}^{N_t}\right)\right\}\right]\\
+&= \exp\left\{iu\gamma t\right\}\mathbb{E}\left[\exp\left\{iu \sigma W_t\right\}\right]\mathbb{E}\left[\exp\left\{iu\sum_{i=1}^{N_t}Y_i\right\}\right],
+\end{align*}
+by independence of $W_t$ and $N_t$.
+Since $W_t\sim\mathcal{N}(0,\sigma^2 t)$ and $N_t \sim \text{Poisson}(\lambda t)$, we have
+\begin{align*}
+\mathbb{E}\left[e^{iu\sigma W_t}\right]&=e^{-\frac{1}{2}\sigma^2 u^2 t}, \\
+\mathbb{E}\left[e^{iu\sum_{i=1}^{N_t}Y_i}\right]&=\sum_{n=0}^\infty
+\mathbb{E}\left[e^{iunY}\right]\mathbb{P}(N_t=n)\\
+&=\sum_{n=0}^\infty \Phi_Y(u)^n\frac{(\lambda t)^n}{n!}e^{-\lambda t}\\
+&=e^{\lambda t \left(\Phi_Y(u)-1\right)}\\
+&=e^{\lambda t \int_\mathbb{R}\left(e^{iuy}-1\right)F(dy)}.
+\end{align*}
+Hence we get
+\begin{align}\label{eq:CF_Ljd}
+\Phi_t(u) &= \exp\left\{iu\gamma t\right\}\exp\left\{-\frac{1}{2}\sigma^2 u^2 t\right\}\exp\left\{\lambda t \int_\mathbb{R}\left(e^{iuy}-1\right)f_J(dy)\right\}\nonumber\\
+&= \exp\left\{t\left(iu\gamma -\frac{1}{2}\sigma^2 u^2 + \int_\mathbb{R}\left(e^{iuy}-1\right)\lambda f_J(dy)\right)\right\}.
+\end{align}
+Then we have a characterization of L\'evy jump-diffusion process by its characteristic triplet $(\gamma,\sigma,\lambda\cdot f_J)$.
+
+\subsection{Merton Model}
+Under the Black-Scholes model, the stock price is supposed to be continuous. Unfortunately this is not the case in reality. Merton \citeyearpar{Mer76} is the first to use the notion of discontinuous price process to model asset returns. In his model, Merton uses a Normal distribution to model the jump size, i.e. $f_J\sim \mathcal{N}(\alpha,\delta^2)$. Then the L\'evy processes is
+$$X_t = \mu t +\sigma W_t +\sum_{i=0}^{N_t} Y_i,$$
+with $Y_i\sim \mathcal{N}(\alpha,\delta^2)$. Hence, the density function of the jump size is
+$$f_J(x) = \frac{1}{\sqrt{2\pi}\delta}e^{-\frac{(x-\alpha)^2}{2\delta^2}},$$
+and the L\'evy density is
+$$\nu(x) = \lambda f_J(x) = \frac{\lambda}{\sqrt{2\pi}\delta}e^{-\frac{(x-\alpha)^2}{2\delta^2}}.$$
+Then there are four parameters in the Merton model excluding the drift parameter $\mu$:
+\begin{my_list_item}
+\item $\sigma$ - the diffusion volatility, 
+\item $\lambda$ - the jump intensity,
+\item $\alpha$ - the mean of jump size,
+\item $\delta$ - the standard deviation of jump size.
+\end{my_list_item}
+
+\subsubsection*{Risk-neutral Characteristic Function}
+With the help of equation \ref{eq:CF_Ljd}, we obtain the characteristic function of the model under the real world measure $\mathbb{P}$:
+\begin{align*}
+\Phi_t(u) &= \exp\left\{t\left(iu\gamma -\frac{1}{2}\sigma^2 u^2 + \int_\mathbb{R}\left(e^{iuy}-1\right)\lambda f_J(dy)\right)\right\}\\
+&= \exp\left\{t\left(iu\gamma - \frac{1}{2}\sigma^2 u^2 + \lambda\left( \Phi_Y(u)-1\right)\right)\right\}\\
+&= \exp\left\{t\left(iu\gamma - \frac{1}{2}\sigma^2 u^2 + \lambda\left( e^{iu\alpha - \frac{1}{2}\delta^2 u^2}-1\right)\right)\right\},
+\end{align*}
+where $\Phi_Y$ is the characteristic function of a jump $Y$. Hence the model is characterized by the triplet $(\gamma,\sigma,\lambda \cdot f_J)$.
+
+We can now compute the characteristic exponent in order to apply the mean-correction and get the risk-neutral process.
+$$\Psi(-i) = \gamma +\frac{1}{2}\sigma^2 + \lambda\left(e^{\alpha+\frac{1}{2}\delta^2}-1\right).$$
+Applying equation \eqref{eq:rn_drift}, we obtain the risk-neutral drift
+$$\gamma^\ast = (r-q) -\frac{1}{2}\sigma^2 - \lambda\left(e^{\alpha+\frac{1}{2}\delta^2}-1\right),$$
+and the risk-neutral characteristic function of the Merton jump-diffusion model is given by
+$$\Phi_t^{\text{RN}}(u) = \exp\left\{t\left(i\gamma^\ast u -\frac{1}{2}\sigma^2 u^2 + \lambda\left(e^{i\alpha u -\frac{1}{2}\delta^2 u^2}-1\right)\right)\right\}.$$
+The risk-neutral stock price process is finally
+$$S_t = S_0\exp\left\{X_t^\text{Mer}(r,q,\sigma,\lambda,\alpha,\delta)\right\},$$
+where $X^\text{Mer}$ is the L\'evy jump-diffusion process characterized by the triplet $(\gamma^\ast,\sigma,\lambda\cdot f_J)$.
+
+\subsection{Kou Model}
+The Kou model \citeyearpar{Kou02} is very similar to Merton's one. The only difference is in the distribution of the jump size, which is double-exponential. Then the L\'evy process under Kou model is
+$$X_t = \gamma t +\sigma W_t +\sum_{i=0}^{N_t} Y_i,$$
+with $Y_i\sim \text{DoubleExp}(p,\eta_1,\eta_2)$. In other words, jump size has the density
+$$f_J(x) = \begin{cases}
+p\cdot\eta_1e^{-\eta_1 x}, &\text{if } x \geq 0,\\
+(1-p)\cdot\eta_2e^{\eta_2x}, &\text{if } x <0.
+\end{cases}$$
+The probability $p$ represents the probability of an upward jump and $(1-p)$ the probability of a downward jump. Thus the L\'evy density is given by
+$$\nu(x) = \lambda\left(p\cdot\eta_1e^{-\eta_1 x} \mathbf{1}_{x\geq0}+(1-p)\cdot\eta_2e^{\eta_2x}\mathbf{1}_{x<0}\right).$$
+Then there are five parameters in the Kou model excluding the drift parameter $\mu$:
+\begin{my_list_item}
+\item $\sigma$ - the diffusion volatility, 
+\item $\lambda$ - the jump intensity,
+\item $p$ - the probability of an upward jump,
+\item $\eta_1, \eta_2$ - control the decay of the tails in the distribution.
+\end{my_list_item}
+\subsubsection*{Risk-neutral Characteristic Function}
+A preliminary computation of the characteristic function of a double exponential random variable $Y$ is needed.
+\begin{align*}
+\Phi_Y(u)&=\int_\mathbb{R} e^{iuy}f_J(y) dy\\
+&=\int_0^\infty e^{iuy}p\cdot \eta_1e^{-\eta_1 y}dy + \int_{-\infty}^0e^{iuy}(1-p)\cdot\eta_2e^{\eta_2 y}dy\\
+&= p\cdot\eta_1\left[\frac{e^{(iu-\eta_1)y}}{iu-\eta_1}\right]_0^\infty+(1-p)\cdot\eta_2\left[\frac{e^{(iu+\eta_2)y}}{iu+\eta_2}\right]_{-\infty}^0\\
+&=\frac{p\cdot\eta_1}{\eta_1-iu}+\frac{(1-p)\cdot\eta_2}{\eta_2+iu}
+\end{align*}
+Now as for Merton model, the equation \eqref{eq:CF_Ljd} gives us the characteristic function of $X_t$
+\begin{align*}
+\Phi_t(u)&=\exp\left\{t\left(iu\gamma-\frac{1}{2}\sigma^2 u^2 + \lambda\left(\Phi_Y(u)-1\right)\right)\right\}\\
+&=\exp\left\{t\left(iu\gamma -\frac{1}{2}\sigma^2u^2 + \lambda\left(\frac{p\cdot\eta_1}{\eta_1-iu}+\frac{(1-p)\cdot\eta_2}{\eta_2+iu}-1\right)\right)\right\}.
+\end{align*}
+Hence the model is characterized by the triplet $(\gamma,\sigma,\lambda\cdot f_J)$.
+
+The characteristic exponent of this process gives us
+$$\Psi(-i) = \gamma + \frac{1}{2}\sigma^2 +\lambda \left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right).$$
+Consequently we obtain the risk-neutral drift
+$$\gamma^\ast = (r-q)- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right),$$
+and the risk-neutral characteristic function of the Double Exponential Kou jump-diffusion model
+$$\Phi_t^\text{RN}(u)=\exp\left\{t\left(i\gamma^\ast u -\frac{1}{2}\sigma^2 u^2 +\lambda\left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right)\right)\right\}.$$
+Therefore we can model the risk-neutral stock price process by
+$$S_t=S_0\exp\left\{X_t^\text{Kou}(r,q,\sigma,\lambda,p,\eta_1,\eta_2)\right\},$$
+where $X_t^\text{Kou}$ is the L\'evy jump-diffusion process characterized by the triplet $(\gamma^\ast,\sigma,\lambda\cdot f_J)$.
+
 \section{Pure jump models}
 \label{sec:models:pure_jump}
+
+\subsection{Normal Inverse Gaussian Model}
+\subsubsection*{Risk-neutral Characteristic Function}
+\subsection{Variance Gamma Model}
+\subsubsection*{Risk-neutral Characteristic Function}

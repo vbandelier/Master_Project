@@ -3,7 +3,7 @@
 
 \cleanchapterquote{Paul L\'evy was a painter in the probabilistic world.}{Michel Lo\`eve}{(1907-1979)}
 
-The L\'evy processes play a central role in mathematical finance. They can describe the reality of financial markets in a more accurate way than models based on the geometric Brownian motion used in particular in Black-Scholes model. Indeed we can observe in the real world that the asset price processes have some jumps. Moreover, the log returns of the underlying have empirical distribution with fat tails and skewness which deviates from normality supposed by Black and Scholes. We begin this chapter, in section \ref{sec:Levy:definitions}, with the definition of a L\'evy process and expose its fundamental properties. Next, in section \ref{sec:Levy:theorems}, we presents two main results about L\'evy processes which are the L\'evy-Khinchine formula and the L\'evy-Itô decomposition. In section \ref{sec:Levy:Levy_measure}, the L\'evy measure and  path properties of a L\'evy process are exposed. Finally, the section \ref{sec:Levy:exponential_processes} presents the class of exponential L\'evy processes used to describe the asset price in financial modeling.
+The L\'evy processes play a central role in mathematical finance. They can describe the reality of financial markets in a more accurate way than models based on the geometric Brownian motion used in particular in Black-Scholes model. Indeed we can observe in the real world that the asset price processes have some jumps. Moreover, the log returns of the underlying have empirical distribution with fat tails and skewness which deviates from normality supposed by Black and Scholes. We begin this chapter, in section \ref{sec:Levy:definitions}, with the definition of a L\'evy process and expose its fundamental properties. Next, in section \ref{sec:Levy:theorems}, we presents two main results about L\'evy processes which are the L\'evy-Khinchine formula and the L\'evy-Itô decomposition. In section \ref{sec:Levy:Levy_measure}, the L\'evy measure and  path properties of a L\'evy process are exposed. Finally, the section \ref{sec:Levy:exponential_processes} presents the class of exponential L\'evy processes and the equivalent martingale measure used to describe the asset price in financial modeling.
 
 \section{Definitions and properties}
 \label{sec:Levy:definitions}
@@ -75,11 +75,11 @@ X_t = X_{t/n} + (X_{2t/n}-X_{t/n}) + \cdots + (X_t - X_{(n-1)t/n}),
 \end{equation}
 and the property of stationary and independent increments. Let define now the characteristic function and characteristic  exponent of $X_t$.
 
-\begin{defn}[Characteristic function and exponent]
+\begin{defn}[Characteristic function and exponent]\label{def:Levy:CF_CE}
 The \textbf{characteristic function} $\Phi_t$ of a random variable $X_t$ with cumulative distribution $F_t$ is given by
 $$\Phi_t(u) = \mathbb{E}\left[e^{iu X_t}\right]=\int_{-\infty}^{\infty}e^{i\theta x}dF_t(x).$$
 Its \textbf{characteristic exponent} is given by
-$$\Psi_t(u) = -\log\left(\mathbb{E}\left[e^{iu X_t}\right]\right),$$
+$$\Psi_t(u) = \log\left(\mathbb{E}\left[e^{iu X_t}\right]\right),$$
 for $u \in\mathbb{R}$ and $t>0$.
 \end{defn}
 
@@ -90,39 +90,39 @@ $$\Psi_t(u) = t\Psi_1(u).$$
 We can generalize this relation for all $t>0$ with the help of the almost sure continuity of $X$ and a sequence of rational $\{t_n, n\geq 1\}$ such that $t_n\downarrow t$.
 
 In conclusion, any L\'evy process has the property that for all $t>0$
-$$\mathbb{E}\left[e^{iu X_t}\right] = e^{-t\Psi(u)},$$
+$$\mathbb{E}\left[e^{iu X_t}\right] = e^{t\Psi(u)},$$
 where $\Psi(u) = \Psi_1(u)$ is the characteristic exponent of $X_1$.
 
 Then it is clear that each L\'evy process has an infinitely divisible distribution. This allows us to apply the celebrated L\'evy-Khinchine formula. 
 
-\begin{thm}[Lévy-Khintchine formula]
-Each L\'evy process can be characterized by a triplet $(\mu,\sigma,\nu)$ with $\mu \in \mathbb{R},\sigma \geq 0$ and $\nu$ a measure satisfying $\nu(\{0\}) = 0$ and
+\begin{thm}[Lévy-Khintchine formula]\label{thm:Levy:LK}
+Each L\'evy process can be characterized by a triplet $(\gamma,\sigma,\nu)$ with $\gamma \in \mathbb{R},\sigma \geq 0$ and $\nu$ a measure satisfying $\nu(\{0\}) = 0$ and
 $$\int_\mathbb{R} \min\{1,|x|^2\}\nu(dx)<\infty.$$
 In term of this triplet the characteristic function of the L\'evy process equals:
 \begin{align}\label{eq:LK}
-\Phi(u) &= \mathbb{E}\left[\exp(i u X_t)\right]\nonumber\\
-&= \exp\left(t\left(i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx)\right)\right).
+\Phi_t(u) &= \mathbb{E}\left[\exp(i u X_t)\right]\nonumber\\
+&= \exp\left(t\left(i\gamma u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx)\right)\right).
 \end{align}
 (The proof can be find in \citeauthor{TC03} \citeyearpar{TC03})
 \end{thm}
 
-The triplet $(\mu,\sigma,\nu)$ is called the \textit{L\'evy} or \textit{characteristic triplet}. Moreover, $\mu$ is called the \textit{drift term}, $\sigma$ the \textit{Gaussian} or \textit{diffusion coefficient} and $\nu(dx)$ is the \textit{L\'evy measure}, being the intensity of jumps of size $x$. This brings us to the following great result which is the L\'evy-Itô decomposition.
+The triplet $(\gamma,\sigma,\nu)$ is called the \textit{L\'evy} or \textit{characteristic triplet}. Moreover, $\gamma$ is called the \textit{drift term}, $\sigma$ the \textit{Gaussian} or \textit{diffusion coefficient} and $\nu(dx)$ is the \textit{L\'evy measure}, being the intensity of jumps of size $x$. This brings us to the following great result which is the L\'evy-Itô decomposition.
 
 \begin{thm}[L\'evy-Itô decomposition]
-Consider a triplet $(\mu,\sigma,\nu)$ where $\mu\in\mathbb{R}$, $\sigma\geq 0$ and $\nu$ is a measure satisfying $\nu(\{0\}) = 0$ and
+Consider a triplet $(\gamma,\sigma,\nu)$ where $\gamma\in\mathbb{R}$, $\sigma\geq 0$ and $\nu$ is a measure satisfying $\nu(\{0\}) = 0$ and
 $$\int_\mathbb{R} \min\{1,|x|^2\}\nu(dx)<\infty.$$
 Then, there exists exists a probability space $(\Omega,\mathcal{F},\mathbb{P})$ on which four independent L\'evy processes exist, $X^{(1)},X^{(2)},X^{(3)}$ and $X^{(4)}$, where $X^{(1)}$ is a constant drift, $X^{(2)}$ is a Wiener process, $X^{(3)}$ is a compound Poisson process and $X^{(4)}$ is a square integrable (pure jump) martingale with an a.s. countable number of jumps of magnitude less than 1 on each finite time interval. Taking $X = X^{(1)}+X^{(2)}+X^{(3)}+X^{(4)}$, we have that there exists a probability space on which a L\'evy process $X = \{X_t,0\leq t \leq T\}$ with characteristic exponent
-$$\Psi(u) = i\mu u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx),$$
+$$\Psi(u) = i\gamma u -\frac{1}{2}\sigma^2u^2+\int_\mathbb{R}\left(e^{iux}-1-iux\mathbf{1}_{\{|x|<1\}}\right)\nu(dx),$$
 for all $u\in\mathbb{R}$, is defined.
 
 (See \citeauthor{Kyp06} \citeyearpar{Kyp06} for the proof)
 \end{thm}
 
-The L\'evy process is characterized by its triplet $(\mu,\sigma,\nu)$. The simplest L\'evy process is the linear \textit{drift} with the triplet $(\mu,0,0)$. Adding a \textit{diffusion} component we get the triplet $(\mu,\sigma,0)$ which is the case of the Black-Scholes model. A \textit{pure jump} process will be identified by the triplet $(0,0,\nu)$ and finally a \textit{L\'evy jump-diffusion} process will have the complete triplet $(\mu,\sigma,\nu)$. The figure~\ref{fig:Levy:examples} illustrates some examples of L\'evy processes.
+The L\'evy process is characterized by its triplet $(\gamma,\sigma,\nu)$. The simplest L\'evy process is the linear \textit{drift} with the triplet $(\gamma,0,0)$. Adding a \textit{diffusion} component we get the triplet $(\gamma,\sigma,0)$ which is the case of the Black-Scholes model. A \textit{pure jump} process will be identified by the triplet $(0,0,\nu)$ and finally a \textit{L\'evy jump-diffusion} process will have the complete triplet $(\gamma,\sigma,\nu)$. The figure~\ref{fig:Levy:examples} illustrates some examples of L\'evy processes.
 
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/processes_examples}
-	\caption{Examples of L\'evy processes: a linear drift with L\'evy triplet $(2,0,0)$, a Wiener process with L\'evy triplet $(2,1,0)$, a compound Poisson process with L\'evy triplet $(0,0,\lambda\times f_J)$, where $\lambda = 5$, and $f_J\sim\mathcal{N}(0,1)$ and finally a jump-diffusion process with L\'evy triplet $(2,1,\lambda\times f_J)$.}
+	\caption{Examples of L\'evy processes: a linear drift with L\'evy triplet $(2,0,0)$, a Wiener process with L\'evy triplet $(2,1,0)$, a compound Poisson process with L\'evy triplet $(0,0,\lambda\cdot f_J)$, where $\lambda = 5$, and $f_J\sim\mathcal{N}(0,1)$ and finally a jump-diffusion process with L\'evy triplet $(2,1,\lambda\cdot f_J)$.}
 	\label{fig:Levy:examples}
 \end{figure}
 
@@ -141,7 +141,7 @@ More generally, if $\nu$ is a finite measure, that is $\lambda = \nu(\mathbb{R})
 then we can defined $f(dx) = \frac{\nu(dx)}{\lambda}$, which is a probability measure. Then, $\lambda$ is the expected number of jumps and $f(dx)$ is the distribution of the jump size $x$. If $\nu(\mathbb{R}) = \infty$, an infinite number of (small) jumps is expected.
 
 \begin{prop}[Finite and infinite activity]
-Let $X =\{X_t,t\geq 0\}$ be a L\'evy process with triplet $(\mu,\sigma,\nu)$.
+Let $X =\{X_t,t\geq 0\}$ be a L\'evy process with triplet $(\gamma,\sigma,\nu)$.
 \begin{my_list}
 \item If $\nu(\mathbb{R})<\infty$ then almost all paths of $X$ have a finite number of jumps on every compact interval. In that case, the L\'evy process has \textbf{finite activity}.
 \item If $\nu(\mathbb{R})=\infty$ then almost all paths of $X$ have a infinite number of jumps on every compact interval. In that case, the L\'evy process has \textbf{infinite activity}.
@@ -157,24 +157,60 @@ Then the L\'evy jump models can be classified into two categories from their L\'
 	\label{fig:Levy:densities}
 \end{figure}
 
-\section{Exponential L\'evy processes}
+\section{Exponential L\'evy processes and Equivalent martingale measure}
 \label{sec:Levy:exponential_processes}
 
 In finance, it is common to model the stock price process as exponentials of a L\'evy process:
 $$S_t = S_0 e^{X_t}. $$
-The advantage of this representation is that the log returns $\log(S_{t+s}/S_t)$, for $s,t>0,$ follow the distribution of increments of length $s$ dictate by the L\'evy process $X=\{X_t,t\geq0\}$. Thus they have independent and stationary increments. If we choose $X_0=0$, we get $e^{X_0}=1$ and therefore $S_0=S_0e^{X_0}=S_0$. 
+The advantage of this representation is that the stock prices process is nonnegative and the log returns $\log(S_{t+s}/S_t)$, for $s,t>0,$ follow the distribution of increments of length $s$ dictate by the L\'evy process $X=\{X_t,t\geq0\}$. Thus they have independent and stationary increments. If we choose a process such that $X_0=0$, we get $e^{X_0}=1$ and therefore $S_0=S_0e^{X_0}=S_0$. 
 
-In order to avoid an arbitrage opportunity, the discounted stock price process $\hat{S}=\{\hat{S}_t = e^{-rt}S_t,t\geq0\}$ has to be a martingale under an equivalent martingale measure $\mathbb{Q}$, called the \textit{risk neutral measure}. In other words, we are looking for a measure $\mathbb{Q}$ such that
+In order to avoid an arbitrage opportunity, the discounted and reinvested process $\hat{S}=\{\hat{S}_t = e^{-(r-q)t}S_t,t\geq0\}$ has to be a martingale under an \textit{equivalent martingale measure} (EMM) $\mathbb{Q}$, called the \textit{risk-neutral measure}. Recall that $r$ is the \textit{(domestic) risk-free rate} and $q$ is the \textit{continuous dividend yield (or foreign interest rate)} of the asset. In other words, we are looking for a measure $\mathbb{Q}$ such that
 $$\mathbb{E}^\mathbb{Q}\left[\hat{S}_T|\mathcal{F}_t\right]=\hat{S_t}.$$
-A first approach is proposed by \citeauthor{Ger94} \citeyearpar{Ger94} using the Esscher transform. This method is a bit complicated and doesn't seem corresponding to the measure chosen by the market. See \citeauthor{Sch03} \citeyearpar{Sch03} for more details.
+Since the market is not complete under L\'evy processes, there exists several ways to find a risk-neutral measure. We will see two different methods to determine this probability measure.
 
-A second approach consists to correct the mean of the exponential L\'evy process to obtain an equivalent martingale measure $\mathbb{Q}$. This measure is known as the \textit{mean-correcting martingale measure}. The idea behind this method is to change the drift (or add a drift if there is no drift in the process) so that the discounted stock price $\hat{S} = \{\hat{S}_t=e^{-rt}S_t, t\geq 0\}$ becomes a martingale.
+\subsection{Esscher transform method}
+The first approach to find an EMM $\mathbb{Q}$ is proposed by \citeauthor{G+94} \citeyearpar{G+94} using the Esscher transform. Suppose that the L\'evy process $X=\{X_t,t\geq0\}$ has a density function $f(x;t)$. Now multiply this density by an exponential factor $e^{\theta t}$ to get a new density function:
+$$f(x;t,\theta) = \frac{e^{\theta x}f(x;t)}{\int_{\mathbb{R}}e^{\theta y}f(y;t)dy}.$$
+Note that the denominator ensures the properties of $f(x;t,\theta)$ to be a density function, i.e.
+$$\int_\mathbb{R}f(y;t,\theta)dy = 1.$$
+With this transformation we obtain a new probability function defined by
+$$d\mathbb{P}^{\theta}_t = \frac{d\mathbb{P}_t}{\int_\mathbb{R}e^{\theta y} d\mathbb{P}_t} = \frac{d\mathbb{P}_t}{M(\theta;t)},$$
+where $M(\theta;t)$ is the moment-generating function and $\mathbb{P}$ is the real world probability measure. The goal is to determine the parameter $\theta$ such that $\mathbb{P}^{\theta}$ is an EEM.
+Take a look on the moment-generating function of $X_t$ under $\mathbb{P}$,
+$$M(u;t) = \mathbb{E}\left[e^{u X_t}\right]=\Phi_t(-iu),$$
+and the moment-generating function of $X_t$ under $\mathbb{P}^{\theta}$,
+\begin{align}\label{eq:CF_theta}
+M(u;t,\theta) &= \int_\mathbb{R} e^{u x}f(x;t,\theta)dx\nonumber\\
+&=\frac{\int_\mathbb{R} e^{(u+\theta)x}f(x;t) dx}{\int_\mathbb{R} e^{\theta y}f(y;t)dy}\nonumber\\
+&= \frac{M(u+\theta;t)}{M(\theta;t)}\nonumber\\
+&=\frac{\Phi_t(-i(u+\theta))}{\Phi_t(-i\theta)}.
+\end{align}
+The martingale condition on $\hat{S}=\{\hat{S}_t=S_0e^{-(r-q)t+X_t},t\geq0\}$ gives us the following relation:
+$$S_0 = e^{-(r-q)t}\mathbb{E}^{\mathbb{P}^\theta}\left[S_t\right]=e^{-(r-q)t}S_0\underbrace{\mathbb{E}^{\mathbb{P}^\theta}\left[e^{X_t}\right]}_{=M(u;t,\theta)}=e^{-(r-q)t}S_0 \frac{\Phi_t(-i(u+\theta))}{\Phi_t(-i\theta)}.$$
+Therefore, $\theta$ is given by the explicit equation
+$$ e^{(r-q)t}= \frac{\Phi_t(-i(1+\theta))}{\Phi_t(-i\theta)}.$$
+Thus the solution $\theta^\ast$ of this equation gives us the Esscher transform martingale measure and we have $\mathbb{Q} \equiv \mathbb{P}^{\theta^\ast}$.
 
+\subsubsection*{Characterization of the risk-neutral L\'evy process}
+With the help of equation \eqref{eq:CF_theta} we have that
+$$\Phi_t^{\theta}(-iu) = \frac{\Phi_t(-i(u+\theta))}{\Phi_t(-i\theta)} \Longleftrightarrow \Phi_t^\theta(z)=\frac{\Phi_t(z-i\theta))}{\Phi_t(-i\theta)}.$$
+We can also add that the new L\'evy process is characterized by the triplet $(\gamma^\theta,\sigma^\theta, \nu^\theta(dx))$, and with the L\'evy-Khintchine formula \ref{thm:Levy:LK} combined to the definition \eqref{def:Levy:CF_CE} of the characteristic exponent, we can recover
+\begin{align*}
+\gamma^\theta &= \gamma + \sigma^2 \theta + \int_{-1}^1 \left(e^{\theta x}-1\right)\nu(dx),\\
+\sigma^\theta &= \sigma,\\
+\nu^\theta(dx)&=e^{\theta x}\nu(dx).
+\end{align*}
 
-% In the case of  a jump-diffusion model, we have
-% $$S_t = S_0\exp\left(\mu t+\sigma W_t + \sum_{i=1}^{N_t}Y_i\right)=S_0\exp\left(\mu t+\sigma W_t + J_t\right),$$
-% where $J_t$ is the compound Poisson process that dictates the jumps.
-
-% Intuitively, between the jumps, the process evolves like a geometric Brownian motion (Black-Scholes model), and after each jump, $S_t$ is multiplied by the factor $e^{Y_i}$. Thus we can see it as a generalization of the Black-Scholes model:
-% $$\frac{dS_t}{S_{t^-}}=\tilde{\mu} dt + \sigma dW_t + dJ_t.$$
-% The notation $S_{t^-}$ is used to say that whenever there is a jump, we have to take the value just before the jump in the formula.
+\subsection{Mean-correction method}
+The second way to obtain an equivalent martingale measure $\mathbb{Q}$ is to correct the mean of the exponential L\'evy process to satisfy the martingale condition of the discounted stock price process $\hat{S}=\{\hat{S}_t=e^{-(r-q)t}S_t,t\geq0\}$. The idea is to add a drift to the L\'evy process to kill the drift of the discounted asset price process. Therefore we obtain a new L\'evy process $\tilde{X}=\left\{\tilde{X}_t=X_t+\omega t,t\geq0\right\}$ and consequently
+\begin{align*}
+S_0 &= \mathbb{E}^\mathbb{Q}\left[e^{-(r-q)t}S_t\right]\\
+&= S_0e^{-(r-q)t} \mathbb{E}^\mathbb{Q}\left[e^{\tilde{X}_t}\right]\\
+&=  S_0e^{-(r-q)t} \mathbb{E}^\mathbb{Q}\left[e^{X_t+\omega t}\right]\\
+&= S_0e^{\left[\omega-(r-q)) + \Psi(-i)\right]t}
+\end{align*}
+Hence we have that $\omega$ have to be equal to $\left[(r-q)-\Psi(-i)\right]$, where $\Psi$ is the characteristic exponent of $X_1$. Moreover we have that the new risk-neutral L\'evy process $\tilde{X}$ is characterized by the triplet $(\gamma^\ast,\sigma,\nu)$ with
+\begin{equation}\label{eq:rn_drift}
+\gamma^\ast = \gamma + (r-q) - \Psi(-i).
+\end{equation}
+The mean-correction method is simpler than the Esscher transform method and this is the method we will use throughout this thesis.
