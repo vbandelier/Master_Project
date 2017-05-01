@@ -4,20 +4,20 @@ rng(0)
 %% Parameters
 S0 = 1.05;
 K   = 1.00;
-r_d = 0.02;
-r_f = 0.5;
+r_d = 0.01;
+r_f = 0.05;
 sigma = 0.2;
 
 N_fixDates = 20;
 Period = 30/365;
 
 Nx = 500;
-Nt = 15;
+Nt = 25;
 N = 2^10;
 Na = 50;
-N_sim = 1e6;
+N_sim = 1e4;
 q_order = 100;
-alpha = -2; % Damping Factor
+alpha = 0; % Damping Factor
 
 Targets= [0.3 0.5 0.7 0.9];
 
@@ -25,7 +25,7 @@ theta=0.5;
 
 gainFun = @(s,x) max(s-x,0).*ones(size(s));
 lossFun = @(s,x) max(x-s,0).*ones(size(s));
-g = 0;
+g = 2;
 
 KO_type = ['noGain  ';...
            'partGain';...
@@ -42,14 +42,14 @@ Prices_Exact = zeros(4,3);
 %%
 figure
 k = 1;
-for j = 3
+for j = 1:3
     KO = KO_type(j,:);
-    for i = 4
+    for i = 1:4
         subplot(3,4,k)  
         hold on
         Targ = Targets(i);
         tic
-        [Prices_MC(i,j),stdev_MC(i,j)] = MCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,lossFun,g,KO);
+%         [Prices_MC(i,j),stdev_MC(i,j)] = MCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N_sim,gainFun,lossFun,g,KO);
         Prices_FD(i,j) = FDTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Nt,Na,gainFun,lossFun,g,KO,theta);
         Prices_GHQC(i,j) = GHQCTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,Nx,Na,gainFun,lossFun,g,KO,q_order);
         Prices_QUAD(i,j) = QUADTarnPricing(S0,K,r_d,r_f,sigma,Period,Targ,N_fixDates,N,Na,gainFun,lossFun,g,KO);

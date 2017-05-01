@@ -24,7 +24,7 @@ nu = 0.01;
 
 T = 1;
 dt = 0.001;
-M = 1e4;
+M = 1e3;
 
 [S_BS,t] = BS_generator(S0,r,q,sigma,T,dt,M);
 [S_Mer,~] = Merton_generator(S0,r,q,sigma,lambda,alpha,delta,T,dt,M);
