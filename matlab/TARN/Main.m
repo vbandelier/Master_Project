@@ -4,8 +4,8 @@ rng(0)
 %% Parameters
 S0 = 1.05;
 K   = 1.00;
-r_d = 0.00;
-r_f = 0.00;
+r_d = 0.02;
+r_f = 0.5;
 sigma = 0.2;
 
 N_fixDates = 20;
@@ -42,9 +42,9 @@ Prices_Exact = zeros(4,3);
 %%
 figure
 k = 1;
-for j = 1:3
+for j = 3
     KO = KO_type(j,:);
-    for i = 1:4
+    for i = 4
         subplot(3,4,k)  
         hold on
         Targ = Targets(i);

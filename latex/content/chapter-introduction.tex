@@ -41,10 +41,14 @@ where $\beta$ is the strategy, i.e. $\beta = 1$ the investor buys call options, 
 Denote $t_{\tilde{N}}$ the first fixing date before maturity on which the target level $U$ is breached by the total accumulated gain (without the loss part), i.e.
 \[\tilde{N}=\min\{n: A(t_n)\geq U\},\qquad n = 1,2,\ldots,N.\]
 If the target $U$ is not breached, set $\tilde{N} = N$. For $t_n \leq t_{\tilde{N}}$ we can write the actual payment as
-\[C_n(S(t_n),A(t_{n-1})) = \tilde{C}_n\times (\mathbf{1}_{A(t_{n-1})+\tilde{C}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}),\]
-and $C_n=0$ for $t_n>t_{\tilde{N}}$. As a loss can not occur at the same time as a gain and consequently does not depend on the knock-out condition, we can set
-\[C^\ast_n = \tilde{C}_n^\ast.\]
-$A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_{n-1}$ and $W_n$ is the weight corresponding to the type of knock-out when the target is breached. Therefore, the accumulated gain $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
+\begin{equation}\label{eq:TARN:gain}
+C_n(S(t_n),A(t_{n-1})) = \tilde{C}_n\times \left(\mathbf{1}_{\{A(t_{n-1})+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}\right),
+\end{equation}
+and $C_n=0$ for $t_n>t_{\tilde{N}}$. This loss does not count in the knock-out condition but will also knock-out by the same knock-out condition. Therefore we have that
+\begin{equation}\label{eq:TARN:loss}
+C^\ast_n = \tilde{C}_n^\ast\times \left(\mathbf{1}_{A(t_{\{n-1})+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}\right).
+\end{equation}
+Here, $A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_{n-1}$ and $W_n$ is the weight corresponding to the type of knock-out when the target is breached. Therefore, the accumulated gains $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
 \[A(t_n)= A(t_{n-1}) + C_n(S(t_n),A(t_{n-1})).\]
 We can model the weights $W_n$ for the different types of knock-out as follow:
 \[W_n = \begin{cases}
@@ -54,7 +58,9 @@ We can model the weights $W_n$ for the different types of knock-out as follow:
 \end{cases}\]
 
 Finally, the net present value of FX-TARN in domestic currency for FX rate realization $\mathbf{S} = (S(t_1),S(t_2),\ldots,S(t_N))$ is
-\[P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,\]
+\begin{equation}\label{eq:intro:pv}
+P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,
+\end{equation}
 where $B_d(t_0,t_n)^{-1}$ is the domestic discounting factor from $t_n$ to $t_0$.
 
 \section{Example of Term Sheet}
