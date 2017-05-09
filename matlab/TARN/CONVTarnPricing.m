@@ -42,8 +42,9 @@ for k = 1:N_fixDates
         end
         Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
         Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Payoff = Cgain+Closs;
         Aplus  = A + Cgtild;
-        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+Cgain+Closs;
+        Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
     end
     for j = 1:Na
         % Step 1 :

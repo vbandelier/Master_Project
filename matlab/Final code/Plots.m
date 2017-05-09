@@ -3,12 +3,12 @@ clc
 rng(1)
 
 S0 = 1;
-r = 0.01;
+r = 0.06;
 q = 0.02;
 sigma = 0.3;
 lambda = 10;
 % Merton
-alpha = -0.05;
+alpha = -0.1;
 delta = 0.1;
 % Kou
 p = 0.5;
@@ -24,14 +24,14 @@ nu = 0.01;
 
 T = 1;
 dt = 0.001;
-M = 1e3;
-
-[S_BS,t] = BS_generator(S0,r,q,sigma,T,dt,M);
-[S_Mer,~] = Merton_generator(S0,r,q,sigma,lambda,alpha,delta,T,dt,M);
-[S_Kou,~] = Kou_generator(S0,r,q,sigma,lambda,p,eta1,eta2,T,dt,M);
-[S_NIG,~] = NIG_generator( S0,r,q,a,b,c,T,dt,M );
-[S_VG,~] = VG_generator( S0,r,q,theta,sigma,nu,T,dt,M );
-figure
+N = T/dt;
+M = 5;
+t = 0:dt:T;
+S_BS = BS_generator(S0,r,q,T,N,sigma,M);
+S_Mer = Merton_generator( S0,r,q,T,N,sigma,lambda,alpha,delta,M );
+S_Kou = Kou_generator( S0,r,q,T,N,sigma,lambda,p,eta1,eta2,M );
+S_NIG = NIG_generator( S0,r,q,T,N,a,b,c,M );
+S_VG = VG_generator( S0,r,q,T,N,theta,sigma,nu,M );
 plot(t,S_BS,'linewidth',1)
 title('\fontsize{20} Simulations under Black-Scholes model')
 xlabel('\fontsize{16} Time')

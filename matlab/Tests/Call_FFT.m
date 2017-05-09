@@ -28,6 +28,5 @@ y = exp(-alpha*k).*real(w)/pi;
 K = (S0 * exp(k));
 Y = (exp(-r*T)*S0*y);
 
-
 Price = interp1(K,Y,90);
 [Call,Put]=blsprice(S0,90,r,T,sigma,q);

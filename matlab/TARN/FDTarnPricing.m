@@ -21,8 +21,8 @@ uu = alpha + beta;
 
 dd(1) = -2*beta(1)-r_d*dt;
 uu(1) = 2*beta(1);
-dd(end) = -2*beta(end)-r_d*dt;
-ll(end) = 2*beta(end);
+dd(end) = 2*beta(end)-r_d*dt;
+ll(end) = -2*beta(end);
 
 Amat = spdiags([NaN; uu(1:end-1)'],1,Nx+1,Nx+1) +...
     spdiags(dd',0,Nx+1,Nx+1) +...
@@ -50,11 +50,16 @@ for k = 1:N_fixDates
         end
         Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
         Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+        Payoff = Cgain+Closs;
         % step 2
         Aplus  = A + Cgtild;
         % step 3/4
-        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Cgain+Closs;
+        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
     end
+    figure(1)
+    surf(U)
+    figure(2)
+    surf(U)
     for j = 1:Na
         % init matrix containing the solution at each time step
         V = zeros(Nx+1,Nt+1);
