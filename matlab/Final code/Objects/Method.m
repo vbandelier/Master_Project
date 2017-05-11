@@ -8,18 +8,17 @@ classdef Method
     end
     
     methods
-        function obj = Method(name,param)
+        function method = Method(name,param)
             if name(1) == 'M'
-                obj.name = 'Monte Carlo';
+                method.name = 'Monte Carlo';
             elseif name(1) == 'F'
-                obj.name = 'Finite Difference';
-            elseif nate(1) == 'C'
-                obj.name = 'Convovolution';
+                method.name = 'Finite Difference';
+            elseif name(1) == 'C'
+                method.name = 'Convovolution';
             else
-                obj.name = NaN;
+                method.name = NaN;
             end
-            
-            obj.param = param;
+            method.param = param;
         end
     end
     

@@ -9,9 +9,8 @@ T   = N_fixDates*30/365;
 gain_fun = @(S,K) max(S-K,0);
 loss_fun = @(S,K) max(K-S,0);
 g = 0;
-Targ = 0.5;
-KO = 'F';       % 'N' = no_gain, 'P' = part_gain, 'F' = full_gain.
-
+Targ = 0.7;
+KO = 'P';
 %% Models
 %  Black-Scholes
 sigma = 0.2;
@@ -45,11 +44,17 @@ model5 = Model('VG',param_vg);
 %  Monte Carlo
 N_sim = 1e5;
 method1 = Method('MC',N_sim);
+%  Convolution
+Na = 100;
+Nx = 500;
+alpha = 0;
+param = [Na, Nx, alpha];
+method3 = Method('Conv',param);
 
 %% Pricing
 TARN = Option(S0,r,q,K,T,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
-tic, Price_BS = Price(TARN,model1,method1), toc
-tic, Price_Merton = Price(TARN,model2,method1), toc
-tic, Price_Kou = Price(TARN,model3,method1), toc
-tic, Price_NIG = Price(TARN,model4,method1), toc
-tic, Price_VG = Price(TARN,model5,method1), toc
+TARN.set_price(model5,method3);
+Price1 = TARN.price
+hold on
+TARN.set_price(model4,method3);
+Price2 = TARN.price

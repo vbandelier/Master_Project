@@ -1,48 +1,16 @@
-function p = Price(option,model,method)
+function price = Price(option,model,method)
+cpu_t0 = cputime;
 %% Option Parameters
-N = option.N_fixDates;
-g = option.g;
+S0 = option.S0; r = option.r; T = option.T;
+N = option.N_fixDates; g = option.g;
 gain_fun = option.gain_fun;
 loss_fun = option.loss_fun;
-Targ = option.Target;
-K = option.K;
-r = option.r;
+K = option.K; Targ = option.Target; KO = option.KO(1);
 %% Monte Carlo Method -----------------------------------------------------
 if method.name(1) == 'M'
     M = method.param(1);
-    period = option.T/option.N_fixDates;
-    if model.name(1) == 'B'
-        sigma = model.param(1);
-        S = BS_generator(option.S0,option.r,option.q,option.T,...
-            option.N_fixDates,sigma,M);
-    elseif model.name(1) == 'M'
-        sigma = model.param(1);
-        lambda = model.param(2);
-        alpha = model.param(3);
-        delta = model.param(4);
-        S = Merton_generator(option.S0,option.r,option.q,option.T,...
-            option.N_fixDates,sigma,lambda,alpha,delta,M);
-    elseif model.name(1) == 'K'
-        sigma = model.param(1);
-        lambda = model.param(2);
-        p = model.param(3);
-        eta1 = model.param(4);
-        eta2 = model.param(5);
-        S = Kou_generator(option.S0,option.r,option.q,option.T,...
-            option.N_fixDates,sigma,lambda,p,eta1,eta2,M);
-    elseif model.name(1) == 'N'
-        alpha = model.param(1);
-        beta = model.param(2);
-        delta = model.param(3);
-        S = NIG_generator(option.S0,option.r,option.q,option.T,...
-            option.N_fixDates,alpha,beta,delta,M);
-    elseif model.name(1) == 'V'
-        theta = model.param(1);
-        sigma = model.param(2);
-        nu = model.param(3);
-        S = VG_generator(option.S0,option.r,option.q,option.T,...
-            option.N_fixDates,theta,sigma,nu,M);
-    end
+    period = T/N;
+    S = model.generator(option,M);
     V = zeros(M,1);
     for i = 1:M
         A = 0;
@@ -53,13 +21,13 @@ if method.name(1) == 'M'
                 Loss = -g*loss_fun(S(j+1,i),K);
                 A = A + Gain;
                 if(A > Targ)
-                    switch option.KO
+                    switch KO
                         case 'F'
                             V(i) = V(i) + exp(-r*t)*Gain;
                         case 'N'
                             break;
                         case 'P'
-                            V(i) = V(i) + exp(-r*t)* (Target - (A - Gain));
+                            V(i) = V(i) + exp(-r*t)* (Targ - (A - Gain));
                     end
                 else
                     V(i) = V(i) + exp(-r*t)*(Gain+Loss);
@@ -68,11 +36,74 @@ if method.name(1) == 'M'
             end
         end
     end
-    p = mean(V);
+    option.set_error(std(V)/sqrt(M));
+    price = mean(V);
+    %% Finite Difference Method -----------------------------------------------
+elseif method.name(1) == 'F'
+    price = NaN;
+    %% Convolution Method -----------------------------------------------------
+elseif method.name(1) == 'C'
+    Na = method.param(1);
+    Nx = method.param(2);
+    alpha = method.param(3);
+    dt = T/N;
+    A = linspace(0,Targ,Na);
+    Xmin = -5;
+    Xmax = 1;
+    
+    dx = (Xmax-Xmin)/Nx;
+    x = Xmin + (0:Nx-1)*dx;
+    du = 2*pi/(Nx*dx);
+    
+    phi = model.char_fun(option);
+    
+    u = ((0:Nx-1)-Nx/2)*du;
+    y = x;
+    
+    w = ones(1,Nx);
+    w(1) = 0.5; w(end) = 0.5;
+    
+    S = S0*exp(x);
+    
+    Q = zeros(Nx,Na);
+    Qnew = Q;
+    for k = 1:N
+        for m = 1:Nx
+            Cgtild = gain_fun(S(m),K);
+            Cltild = -g*loss_fun(S(m),K);
+            switch KO
+                case 'F'
+                    W = 1;
+                case 'N'
+                    W = 0;
+                case 'P'
+                    W = (Targ-A)/(S(m)-K);
+            end
+            Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+            Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
+            Payoff = Cgain+Closs;
+            Aplus  = A + Cgtild;
+            Qnew(m,:) = (interp1(A,Q(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
+        end
+        for j = 1:Na
+            % Step 1 :
+            res1 = ifft((-1).^(0:Nx-1).*w.*exp(alpha*y).*Qnew(:,j)');
+            
+            % Step 2 :
+            res2 = res1 .* phi(-(u-1i*alpha));
+            
+            % Step 3 :
+            res3 = real(exp(-r*dt)*exp(-alpha.*x).*(-1).^(0:Nx-1).* fft(res2));
+            
+            Q(:,j)=res3;
+        end
+    end
+    %%
+    figure(1)
+    price = interp1(S,Q(:,1),S0);
+    plot(S,Q(:,1));
 end
-%% Finite Difference Method
-
-%% Convolution Method
+option.CPU_time = cputime-cpu_t0;
 end
 
 
