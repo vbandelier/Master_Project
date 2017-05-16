@@ -1,4 +1,18 @@
 function [ Price ] = FDTarnPricing(S0,K,r_d,r_f,sigma,period,Targ,N_fixDates,Nx,Nt,Na,gainFun,lossFun,g,KO_type,theta)
+Cgtild_fun = @(s) gainFun(s,K);
+Cltild_fun = @(s)-g*lossFun(s,K);
+switch KO_type
+    case 'fullGain'
+        W_fun = @(s,a) 1*ones(size(a));
+    case 'noGain  '
+        W_fun = @(s,a) 0*ones(size(a));
+    case 'partGain'
+        W_fun = @(s,a) (Targ-a)/(s-K);
+end
+Cgain_fun = @(s,a) Cgtild_fun(s) .* ( ( (a+Cgtild_fun(s))<Targ )+W_fun(s,a) .*( (a+Cgtild_fun(s))>=Targ ) );
+Closs_fun = @(s,a) Cltild_fun(s) .* ( ( (a+Cgtild_fun(s))<Targ )+W_fun(s,a) .*( (a+Cgtild_fun(s))>=Targ ) );
+Payoff_fun = @(s,a)Cgain_fun(s,a)+Closs_fun(s,a);
+
 T = N_fixDates*period;
 
 Smin = S0 * exp(min((r_d-r_f-0.5*sigma^2)*T-3*sigma*T,-3*sigma*T));
@@ -51,15 +65,13 @@ for k = 1:N_fixDates
         Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
         Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
         Payoff = Cgain+Closs;
+        Payoff2 = Payoff_fun(S(m),A);
+        %sum(Payoff-Payoff2)
         % step 2
-        Aplus  = A + Cgtild;
+        Aplus  = A + Cgtild_fun(S(m));
         % step 3/4
-        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
+        Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff2;
     end
-    figure(1)
-    surf(U)
-    figure(2)
-    surf(U)
     for j = 1:Na
         % init matrix containing the solution at each time step
         V = zeros(Nx+1,Nt+1);

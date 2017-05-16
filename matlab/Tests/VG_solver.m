@@ -1,4 +1,4 @@
-function [V,FD_grid,time_steps] = VG_solver(sigma,r,lambda_p, lambda_n, nu,forcing,...
+function [V,FD_grid,time_steps] = VG_solver(sigma,r,q,lambda_p, lambda_n, nu,forcing,...
                                               bc_left,bc_right,initial_cond,...
                                               x_min,x_max,q_min,q_max,q_inf,ext_left,ext_right,...
                                               Nx,T,Nt,epsi,fix_pt_iter,tol)
@@ -82,10 +82,6 @@ quad_grid_left = fliplr(x_min - ( 0:h:(x_min - q_min) ) );
 quad_grid  = [quad_grid_left inner_grid quad_grid_right];
 Nq = length(quad_grid)-1;
 
-
-
-
-
 % set number of time steps
 deltat = T/Nt;
 time_steps = [0 deltat*(1:Nt)];
@@ -94,14 +90,21 @@ time_steps = [0 deltat*(1:Nt)];
 V=zeros(length(FD_grid),Nt+1);
 V(:,1)=initial_cond(FD_grid)';
 
-
 % we need to determine the constants sigma_epsi, lambda_epsi, c_epsi. Note that f(y) may be singular in zero,
 % therefore we need to split the integration in -epsi<y<0 and 0<y<epsi. The obvious choice is epsi = h
 
-sigma_epsi =  integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)-levyf_epsi(lambda_p,lambda_n,nu,epsi,y)), -epsi, 0 ) ...
-            + integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)-levyf_epsi(lambda_p,lambda_n,nu,epsi,y)), 0, epsi) ;
+sigma_epsi =  sqrt(integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)-levyf_epsi(lambda_p,lambda_n,nu,epsi,y)), -epsi, 0 ) ...
+                 + integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)-levyf_epsi(lambda_p,lambda_n,nu,epsi,y)), 0, epsi) );
 lambda_epsi = integral(@(y) levyf_epsi(lambda_p,lambda_n,nu,epsi,y), -q_inf, +q_inf);
 c_epsi = integral(@(y) (exp(y)-1).*levyf_epsi(lambda_p,lambda_n,nu,epsi,y), -q_inf, q_inf) ;
+
+% sigma_epsi =  sqrt(integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)), -epsi, 0 ) ...
+%                  + integral(@(y) y.^2.*(levyf(lambda_p,lambda_n,nu,y)), 0, epsi) );
+% lambda_epsi = integral(@(y) levyf(lambda_p,lambda_n,nu,y), -q_inf, -epsi)...
+%                  +integral(@(y) levyf(lambda_p,lambda_n,nu,y), epsi, q_inf);
+% c_epsi = integral(@(y) (exp(y)-1).*levyf(lambda_p,lambda_n,nu,y), -q_inf, -epsi)...
+%                  +integral(@(y) (exp(y)-1).*levyf(lambda_p,lambda_n,nu,y), epsi, q_inf);
+
 
 disp('-----------------------------')
 disp('epsi constant values')
@@ -126,8 +129,8 @@ aa_up   = -0.5*(sigma^2+sigma_epsi^2)*ones(Nx-2,1)/h^2;
 aa_main =  0.5*(sigma^2+sigma_epsi^2)*2*ones(Nx-1,1)/h^2;
 aa_down = -0.5*(sigma^2+sigma_epsi^2)*ones(Nx-2,1)/h^2;
 
-bb_up = -(r-(sigma^2+sigma_epsi^2)/2-c_epsi)*ones(Nx-2,1)/(2*h);
-bb_down = (r-(sigma^2+sigma_epsi^2)/2-c_epsi)*ones(Nx-2,1)/(2*h);
+bb_up = -(r-q-(sigma^2+sigma_epsi^2)/2-c_epsi)*ones(Nx-2,1)/(2*h);
+bb_down = (r-q-(sigma^2+sigma_epsi^2)/2-c_epsi)*ones(Nx-2,1)/(2*h);
 
 cc_main = (r+lambda_epsi)*ones(Nx-1,1);
 
@@ -189,7 +192,7 @@ for tn = 1:Nt
 
         % 3) the solution at the previous time step
         f_tot = V(2:end-1,tn) + deltat*f_new ;
-        
+
         % ----------------------
         % finally, solve the system and store the solution
         % -----------------------
