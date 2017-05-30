@@ -103,9 +103,9 @@ elseif method.name(1) == 'F'
     B_down = dt*(aa_down+bb_down);
     
     levy_grid = (quad_grid(1)-inner_grid(end)):dx:(quad_grid(end)-inner_grid(1));
-    if model.name(1) == 'B' || model.name(1) == 'M' || model.name(1) == 'K'
+    if model.name(1) == 'B' || model.name(1) == 'M' %|| model.name(1) == 'K'
         levyf_vals= model.levyf(levy_grid);
-    elseif model.name(1) == 'N' || model.name(1) == 'V' %|| model.name(1) == 'K'
+    elseif model.name(1) == 'N' || model.name(1) == 'V' || model.name(1) == 'K'
         levyf_vals= model.levyf_epsi(levy_grid,epsi);
     end
     fftJ = fft(dx*levyf_vals);
@@ -224,7 +224,7 @@ elseif method.name(1) == 'C'
     %%
     price = interp1(S,Q(:,1),S0);
     option.set_error(NaN);
-    %plot(S,Q(:,1),'linewidth',1);
+    plot(S,Q(:,1),'linewidth',1);
 end
 option.CPU_time = cputime-cpu_t0;
 end

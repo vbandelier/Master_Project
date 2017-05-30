@@ -1,5 +1,3 @@
-clear
-
 %% Market data
 [Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data.csv',2, 122);
 Market_data = [Prices,Strikes,Maturity,r,q,Option_type];
@@ -66,28 +64,28 @@ model5 = Model('VG',param_vg);
 N_sim = 1e6;
 method1 = Method('MC',N_sim);
 %  Finite Difference
-Na = 100;
-Nx = 1000;
-Nt = 40;
-method2 = Method('FD',[Na, Nx, Nt]);
-%  Convolution
 Na = 200;
 Nx = 2000;
+Nt = 80;
+method2 = Method('FD',[Na, Nx, Nt]);
+%  Convolution
+Na = 50;
+Nx = 500;
 alpha = 0;
 method3 = Method('Conv',[Na, Nx, alpha]);
 
 %% Calibration
 % RMSE = RMSE(0.0502, 'BS', S0, Data)
-% lb = [ 0 0 0 0 0 ];
-% ub = [ Inf Inf 1 Inf Inf];
-% options = optimset('Display','iter','MaxFunEvals', 5000, 'MaxIter', 5000);
-% param_kou_1 = fmincon(@(p) RMSE(p, 'Kou', S0, Data),param_kou,[],[],[],[], lb, ub, [], options)
-% param_kou = fminsearch(@(p) RMSE(p, 'Kou', S0, Data),param_kou_1, options)
+lb = [ 0 0 0 0 0 ];
+ub = [ Inf Inf 1 Inf Inf];
+options = optimset('Display','iter','MaxFunEvals', 5000, 'MaxIter', 5000);
+param_kou_1 = fmincon(@(p) RMSE(p, 'Kou', S0, Data),param_kou,[],[],[],[], lb, ub, [], options)
+param_kou = fminsearch(@(p) RMSE(p, 'Kou', S0, Data),param_kou_1, options)
 
 %% Pricing
 % TARN_MC_BS  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
 % TARN_MC_Mer = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
-% TARN_MC_Kou = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
+TARN_MC_Kou = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
 % TARN_MC_NIG = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
 % TARN_MC_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO);
 
@@ -110,7 +108,7 @@ disp('---------- Black-Scholes ----------')
 % TARN_MC_BS.set_price(model1,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_BS.price)));
 % TARN_FD_BS.set_price(model1,method2);
-% disp(TARN_FD_BS.price)
+% disp(strcat('TARN price with FD  = ',num2str(TARN_FD_BS.price)));
 % TARN_Conv_BS.set_price(model1,method3);
 % disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_BS.price)));
 
@@ -118,15 +116,15 @@ disp('---------- Merton -----------------')
 % TARN_MC_Mer.set_price(model2,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Mer.price)));
 % TARN_FD_Mer.set_price(model2,method2);
-% disp(TARN_FD_Mer.price)
+% disp(strcat('TARN price with FD  = ',num2str(TARN_FD_Mer.price)));
 % TARN_Conv_Mer.set_price(model2,method3);
 % disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Mer.price)));
 
 disp('---------- Kou --------------------')
-% TARN_MC_Kou.set_price(model3,method1);
-% disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Kou.price)));
+TARN_MC_Kou.set_price(model3,method1);
+disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Kou.price)));
 TARN_FD_Kou.set_price(model3,method2);
-disp(TARN_FD_Kou.price)
+disp(strcat('TARN price with FD  = ',num2str(TARN_FD_Kou.price)));
 % TARN_Conv_Kou.set_price(model3,method3);
 % disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Kou.price)));
 
@@ -134,7 +132,7 @@ disp('---------- NIG --------------------')
 % TARN_MC_NIG.set_price(model4,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_NIG.price)));
 TARN_FD_NIG.set_price(model4,method2);
-disp(TARN_FD_NIG.price)
+disp(strcat('TARN price with FD  = ',num2str(TARN_FD_NIG.price)));
 % TARN_Conv_NIG.set_price(model4,method3);
 % disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_NIG.price)));
 
@@ -142,6 +140,12 @@ disp('---------- VG ---------------------')
 % TARN_MC_VG.set_price(model5,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_VG.price)));
 TARN_FD_VG.set_price(model5,method2);
-disp(TARN_FD_VG.price);
+disp(strcat('TARN price with FD  = ',num2str(TARN_FD_VG.price)));
 % TARN_Conv_VG.set_price(model5,method3);
 % disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_VG.price)));
+%%
+disp(TARN_FD_BS.price)
+disp(TARN_FD_Mer.price)
+disp(TARN_FD_Kou.price)
+disp(TARN_FD_NIG.price)
+disp(TARN_FD_VG.price)

@@ -12,7 +12,6 @@ function S = Merton_generator( S0,r,q,T,N,sigma,lambda,alpha,delta,M )
 %   S       : stock price process
 %   t       : discret time domain
 dt = T/N;
-t = 0:dt:T;
 mu = r-q-0.5*sigma^2-lambda*(exp(alpha+0.5*delta^2)-1);
 Nt = random('poiss',lambda*dt,M,N);
 Jumps = arrayfun(@(n) random('norm',n*alpha,sqrt(n)*delta),Nt);

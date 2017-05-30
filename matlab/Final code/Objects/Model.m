@@ -77,8 +77,8 @@ classdef Model
                 p = model.param(3);
                 eta1 = model.param(4);
                 eta2 = model.param(5);
-                mu = r-q-0.5*sigma^2-lambda*((p*eta1)/(eta1+1)+((1-p)*eta2)/(eta2+1)-1);
-                CE = @(u) -0.5*sigma^2*u.^2+lambda*((p*eta1)./(eta1+1i*u)+((1-p)*eta2)./(eta2+1i*u)-1);
+                mu = r-q-0.5*sigma^2-lambda*((p*eta1)/(eta1-1)+((1-p)*eta2)/(eta2+1)-1);
+                CE = @(u) -0.5*sigma^2*u.^2+lambda*((p*eta1)./(eta1-1i*u)+((1-p)*eta2)./(eta2+1i*u)-1);
                 CF = @(u) exp(dt*(1i*u*mu+CE(u)));
             elseif model.name(1) == 'N'
                 alpha = model.param(1);
@@ -115,7 +115,14 @@ classdef Model
                 
                 levyf = lambda/(sqrt(2*pi)*delta)*exp(-(x-alpha).^2/(2*delta^2));
             elseif model.name(1) == 'K'
-                % --- TO DO --- %
+                lambda = model.param(2);
+                p      = model.param(3);
+                eta1   = model.param(4);
+                eta2   = model.param(5);
+                
+                levyf = [lambda * (1-p) * eta2 * exp(eta2*xneg),...
+                             lambda * p * eta1 .* ones(1,length(xzero)),...
+                             lambda * p * eta1 * exp(-eta1*xpos)];
             elseif model.name(1) == 'N'
                 alpha = model.param(1);
                 beta  = model.param(2);
@@ -151,29 +158,28 @@ classdef Model
             v2=model.levyf(-epsi);
             m = ( v1-v2 ) / (2*epsi);
             
-            %levyf_epsi = [model.levyf(xleft), v1+m*(xcenter-epsi), model.levyf(xright)];
-            levyf_epsi = [model.levyf(xleft), zeros(size(xcenter)), model.levyf(xright)];
+            levyf_epsi = [model.levyf(xleft), v1+m*(xcenter-epsi), model.levyf(xright)];
+%             levyf_epsi = [model.levyf(xleft), zeros(size(xcenter)), model.levyf(xright)];
             
         end
         
         function sigma2 = get_sigma2_FD(model,epsi)
             if model.name(1) == 'B' || model.name(1) == 'M' || model.name(1) == 'K'
                 sigma = model.param(1);
-            elseif model.name(1) == 'N'
-                sigma = model.param(3);
-            elseif model.name(1) == 'V'
-                sigma = model.param(2);
+%             elseif model.name(1) == 'N'
+%                 sigma = model.param(3);
+%             elseif model.name(1) == 'V'
+%                 sigma = model.param(2);
+%             end  
+            elseif model.name(1) == 'N' || model.name(1) =='V'
+                sigma = sqrt(integral(@(y) y.^2.*(model.levyf(y)-model.levyf_epsi(y,epsi)), -epsi, 0 ) ...
+                      + integral(@(y) y.^2.*(model.levyf(y)-model.levyf_epsi(y,epsi)), 0, epsi) );
+%                 sigma = sqrt(integral(@(y) y.^2.*model.levyf(y), -epsi, 0 ) ...
+%                     + integral(@(y) y.^2.*model.levyf(y), 0, epsi) );
+%             else
+%                 sigma_epsi = 0;
             end
-            
-            if model.name(1) == 'N' || model.name(1) =='V'
-                %sigma_epsi = sqrt(integral(@(y) y.^2.*(model.levyf(y)-model.levyf_epsi(y,epsi)), -epsi, 0 ) ...
-                %    + integral(@(y) y.^2.*(model.levyf(y)-model.levyf_epsi(y,epsi)), 0, epsi) );
-                sigma_epsi = sqrt(integral(@(y) y.^2.*model.levyf(y), -epsi, 0 ) ...
-                    + integral(@(y) y.^2.*model.levyf(y), 0, epsi) );
-            else
-                sigma_epsi = 0;
-            end
-            sigma2 = sigma^2+sigma_epsi^2;
+            sigma2 = sigma^2 ;%+ sigma_epsi^2;
         end
         
         function lambda = get_lambda_FD(model,epsi,q_inf)
@@ -181,7 +187,7 @@ classdef Model
                 lambda = 0;
             elseif model.name(1) == 'M' || model.name(1) == 'K'
                 lambda = model.param(2);
-            elseif model.name(1) == 'N' || model.name(1) == 'V'
+            elseif model.name(1) == 'N' || model.name(1) == 'V' || model.name(1) == 'K'
                 lambda = integral(@(y) model.levyf_epsi(y,epsi), -q_inf, q_inf);
             end
         end
@@ -189,9 +195,17 @@ classdef Model
         function c = get_c_FD(model,epsi,q_inf)
             if model.name(1) == 'B'
                 c = 0;
-            elseif model.name(1) == 'M' || model.name(1) == 'K'
-                % --- CLOSED FORM --- %
-                c = integral(@(y) (exp(y)-1).*model.levyf(y),-q_inf,q_inf);
+            elseif model.name(1) == 'M' 
+                lambda = model.param(2);
+                alpha = model.param(3);
+                delta = model.param(4);
+                c = lambda*(exp(alpha+0.5*delta^2)-1);
+            elseif model.name(1) == 'K'
+                lambda = model.param(2);
+                p      = model.param(3);
+                eta1   = model.param(4);
+                eta2   = model.param(5);
+                c = lambda*(p*eta1/(eta1-1)+(1-p)*eta2/(eta2+1)-1);
             elseif model.name(1) == 'N' || model.name(1) == 'V'
                 c = integral(@(y) (exp(y)-1).*model.levyf_epsi(y,epsi), -q_inf, q_inf);
             end
