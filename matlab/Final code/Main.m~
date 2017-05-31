@@ -1,7 +1,7 @@
 clear
 
 %% Market data
-[Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data.csv',2, 122);
+[Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data.csv',2, 111);
 Data = [Prices,Strikes,Maturity,r,q,Option_type];
 
 options = optimset('Display','iter','MaxFunEvals', 5000, 'MaxIter', 5000);
@@ -24,18 +24,19 @@ sigma = 0.08912;
 param_bs = sigma;
 model1 = Model('BS',param_bs);
 %%  Merton
-% sigma   = 0.08912;
-% lambda  = 1;        
-% alpha   = 0.1;      
-% delta   = 0.1;      
-% param_mer = [sigma,lambda,alpha,delta];
-param_mer = [0.0592    0.1434    0.1167    0.0625]; %Calibrated
-% % Calibration
-% Nx = 500;
+sigma   = 0.08912;
+lambda  = 1;        
+alpha   = 0.1;      
+delta   = 0.1;      
+param_mer = [sigma,lambda,alpha,delta];
+% param_mer = [0.0421   10.3301    0.0093    0.0148]; %Calibrated
+% Calibration
+Nx = 500;
 % lb = [ 0   0  -Inf 0  ];
 % ub = [ Inf Inf Inf Inf];
 % param_mer = fmincon(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,[],[],[],[], lb, ub, [], options)
-% model2 = Model('Merton',param_mer);
+param_mer = fminsearch(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer, options)
+model2 = Model('Merton',param_mer);
 %%  Kou
 % sigma   = 0.08912;       
 % lambda  = 0.1434;        
@@ -48,28 +49,26 @@ param_kou = [0.0528    1.4984    0.5013   23.3588   69.5682]; % Calibrated
 % lb = [ 0   0   0  0   0  ];
 % ub = [ Inf Inf 1  Inf Inf];
 % param_kou = fmincon(@(p) RMSE(p, 'Kou', S0, Data,Nx),param_kou,[],[],[],[], lb, ub, [], options)
-% model3 = Model('Kou',param_kou);
+model3 = Model('Kou',param_kou);
 %%  NIG
 alpha = 28;     
 beta  =-15;    
 delta = 0.3;  
 param_nig = [alpha,beta,delta];
-% param_nig = [10.2623    3.3836    0.0338]; % Calibrated
+% param_nig = [34.5759   13.9254    0.1497]; % Calibrated
 lb = [ 0   -Inf 0  ];
 ub = [ Inf  Inf Inf];
 param_nig = fmincon(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,[],[],[],[], lb, ub, [], options)
-
 model4 = Model('NIG',param_nig);
 %%  VG
 theta =  0.0039;
 sigma =  0.0338;
 nu    =  28.4765;
 param_vg = [theta,sigma,nu];
-% param_vg = [0.0143    0.0545    0.9621]; % Calibrated
+% param_vg = [-0.5767    1.0830   27.8241]; % Calibrated
 lb = [ -Inf  0   0  ];
 ub = [  Inf  Inf Inf];
-param_vg1 = fmincon(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,[],[],[],[], lb, ub, [], options)
-param_vg = fminsearch(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg1, options)
+param_vg = fmincon(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,[],[],[],[], lb, ub, [], options)
 model5 = Model('VG',param_vg);
 
 %% Methods

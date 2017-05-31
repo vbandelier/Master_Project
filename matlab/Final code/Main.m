@@ -1,7 +1,7 @@
 clear
 
 %% Market data
-[Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data.csv',2, 122);
+[Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data.csv',2, 111);
 Data = [Prices,Strikes,Maturity,r,q,Option_type];
 
 options = optimset('Display','iter','MaxFunEvals', 5000, 'MaxIter', 5000);
@@ -29,12 +29,13 @@ lambda  = 1;
 alpha   = 0.1;      
 delta   = 0.1;      
 param_mer = [sigma,lambda,alpha,delta];
-% param_mer = [0.0421   10.3301    0.0093    0.0148]; %Calibrated
+% param_mer = [0.0644    0.0202   -0.7804    1.2160]; %Calibrated
 % Calibration
 Nx = 500;
-lb = [ 0   0  -Inf 0  ];
-ub = [ Inf Inf Inf Inf];
-param_mer = fmincon(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,[],[],[],[], lb, ub, [], options)
+% lb = [ 0   0  -Inf 0  ];
+% ub = [ Inf Inf Inf Inf];
+% param_mer = fmincon(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,[],[],[],[], lb, ub, [], options)
+param_mer = fminsearch(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer, options)
 model2 = Model('Merton',param_mer);
 %%  Kou
 % sigma   = 0.08912;       
@@ -86,7 +87,7 @@ alpha = 0;
 method3 = Method('Conv',[Na, Nx, alpha]);
 
 %% Calibration
-RMSE = RMSE(0.08912, 'BS', S0, Data)
+RMSE = RMSE(0.08912, 'BS', S0, Data,500)
 % lb = [ 0 0 0 0 0 ];
 % ub = [ Inf Inf 1 Inf Inf];
 
