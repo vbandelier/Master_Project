@@ -26,8 +26,8 @@ if method.name(1) == 'M'
         t = period;
         for j = 1:N
             if( A < Targ )
-                Gain = gain_fun(S(j+1,i),K);
-                Loss = -g*loss_fun(S(j+1,i),K);
+                Gain = gain_fun(S(j+1,i),K(end-j+1));
+                Loss = -g*loss_fun(S(j+1,i),K(end-j+1));
                 A = A + Gain;
                 if(A > Targ)
                     switch KO
@@ -64,21 +64,20 @@ elseif method.name(1) == 'F'
     inner_grid = FD_grid(2:end-1);
     S = S0*exp(FD_grid);
     
-    Cgtild = @(s) gain_fun(s,K);
-    Cltild = @(s)-g*loss_fun(s,K);
+    Cgtild = @(s,k) gain_fun(s,k);
+    Cltild = @(s,k)-g*loss_fun(s,k);
     switch KO
         case 'F'
-            W = @(s,a) 1*ones(size(a));
+            W = @(s,a,k) 1*ones(size(a));
         case 'N'
-            W = @(s,a) 0*ones(size(a));
+            W = @(s,a,k) 0*ones(size(a));
         case 'P'
-            W = @(s,a) (Targ-a)./(s-K);
+            W = @(s,a,k) (Targ-a)./(s-k);
     end
-    Cgain = @(s,a) Cgtild(s) .* ( ( (a+Cgtild(s))<Targ )+W(s,a) .*( (a+Cgtild(s))>=Targ ) );
-    Closs = @(s,a) Cltild(s) .* ( ( (a+Cgtild(s))<Targ )+W(s,a) .*( (a+Cgtild(s))>=Targ ) );
-    Payoff_fun = @(s,a,k)Cgain(s,a)+k*Closs(s,a);
-    
-    ext_fun = @(x,a,t,k) (a+Payoff_fun(S0*exp(x+r*(period-t)),a,k))*exp(-r*(period-t));
+    Cgain = @(s,a,k) Cgtild(s,k) .* ( ( (a+Cgtild(s,k))<Targ )+W(s,a,k) .*( (a+Cgtild(s,k))>=Targ ) );
+    Closs = @(s,a,k) Cltild(s,k) .* ( ( (a+Cgtild(s,k))<Targ )+W(s,a,k) .*( (a+Cgtild(s,k))>=Targ ) );
+    Payoff_fun = @(s,a,k,kk)Cgain(s,a,k)+kk*Closs(s,a,k);
+    ext_fun = @(x,a,k,t,kk) (a+Payoff_fun(S0*exp(x+r*(period-t)),a,k,kk))*exp(-r*(period-t));
     
     quad_grid_right = Xmax + (0:dx:(q_max-Xmax));
     quad_grid_left = fliplr(Xmin - (0:dx:(Xmin-q_min)));
@@ -112,10 +111,11 @@ elseif method.name(1) == 'F'
     
     U = zeros(Nx+1,Na);
     Unew = U;
-    for k = 1:N
+    for kk = 1:N
+      
         for m = 1:Nx+1
-            Payoff = Payoff_fun(S(m),A,1);
-            Aplus  = A + Cgtild(S(m));
+            Payoff = Payoff_fun(S(m),A,K(end-kk+1),1);
+            Aplus  = A + Cgtild(S(m),K(end-kk+1));
             if Na>1
                 Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
             else 
@@ -127,18 +127,18 @@ elseif method.name(1) == 'F'
             V(:,1) = Unew(:,j);
             for tn = 1:Nt
                 tnew = tn*dt;
-                Vleft = ext_fun(quad_grid_left,A(j),tnew,k);
-                Vright= ext_fun(quad_grid_right,A(j),tnew,k);
+                Vleft = ext_fun(quad_grid_left,A(j),K(end-kk+1),tnew,kk);
+                Vright= ext_fun(quad_grid_right,A(j),K(end-kk+1),tnew,kk);
                 iter = 0;
                 Vstar = [Vleft, V(2:end-1,tn)', Vright];
                 Vstar_old = 0*Vstar;
                 while max(abs(Vstar_old-Vstar))>tol && iter<fix_pt_iter
                     iter = iter + 1;
                     fnew = zeros(size(inner_grid))';
-                    fnew(1)  = 0.5*sigma2*ext_fun(Xmin,A(j),tnew,k)/(dx^2)...
-                        - (r-q-0.5*sigma2-c)*ext_fun(Xmin,A(j),tnew,k)/(2*dx);
-                    fnew(end)= 0.5*sigma2*ext_fun(Xmax,A(j),tnew,k)/(dx^2)...
-                        + (r-q-0.5*sigma2-c)*ext_fun(Xmax,A(j),tnew,k)/(2*dx);
+                    fnew(1)  = 0.5*sigma2*ext_fun(Xmin,A(j),K(end-kk+1),tnew,kk)/(dx^2)...
+                        - (r-q-0.5*sigma2-c)*ext_fun(Xmin,A(j),K(end-kk+1),tnew,kk)/(2*dx);
+                    fnew(end)= 0.5*sigma2*ext_fun(Xmax,A(j),K(end-kk+1),tnew,kk)/(dx^2)...
+                        + (r-q-0.5*sigma2-c)*ext_fun(Xmax,A(j),K(end-kk+1),tnew,kk)/(2*dx);
                     fftV = fft([zeros(1,length(levy_grid)-Nq-1), Vstar]);
                     fcomp = ifft(conj(fftJ).*fftV);
                     fnew = fnew + fcomp(1:Nx-1)';
@@ -153,7 +153,7 @@ elseif method.name(1) == 'F'
                     Vstar_old = Vstar;
                     Vstar=[Vleft,  sol',  Vright];
                 end
-                V(:,tn+1)=[ext_fun(Xmin,A(j),tnew,k); sol; ext_fun(Xmax,A(j),tnew,k)];
+                V(:,tn+1)=[ext_fun(Xmin,A(j),K(end-kk+1),tnew,kk); sol; ext_fun(Xmax,A(j),K(end-kk+1),tnew,kk)];
             end
             U(:,j) = V(:,end);
         end
@@ -190,15 +190,15 @@ elseif method.name(1) == 'C'
     Qnew = Q;
     for k = 1:N
         for m = 1:Nx
-            Cgtild = gain_fun(S(m),K);
-            Cltild = -g*loss_fun(S(m),K);
+            Cgtild = gain_fun(S(m),K(end-k+1));
+            Cltild = -g*loss_fun(S(m),K(end-k+1));
             switch KO
                 case 'F'
                     W = 1;
                 case 'N'
                     W = 0;
                 case 'P'
-                    W = (Targ-A)/(S(m)-K);
+                    W = (Targ-A)/(S(m)-K(end-k+1));
             end
             Cgain = Cgtild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );
             Closs = Cltild .* ( ( (A+Cgtild)<Targ )+W .*( (A+Cgtild)>=Targ ) );

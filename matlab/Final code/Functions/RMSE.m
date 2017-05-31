@@ -1,4 +1,4 @@
-function RMSE = RMSE(Model_param,Model_name, S0, Market_data)
+function RMSE = RMSE(Model_param,Model_name, S0, Market_data,Nx)
 
 % Computes Root Mean Squared error 
 % Model_param = parameters of the model
@@ -7,8 +7,6 @@ function RMSE = RMSE(Model_param,Model_name, S0, Market_data)
 % Market_data = market data [obs_price,strikes,maturities,r,q,opt_type] 
 
 Na = 1;
-Nx = 500;
-Nt = 50;
 
 model  = Model(Model_name,Model_param);
 
@@ -21,8 +19,8 @@ for i = 1:Noptions
     obs_price = Market_data(i,1); % Observed prices
     K  = Market_data(i,2);
     T  = Market_data(i,3);
-    r  = Market_data(i,4)/100;
-    q  = Market_data(i,5)/100;
+    r  = Market_data(i,4);
+    q  = Market_data(i,5);
     Opt_type = Market_data(i,6);
     
     method = Method('Conv',[Na, Nx, -Opt_type]);
@@ -39,7 +37,7 @@ for i = 1:Noptions
     elseif price + eps < 0
         Error(1,i) = Inf;
     else
-        Error(1,i) = 1/(obs_price^2)*(price - obs_price)^2;
+        Error(1,i) = 1/obs_price^2*(price - obs_price)^2;
     end
     
 end
