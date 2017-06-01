@@ -5,7 +5,7 @@ S0 = option.S0; r = option.r; q = option.q; N = option.N_fixDates;
 g = option.g; gain_fun = option.gain_fun;
 loss_fun = option.loss_fun;
 K = option.K; Targ = option.Target; KO = option.KO(1);
-period = option.Period; T = period*N; ApF = option.ApF;
+period = option.Period; T = period*N;
 
 Xmin = -5;
 Xmax = 1;
@@ -225,7 +225,7 @@ elseif method.name(1) == 'C'
     option.set_error(NaN);
     %plot(S,Q(:,1),'linewidth',1);
 end
-price = ApF*price;
+price = Amount_
 option.CPU_time = cputime-cpu_t0;
 end
 

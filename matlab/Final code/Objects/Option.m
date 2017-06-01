@@ -12,6 +12,7 @@ classdef Option < handle
         g           % Gear factor
         Target      % Target
         KO          % KO type
+        ApF         % Amount per Fixing date
         
         price       % Price of the option
         error       % Price error
@@ -19,7 +20,7 @@ classdef Option < handle
     end
     
     methods
-        function obj = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Target,KO)
+        function obj = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Target,KO,ApF)
             obj.S0 = S0;
             obj.r = r;
             obj.q = q;
@@ -37,6 +38,7 @@ classdef Option < handle
             elseif KO(1) == 'F'
                 obj.KO = 'Full gain';
             end
+            obj.ApF = ApF;
         end
         
         function set_price(option,model,method)

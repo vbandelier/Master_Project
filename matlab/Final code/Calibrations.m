@@ -1,6 +1,6 @@
 
-Model_name  = 'Mer';
-Model_param = param_mer;
+Model_name  = 'Vg';
+Model_param = param_vg;
 
 model  = Model(Model_name,Model_param);
 Noptions = size(Data,1);
