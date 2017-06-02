@@ -1,6 +1,7 @@
+model = model3;
 
-Model_name  = 'Vg';
-Model_param = param_vg;
+Model_name  = model.name;
+Model_param = model.param;
 
 model  = Model(Model_name,Model_param);
 Noptions = size(Data,1);
@@ -13,10 +14,10 @@ for i = 1:Noptions
     q  = Data(i,5);
     Opt_type = Data(i,6);
     
-    method = Method('Conv',[1, 500, -Opt_type]);
+    method = Method('Conv',[1, 1000, -Opt_type]);
     gain_fun = @(S,K) max(Opt_type*(S-K),0);
     
-    option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F'); 
+    option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F',1); 
 
     Pmodel(i) = Price(option,model,method);
 end
@@ -30,7 +31,7 @@ scatter3(K,T,P,'r','marker','o')
 hold on
 scatter3(K,T,Pmodel,'b','marker','*')
 view(-5,30)
-xlabel('Strike K')
+xlabel('Moneyness S/K')
 ylabel('Maturities T')
 zlabel('Prices')
 title('Calibration of the model')

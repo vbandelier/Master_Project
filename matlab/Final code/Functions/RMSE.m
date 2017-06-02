@@ -26,7 +26,7 @@ for i = 1:Noptions
     method = Method('Conv',[Na, Nx, -Opt_type]);
     gain_fun = @(S,K) max(Opt_type*(S-K),0);
     
-    option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F'); 
+    option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F',1); 
 
     price = Price(option,model,method); % Calculation of model option prices
     
@@ -37,10 +37,10 @@ for i = 1:Noptions
     elseif price + eps < 0
         Error(1,i) = Inf;
     else
-        Error(1,i) = 1/obs_price^2*(price - obs_price)^2;
+        Error(1,i) = 1/Noptions.*(price - obs_price)^2;
     end
     
 end
 
-RMSE = sum(Error);
+RMSE = sqrt(sum(Error));
 

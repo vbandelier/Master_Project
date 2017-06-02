@@ -40,7 +40,7 @@ problem = createOptimProblem('fmincon','objective',...
 model2 = Model('Mer',param_mer);
 RMSE_Mer = RMSE(model2.param,model2.name,S0,Data,1000);
 %%  Kou
-param_kou = [0.0623    0.2371    0.1552    8.8225   11.9840]; %0Calibrated
+param_kou = [0.0457    2.7733    0.0001    1.0051   36.5884]; %0Calibrated
 % Calibration %
 Nx = 500;
 lb = [0 0 0 0 0];
@@ -53,30 +53,30 @@ problem = createOptimProblem('fmincon','objective',...
 model3 = Model('Kou',param_kou);
 RMSE_Kou = RMSE(model3.param,model3.name,S0,Data,1000);
 %%  NIG
-param_nig = [18.6508   -3.8876    0.1188]; % Calibrated
+param_nig = [3.1952    2.5333    0.0370]; % Calibrated
 
 % Calibration %
 Nx = 500;
 lb = [0  -Inf  0];
 ub = [Inf Inf Inf];
-problem = createOptimProblem('fmincon','objective',...
- @(p) RMSE(p, 'NIG', S0, Data,Nx),'x0',param_nig,'lb',lb,'ub',ub,'options',opts);
-[param_nig,RMSE_nig] = run(gs,problem);
-% param_nig = fmincon(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,[],[],[],[],lb,ub,[],options);
+% problem = createOptimProblem('fmincon','objective',...
+%  @(p) RMSE(p, 'NIG', S0, Data,Nx),'x0',param_nig,'lb',lb,'ub',ub,'options',opts);
+% [param_nig,RMSE_nig] = run(gs,problem);
+param_nig = fmincon(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,[],[],[],[],lb,ub,[],options);
 
 model4 = Model('NIG',param_nig);
 RMSE_NIG = RMSE(model4.param,model4.name,S0,Data,1000);
 %%  VG
-param_vg = [-0.0294    0.0796    0.2789]; % Calibrated
+param_vg = [0.0247    0.1757   14.3230]; % Calibrated
 
 % Calibration
 Nx = 500;
 lb = [-Inf  0  0];
 ub = [Inf Inf Inf];
-problem = createOptimProblem('fmincon','objective',...
- @(p) RMSE(p, 'VG', S0, Data,Nx),'x0',param_vg,'lb',lb,'ub',ub,'options',opts);
-[param_vg,RMSE_vg] = run(gs,problem);
-% param_vg = fmincon(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,[],[],[],[],lb,ub,[],options);
+% problem = createOptimProblem('fmincon','objective',...
+%  @(p) RMSE(p, 'VG', S0, Data,Nx),'x0',param_vg,'lb',lb,'ub',ub,'options',opts);
+% [param_vg,RMSE_vg] = run(gs,problem);
+param_vg = fmincon(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,[],[],[],[],lb,ub,[],options);
 
 model5 = Model('VG',param_vg);
 RMSE_VG = RMSE(model5.param,model5.name,S0,Data,1000);
@@ -149,7 +149,7 @@ disp('---------- NIG --------------------')
 % disp(TARN_FD_NIG.price)
 TARN_Conv_NIG.set_price(model4,method3);
 disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_NIG.price)));
-%%
+
 disp('---------- VG ---------------------')
 % TARN_MC_VG.set_price(model5,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_VG.price)));
