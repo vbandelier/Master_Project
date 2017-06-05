@@ -1,4 +1,4 @@
-function price = Price(option,model,method)
+function price = Pricer(option,model,method)
 cpu_t0 = cputime;
 %% Option Parameters
 S0 = option.S0; r = option.r; q = option.q; N = option.N_fixDates; 
@@ -103,7 +103,7 @@ elseif method.name(1) == 'F'
     levy_grid = (quad_grid(1)-inner_grid(end)):dx:(quad_grid(end)-inner_grid(1));
     if model.name(1) == 'B' || model.name(1) == 'M' || model.name(1) == 'K'
         levyf_vals= model.levyf(levy_grid);
-    elseif model.name(1) == 'N' || model.name(1) == 'V' %|| model.name(1) == 'K'
+    elseif model.name(1) == 'N' || model.name(1) == 'V'
         levyf_vals= model.levyf_epsi(levy_grid,epsi);
     end
     fftJ = fft(dx*levyf_vals);
@@ -223,7 +223,7 @@ elseif method.name(1) == 'C'
     %%
     price = interp1(S,Q(:,1),S0);
     option.set_error(NaN);
-    %plot(S,Q(:,1),'linewidth',1);
+    plot(S,Q(:,1),'linewidth',1);
 end
 price = ApF*price;
 option.CPU_time = cputime-cpu_t0;

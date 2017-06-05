@@ -1,4 +1,4 @@
-model = model3;
+model = model5;
 
 Model_name  = model.name;
 Model_param = model.param;
@@ -19,7 +19,7 @@ for i = 1:Noptions
     
     option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F',1); 
 
-    Pmodel(i) = Price(option,model,method);
+    Pmodel(i) = Pricer(option,model,method);
 end
 %%
 P = Data(:,1);
@@ -27,11 +27,11 @@ K = Data(:,2);
 T = Data(:,3);
 T_unique = unique(T);
 figure
-scatter3(K,T,P,'r','marker','o')
+scatter3(K/S0,T,P,'r','marker','o')
 hold on
-scatter3(K,T,Pmodel,'b','marker','*')
+scatter3(K/S0,T,Pmodel,'b','marker','*')
 view(-5,30)
-xlabel('Moneyness S/K')
+xlabel('Moneyness K/S')
 ylabel('Maturities T')
 zlabel('Prices')
 title('Calibration of the model')

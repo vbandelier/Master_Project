@@ -113,7 +113,9 @@ classdef Model
                 alpha  = model.param(3);
                 delta  = model.param(4);
                 
-                levyf = lambda/(sqrt(2*pi)*delta)*exp(-(x-alpha).^2/(2*delta^2));
+                levyf = [lambda/(sqrt(2*pi)*delta)*exp(-(xneg-alpha).^2/(2*delta^2)),...
+                         lambda/(sqrt(2*pi)*delta)*exp(-alpha^2/(2*delta^2))*ones(1,length(xzero)),...
+                         lambda/(sqrt(2*pi)*delta)*exp(-(xpos-alpha).^2/(2*delta^2))];
             elseif model.name(1) == 'K'
                 lambda = model.param(2);
                 p      = model.param(3);

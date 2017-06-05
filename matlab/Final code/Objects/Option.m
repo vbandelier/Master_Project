@@ -42,7 +42,7 @@ classdef Option < handle
         end
         
         function set_price(option,model,method)
-            option.price = Price(option,model,method);
+            option.price = Pricer(option,model,method);
         end
         function set_error(option,err)
             option.error = err;

@@ -28,7 +28,7 @@ for i = 1:Noptions
     
     option = Option(S0,r,q,K,T,1,gain_fun,@(S,K) 0.*S,0,1000,'F',1); 
 
-    price = Price(option,model,method); % Calculation of model option prices
+    price = Pricer(option,model,method); % Calculation of model option prices
     
     if ~isreal(price)
         Error(1,i) = Inf;
