@@ -100,7 +100,7 @@ end
 P = Data(:,1);
 K = Data(:,2);
 T = Data(:,3);
-subplot(2,2,3)
+subplot(2,2,1)
 scatter3(K/S0,T,P,'r','marker','o')
 hold on
 scatter3(K/S0,T,Pmodel,'b','marker','*')
@@ -108,9 +108,9 @@ view(-5,40)
 xlabel('\fontsize{12} Moneyness K/S')
 ylabel('\fontsize{12} Maturities T')
 zlabel('\fontsize{12} Prices')
-title('\fontsize{14} NIG Calibration')
+title('\fontsize{14} Black-Scholes prices')
 %% ----------
-model = model5;
+model = model1;
 
 Model_name  = model.name;
 Model_param = model.param;
@@ -138,7 +138,7 @@ P = Data(:,1);
 K = Data(:,2);
 T = Data(:,3);
 T_unique = unique(T);
-subplot(2,2,4)
+subplot(2,2,1)
 scatter3(K/S0,T,P,'r','marker','o')
 hold on
 scatter3(K/S0,T,Pmodel,'b','marker','*')
@@ -146,4 +146,4 @@ view(-5,40)
 xlabel('\fontsize{12} Moneyness K/S')
 ylabel('\fontsize{12} Maturities T')
 zlabel('\fontsize{12} Prices')
-title('\fontsize{14} VG Calibration')
+title('\fontsize{14} Black-Scholes prices')

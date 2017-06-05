@@ -29,8 +29,8 @@ RMSE_BS = RMSE(model1.param,model1.name,S0,Data,1000);
 %%  Merton
 param_mer = [0.0653    0.1201   -0.0608    0.1545]; % Calibrated
 %% Calibration %
-% Nx = 1000;
-% param_mer = fminsearch(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,options);
+Nx = 1000;
+param_mer = fminsearch(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,options);
 % lb = [0 0 -Inf 0];
 % ub = [Inf Inf Inf Inf];
 % param_mer = fmincon(@(p) RMSE(p, 'Mer', S0, Data,Nx),param_mer,[],[],[],[],lb,ub,[],options);
@@ -43,8 +43,8 @@ RMSE_Mer = RMSE(model2.param,model2.name,S0,Data,1000);
 %%  Kou
 param_kou = [0.0656    0.1444    0.0751    4.9643    9.6208]; %0Calibrated
 %% Calibration %
-% Nx = 1000;
-% param_kou = fminsearch(@(p) RMSE(p, 'Kou', S0, Data,Nx),param_kou,options);
+Nx = 1000;
+param_kou = fminsearch(@(p) RMSE(p, 'Kou', S0, Data,Nx),param_kou,options);
 % lb = [0 0 0 0 0];
 % ub = [Inf Inf 1 Inf Inf];
 % param_kou = fmincon(@(p) RMSE(p, 'Kou', S0, Data,Nx),param_kou,[],[],[],[],lb,ub,[],options);
@@ -57,8 +57,8 @@ RMSE_Kou = RMSE(model3.param,model3.name,S0,Data,1000);
 %%  NIG
 param_nig = [22.3418   -4.7619    0.1402]; % Calibrated
 %% Calibration %
-% Nx = 1000;
-% param_nig = fminsearch(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,options);
+Nx = 1000;
+param_nig = fminsearch(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,options);
 % lb = [0  -Inf  0];
 % ub = [Inf Inf Inf];
 % param_nig = fmincon(@(p) RMSE(p, 'NIG', S0, Data,Nx),param_nig,[],[],[],[],lb,ub,[],options);
@@ -72,8 +72,8 @@ RMSE_NIG = RMSE(model4.param,model4.name,S0,Data,1000);
 param_vg = [-0.0383    0.0790    0.1827]; % Calibrated
 
 %% Calibration %
-% Nx = 1000;
-% param_vg = fminsearch(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,options);
+Nx = 1000;
+param_vg = fminsearch(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,options);
 % lb = [-Inf  0  0];
 % ub = [Inf Inf Inf];
 % param_vg = fmincon(@(p) RMSE(p, 'VG', S0, Data,Nx),param_vg,[],[],[],[],lb,ub,[],options);
