@@ -3,9 +3,7 @@
 
 \cleanchapterquote{Finance is the art of passing currency from hand to hand until it finally disappears.}{Robert W. Sarnoff}{(1918-1997)}
 
-This thesis presents different numerical methods for pricing FX-TARN under L\'evy processes. In general, options with path dependents payoff, such as this product, are evaluated by Monte Carlo simulations. We will describe two other methods based on Finite Difference (FD) and Fast Fourier Transform (FFT). The initial chapter starts, in Section \ref{sec:intro:motivation}, with an historic of existing works that allowed this project to born. Then, in Section \ref{sec:intro:description}, the FX-TARN product is presented. In section \ref{sec:intro:term_sheet}, an example of term sheet illustrates this exotic product.
-
-Finally, the chapter concludes with an overview of the thesis in section \ref{sec:intro:overview}.
+This thesis presents different numerical methods for pricing FX-TARN under L\'evy processes. In general, options with path dependents payoff, such as this product, are evaluated by Monte Carlo simulations. We will describe two other methods based on Finite Difference (FD) and Fast Fourier Transform (FFT). The initial chapter starts, in Section \ref{sec:intro:motivation}, with an historic of existing works that allowed this project to born. Then, in Section \ref{sec:intro:description}, the FX-TARN product is presented. In section \ref{sec:intro:term_sheet}, an example of term sheet illustrates this exotic product. Finally, the chapter concludes with an overview of the thesis in section \ref{sec:intro:overview}.
 
 \section{Motivation}
 \label{sec:intro:motivation}
@@ -24,12 +22,12 @@ An FX Target Accrual Redemption Note (FX-TARN) is a financial product that allow
 Define the following notations:
 \begin{my_list_item}
 \item $S(t)$ : FX rate at time $t$,
-\item $K$ : strike,
+\item $K$ : strike(s) (could be different for each fixing dates),
 \item $t_0$ : today's date,
 \item $t_1,t_2,\ldots,t_M$ : fixing dates,
 \item $U$ : target accrual level,
 \item $A(t)$ : accumulated gains at time $t$,
-\item $N_f$ : notional foreign amount.
+\item $N_f$ : Accrual amount per fixing date.
 \end{my_list_item}
 
 On each fixing date $t_n, n = 1,\ldots,N,$ if the target level $U$ is not breached by the accumulated amount $A(t_m)$, the gain per unit of notional foreign amount from the point of view of the investor is given by
@@ -40,31 +38,134 @@ where $\beta$ is the strategy, i.e. $\beta = 1$ the investor buys call options, 
 
 Denote $t_{\tilde{N}}$ the first fixing date before maturity on which the target level $U$ is breached by the total accumulated gain (without the loss part), i.e.
 \[\tilde{N}=\min\{n: A(t_n)\geq U\},\qquad n = 1,2,\ldots,N.\]
-If the target $U$ is not breached, set $\tilde{N} = N$. For $t_n \leq t_{\tilde{N}}$ we can write the actual payment as
+If the target $U$ is not breached, set $\tilde{N} = N$. For $t_n \leq t_{\tilde{N}}$ we can write the actual payment for a gain as
 \begin{equation}\label{eq:TARN:gain}
-C_n(S(t_n),A(t_{n-1})) = \tilde{C}_n\times \left(\mathbf{1}_{\{A(t_{n-1})+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}\right),
+C_n(S(t_n),A(t_{n-1})) = \tilde{C}_n\times \left(\mathbf{1}_{\{A(t_{n-1}))+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1})+\tilde{C}\geq U\}}\right),
 \end{equation}
-and $C_n=0$ for $t_n>t_{\tilde{N}}$. This loss does not count in the knock-out condition but will also knock-out by the same knock-out condition. Therefore we have that
+and $C_n=0$ for $t_n>t_{\tilde{N}}$. The loss does not count in the knock-out condition but will also knock-out by the same redemption event. Therefore we have that
 \begin{equation}\label{eq:TARN:loss}
-C^\ast_n = \tilde{C}_n^\ast\times \left(\mathbf{1}_{A(t_{\{n-1})+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1}+\tilde{C}\geq U\}}\right).
+C^\ast_n(S(t_n),A(t_{n-1})) = \tilde{C}_n^\ast\times \left(\mathbf{1}_{\{A(t_{n-1})+\tilde{C}<U\}}+W_n\times\mathbf{1}_{\{A(t_{n-1})+\tilde{C}\geq U\}}\right).
 \end{equation}
-Here, $A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_{n-1}$ and $W_n$ is the weight corresponding to the type of knock-out when the target is breached. Therefore, the accumulated gains $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
-\[A(t_n)= A(t_{n-1}) + C_n(S(t_n),A(t_{n-1})).\]
-We can model the weights $W_n$ for the different types of knock-out as follow:
+Here, $A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_{n-1}$ and $W_n$ is the weight corresponding to the type of knock-out when the target is breached. We can set the weights $W_n$ for the different types of knock-out as follow:
 \[W_n = \begin{cases}
 0, &\text{for No Gain,} \\
 \frac{U-A(t_{n-1})}{\beta\times(S(t_n)-K)}, & \text{for Part Gain,}\\
 1, &\text{for Full Gain.}
 \end{cases}\]
 
+Therefore, the accumulated gains $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
+\[A(t_n)= A(t_{n-1}) + C_n(S(t_n),A(t_{n-1})).\]
+In Figure \ref{fig:cash_flow}, we can see the plot of the positive cash flow $C(S(t),A(t^-)) = C(S,A)$ that counts in the accumulated amount and produces jumps in the price.
+
+
+
 Finally, the net present value of FX-TARN in domestic currency for FX rate realization $\mathbf{S} = (S(t_1),S(t_2),\ldots,S(t_N))$ is
 \begin{equation}\label{eq:intro:pv}
-P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,
+P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{\mathbf{C}^\text{tot}_n(S(t_n),A(t_{n-1}))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,
 \end{equation}
-where $B_d(t_0,t_n)^{-1}$ is the domestic discounting factor from $t_n$ to $t_0$.
+where $B_d(t_0,t_n)^{-1}$ is the domestic discounting factor from $t_n$ to $t_0$ and $\mathbf{C}^\text{tot}_n = C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n),A(t_{n-1}))$ is the total cash flow at time $t_n$.
 
 \section{Example of Term Sheet}
 \label{sec:intro:term_sheet}
+In this section, we will give an example of a particular TARN called \textit{"Leveraged Foreign Exchange Target Accrual Redemption Note with Full Settlement"}, i.e. Full Gain FX-TARN with gear factor. Thus this is a Full Gain FX-TARN with gear factor. The term sheet has the following form.
+
+\begin{longtable}{|l|l|} 
+\hline
+\textbf{USD/CHF FX-TARN} & \textbf{Key Characteristics of the Transaction} \\
+\hline 
+\hline
+Instrument Type & Leverage FX Target Accrual Redemption Note (TARN) \\
+\hline
+Trade Date & 23 May 2017\\
+\hline
+Transaction Price & 0\% (zero cost strategy) \\
+\hline
+Buyer of CHF & The Bank \\
+\hline
+Buyer of USD & The Client \\
+\hline
+Underlying & USD/CHF Foreign Exchange rate\\
+\hline
+Notional Amount & USD 2'080'000.00 \\
+&(versus maximum notional amount USD 4'160'000.00)\\
+\hline
+Accrual Amount & USD 40'000.00\\
+per Fixing Date &(versus Leveraged Accrual Amount USD 80'000.00)\\
+\hline
+Leverage factor &2\\
+\hline
+Initial Spot Price & 0.9730 CHF per USD\\
+\hline
+Strike Price & As per date schedule below\\
+\hline
+Target Redemption Level & 0.4 CHF per 1 USD\\
+\hline
+Weekly Gains & On each Fixing Date, \\
+& $\bullet$ If USD/CHF > Strike Price :\\
+& \qquad Weekly Gains = USD/CHF - Strike Price\\ 
+& $\bullet$ Otherwise :\\
+& \qquad Weekly Gains = 0 CHF\\
+\hline
+Cumulated Gains & In respect of any Fixing Date, the Weekly Gains \\
+& on that Fixing Date plus the sum of all Weekly \\
+& Gains in respect of all previous Fixing Dates.\\
+\hline
+Redemption Event & A Redemption Event is deemed to have occurred \\
+& if the Cumulated Gains (including the present fixing)\\ 
+& is greater than or equal to the Target Redemption Level\\ 
+& on any Fixing Date.\\
+\hline
+Expiration Date & 22 May 2018 \\
+\hline
+Fixing Reference & Weekly (Business Days)\\
+\hline
+Fixing Dates & 52 Fixings (see Schedule below)\\
+\hline
+Profile on Fixing Date & In respect of each Fixing Date :\\
+& \textbf{1)} If no Redemption Event occurs and the Fixing Price is :\\
+& $\quad\bullet$ At or above the Strike Price, the Client will buy from \\
+& \qquad the Bank the Accrual Amount at the strike price : \\
+& $\hspace{2cm}$ \textbf{Strike Price x Accrual Amount}\\
+& Or \\
+& $\quad\bullet$ Below the Strike Price, the Client will buy from the \\
+& \qquad Bank the Leveraged Accrual Amount at the Strike  \\
+& \qquad Price at the Strike Price for delivery on the relevant \\
+& \qquad Settlement Date :\\
+& $\hspace{1cm}$ \textbf{Leveraged Factor x Strike Price x Accrual Amount}\\
+& \textbf{2)} If a Redemption Event occurs :\\
+& $\quad\bullet$ The Client will buy from the Bank the Accrual Amount \\
+& \qquad at the Strike Price for the Fixing Date that Redemption \\
+& \qquad Event is deemed to have occurred : \\
+& $\hspace{2cm}$ \textbf{Strike Price x Accrual Amount}\\
+& $\quad\bullet$ The product is then knocked out for all remaining\\ 
+& \qquad subsequent Fixings. There will be no further\\ 
+&\qquad obligations between the Client and the Bank. \\
+\hline
+Schedule & \\
+& \qquad\qquad$\begin{array}{|c|c|c|} 
+\hline
+\textbf{Fixing} & \textbf{Fixing Date} & \textbf{Strike Level} \\
+\hline 
+1 & 30 \text{ May } 2017 & 0.9275\\
+2 & 6 \text{ June } 2017 & 0.9275\\
+3 & 13 \text{ June } 2017 & 0.9350\\
+4 & 20 \text{ June }2017 & 0.9350\\
+5 & 27 \text{ June }2017 & 0.9350\\
+6 & 4 \text{ July }2017 &  0.9420\\
+7 & 18 \text{ July }2017 & 0.9420\\
+8 & 25 \text{ July }2017 & 0.9420\\
+\vdots & \vdots & \vdots\\
+50 & 8 \text{ May }2018 & 0.9420\\
+51 & 15 \text{ May }2018 & 0.9420\\
+52 & 22 \text{ May }2018 & 0.9420\\
+\hline
+\end{array}$ \\
+ & (Pay intention about the strike that is increasing in time.)\\
+\hline
+\caption{FX-TARN Term Sheet example.}
+\end{longtable}
+
+
 
 \section{Overview of the Thesis}
 \label{sec:intro:overview}

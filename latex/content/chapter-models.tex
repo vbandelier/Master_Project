@@ -127,9 +127,9 @@ Now as for Merton model, the equation \eqref{eq:CF_Ljd} gives us the characteris
 Hence the model is characterized by the triplet $(\gamma,\sigma,\lambda\cdot f_J)$.
 
 The characteristic exponent of this process gives us
-$$\Psi(-i) = \gamma + \frac{1}{2}\sigma^2 +\lambda \left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right).$$
+$$\Psi(-i) = \gamma + \frac{1}{2}\sigma^2 +\lambda \left(\frac{p\cdot\eta_1}{\eta_1-1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right).$$
 Consequently we obtain the risk-neutral drift
-$$\gamma^\ast = (r-q)- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right),$$
+$$\gamma^\ast = (r-q)- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_1-1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right),$$
 and the risk-neutral characteristic function of the Double Exponential Kou jump-diffusion model
 $$\Phi_t^\text{RN}(u)=\exp\left\{t\left(i\gamma^\ast u -\frac{1}{2}\sigma^2 u^2 +\lambda\left(\frac{p\cdot\eta_1}{\eta_1+iu}+\frac{(1-p)\cdot\eta_2}{\eta_2+iu}-1\right)\right)\right\}.$$
 Therefore we can model the risk-neutral stock price process by
@@ -205,14 +205,16 @@ S_0&=\mathbb{E}^\mathbb{Q}\left[e^{-(r-q)t}S_t\right]\\
 &=S_0e^{\omega t}\Phi_t^\text{NIG}(-i).
 \end{align*}
 Therefore we must have $e^{\omega t}\Phi^\text{NIG}_t(-i) = 1$ or equivalently
-$$\omega = - \delta t\left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+1)^2}\right).$$
+$$\omega = - \delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+1)^2}\right).$$
 This gives us the risk-neutral drift
 $$\gamma^\ast=(r-q) -\delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+1)^2}\right),$$
 and the risk-neutral characteristic function is
 $$\Phi^{RN}_t(u) = \exp\left\{t\left(i\gamma^\ast u + \delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+iu)^2}\right)\right)\right\}.$$
 Finally, the risk-neutral stock price process is in the form
 $$S_t = S_0 \exp\{\gamma^\ast t + X_t^\text{NIG} (\alpha,\beta,\delta)\},$$
-where $X_t^\text{NIG}$ is the Normal Inverse Gaussian process and $\gamma^\ast$ is the risk-neutral drift.
+where $X_t^\text{NIG}$ is the Normal Inverse Gaussian process characterized by the L\'evy triplet $(\gamma^\ast,0,\nu^\text{NIG}$, with
+$$\nu^\text{NIG}(dx) = \frac{\delta \alpha}{\pi}\frac{\exp(\beta x)K_1(\alpha|x|)}{|x|}dx,$$
+where $K_\lambda$ is the modified Bessel of the second king with index $\lambda$.
 
 \subsection{Variance Gamma Model}
 \citeauthor{MCC98} in \citeyear{MCC98} had the same approach as the previous Normal Inverse Gaussian model. The difference is that the random time in the Brownian motion is Gamma distributed. In a second time, since this process has also finite variation, it can be represent by the difference of two increasing processes. The first one models the price increases while the second one reflects the price decreases. To begin, let us introduce the subordinating Gamma process used to construct the Variance Gamma process.
@@ -291,14 +293,24 @@ and the risk-neutral characteristic function is given by
 $$\Phi_t^\text{RN}(u)=\exp\left\{t\left(i\gamma^\ast u-\frac{1}{\nu}\ln\left(1-iu\theta\nu+\frac{\sigma^2\nu}{2}u^2\right)\right)\right\}.$$
 Finally, the risk-neutral stock price process is 
 $$S_t = S_0\exp\left\{\gamma^\ast t+X_t^\text{VG}(\theta,\sigma,\nu)\right\},$$
-where $X_t^\text{VG}$ is the Variance Gamma process and $\gamma^\ast$ is the risk-neutral drift.
+where $X_t^\text{VG}$ is the Variance Gamma process characterized by the L\'evy triplet $(\gamma^\ast,0,\nu^\text{VG})$, with
+$$\nu^\text{VG}(dx) = \begin{cases}
+\frac{C\exp(Gx)}{|x|}dx,&x<0,\\
+\frac{C\exp(-Mx)}{x}dx,&x>0,
+\end{cases}$$
+where
+\begin{align*}
+C &= \frac{1}{\nu}>0,\\
+G &= \left(\sqrt{\frac{1}{4}\theta^2\nu^2+\frac{1}{2}\sigma^2\nu}-\frac{1}{2}\theta \nu\right)^{-1}>0,\\
+M &=\left(\sqrt{\frac{1}{4}\theta^2\nu^2+\frac{1}{2}\sigma^2\nu}+\frac{1}{2}\theta \nu\right)^{-1}>0.
+\end{align*}
 \section{Summary}
 To summarize, we can see that in all models the risk-neutral stock price process can be written in the form:
 $$S_t = S_0\exp\left\{\gamma^\ast t + X_t\right\},$$
 with the risk-neutral drift $\gamma^\ast$ and a drift-less L\'evy process $X_t$. Moreover, the risk-neutral characteristic function is in the form:
 $$\Phi^\text{RN}_t(u) = \exp\left\{t\left(i\gamma^\ast u + \Psi(u)\right)\right\},$$
-where $\Psi$ is the characteristic exponent of $X_1$. Tables \ref{tab:LevyPro}, \ref{tab:rn_drift} and \ref{tab:rn_ce} illustrate respectively the drift-less L\'evy process $X_t$, the risk-neutral drift $\gamma^\ast$ and the risk-neutral characteristic exponent $\Psi(u)$ for all the models which we have just studied in this chapter.
-\vspace{5cm}
+where $\Psi$ is the characteristic exponent of $X_1$. Tables \ref{tab:LevyPro}, \ref{tab:rn_drift}, \ref{tab:density} and \ref{tab:rn_ce} illustrate respectively the drift-less L\'evy process $X_t$, the risk-neutral drift $\gamma^\ast$, the L\'evy density $\nu(dy)$ and the risk-neutral characteristic exponent $\Psi(u)$ for all the models which we have just studied in this chapter.
+\vspace{3cm}
 \begin{table}[!ht]
 \centering
   \begin{tabular}{l|c|c}
@@ -327,7 +339,7 @@ where $\Psi$ is the characteristic exponent of $X_1$. Tables \ref{tab:LevyPro}, 
    Black-Scholes & $r-q-\frac{1}{2}\sigma^2$ \\
    \midrule
    Merton & $r-q -\frac{1}{2}\sigma^2 - \lambda\left(e^{\alpha+\frac{1}{2}\delta^2}-1\right)$\\
-   Kou & $r-q- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_1+1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right)$\\
+   Kou & $r-q- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_1-1}+\frac{(1-p)\cdot\eta_2}{\eta_2+1}-1\right)$\\
    \midrule
    Normal Inverse Gaussian & $r-q -\delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+1)^2}\right) $\\
    Variance Gamma &$r-q + \frac{1}{\nu}\ln\left(1-\theta\nu-\frac{\sigma^2\nu}{2}\right)$ \\
@@ -341,17 +353,35 @@ where $\Psi$ is the characteristic exponent of $X_1$. Tables \ref{tab:LevyPro}, 
 \centering
   \begin{tabular}{l|c}
     \toprule
+    Models & L\'evy density $\nu(dy)$ \\
+    \toprule
+   Black-Scholes & $0$ \\
+   \midrule
+   Merton & $\frac{\lambda}{\sqrt{2\pi}\delta}e^{-\frac{(x-\alpha)^2}{2\delta^2}}dx$\\
+   Kou & $\lambda\left(p\cdot\eta_1e^{-\eta_1 x} \mathbf{1}_{x\geq0}+(1-p)\cdot\eta_2e^{\eta_2x}\mathbf{1}_{x<0}\right)dx$\\
+   \midrule
+   Normal Inverse Gaussian & $\frac{\delta \alpha}{\pi}\frac{\exp(\beta x)K_1(\alpha|x|)}{|x|}dx $\\
+   Variance Gamma & $\left(\frac{C\exp(-Mx)}{x}\mathbf{1}_{x\geq0}+\frac{C\exp(Gx)}{|x|}\mathbf{1}_{x<0}\right)dx $ \\
+    \bottomrule
+  \end{tabular}
+  \vspace{5pt}
+  \caption{\label{tab:density} L\'evy density $\nu(dy)$ for several models.}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+  \begin{tabular}{l|c}
+    \toprule
     Models & Risk-neutral characteristic exponent $\Psi(u)$ \\
     \toprule
    Black-Scholes & $-\frac{1}{2}\sigma^2u^2$ \\
    \midrule
    Merton & $-\frac{1}{2}\sigma^2 u^2 + \lambda\left(e^{i\alpha u -\frac{1}{2}\delta^2 u^2}-1\right)$\\
-   Kou & $-\frac{1}{2}\sigma^2 u^2 +\lambda\left(\frac{p\cdot\eta_1}{\eta_1+iu}+\frac{(1-p)\cdot\eta_2}{\eta_2+iu}-1\right)$\\
+   Kou & $-\frac{1}{2}\sigma^2 u^2 +\lambda\left(\frac{p\cdot\eta_1}{\eta_1-iu}+\frac{(1-p)\cdot\eta_2}{\eta_2+iu}-1\right)$\\
    \midrule
    Normal Inverse Gaussian & $\delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\beta+iu)^2}\right)$\\
    Variance Gamma &$-\frac{1}{\nu}\ln\left(1-iu\theta\nu+\frac{\sigma^2\nu}{2}u^2\right)$ \\
     \bottomrule
   \end{tabular}
-  \vspace{5pt}
   \caption{\label{tab:rn_ce} Risk-neutral characteristic exponent $\Psi(u)$ for several models.}
 \end{table}
