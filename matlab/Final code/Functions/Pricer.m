@@ -44,7 +44,7 @@ if method.name(1) == 'M'
             end
         end
     end
-    option.set_error(std(V)/sqrt(M-1));
+    option.set_error(std(ApF*V)/sqrt(M-1));
     price = mean(V);
 %% Finite Difference Method -----------------------------------------------
 elseif method.name(1) == 'F'
