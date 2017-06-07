@@ -7,6 +7,10 @@ loss_fun = option.loss_fun;
 K = option.K; Targ = option.Target; KO = option.KO(1);
 period = option.Period; T = period*N; ApF = option.ApF;
 
+if length(K) == 1
+    K = K*ones(N,1);
+end
+
 Xmin = -5;
 Xmax = 1;
 q_min = -7;
