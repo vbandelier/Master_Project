@@ -1,7 +1,7 @@
 clc
 close all
 %% Market data
-[Prices,Strikes,Maturity,r,q,Option_type] = importfile('EURUSD_20170524_ask.csv',2, 111);
+[Prices,Strikes,Maturity,r,q,Option_type] = importfile('EURUSD_20170524_mid.csv',2, 111);
 Data = [Prices,Strikes,Maturity,r,q,Option_type];
 options = optimset('display','iter','FunValCheck', 'on', 'MaxFunEvals', 5000, 'MaxIter', 5000);
 % opts = optimoptions(@fmincon,'Algorithm','interior-point');
@@ -128,7 +128,7 @@ disp('---------- Black-Scholes ----------')
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_BS.price)));
 TARN_Conv_BS.set_price(model1,method3);
 disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_BS.price)));
-
+%%
 disp('---------- Merton -----------------')
 % TARN_MC_Mer.set_price(model2,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Mer.price)));

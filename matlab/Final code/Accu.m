@@ -1,7 +1,7 @@
 clc
 close all
 %% Market data
-[Prices,Strikes,Maturity,r,q,Option_type] = importfile('Market_data_mid.csv',2, 111);
+[Prices,Strikes,Maturity,r,q,Option_type] = importfile('USDCHF_20170523_mid.csv',2, 111);
 Data = [Prices,Strikes,Maturity,r,q,Option_type];
 options = optimset('display','iter','FunValCheck', 'on', 'MaxFunEvals', 5000, 'MaxIter', 5000);
 opts = optimoptions(@fmincon,'Algorithm','interior-point');
