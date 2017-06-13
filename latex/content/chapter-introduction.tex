@@ -7,6 +7,16 @@ This thesis presents different numerical methods for pricing FX-TARN under L\'ev
 
 \section{Motivation}
 \label{sec:intro:motivation}
+This project was born during my internship in market risk management at Pictet, a swiss private bank. In fact, I had to reprice FX-TARN to evaluate the risk on this product. The first approach was to price it with Monte Carlo simulations. However, the computational cost was very expensive. Several numbers of research brought me to the paper of \citeauthor{LS15} \citeyearpar{LS15}, in which they develop a Finite Difference (FD) method for Black-Scholes model. 
+
+It is well known that the assumptions under Black-Scholes model are too restrictive with respect to the market. Indeed, the log-normality of the returns and the path continuity are contradicted by the analysis of the financial data. We can clearly identify jumps in financial time series. In addition, the implied volatility presents in general a negative skew which means that the returns distribution is more leptokurtic (fat tails) than the normal one. This can be due effectively to the jumps in the market prices, accentuated during the economic crises.
+
+To go beyond the Black-Scholes model and avoid inconsistencies with the markets, we can model stock price with exponential L\'evy processes. There are two different classes of L\'evy models used in this thesis, the jump-diffusion (finite activity) models which are extension of Black-Scholes model including jumps, and pure jump (infinite activity) models which model the asset price by infinitely many small jumps. The advantage of these models is that they capture
+the volatility smile structure. 
+
+The first part of the study was thus to enlarge the Finite Difference (FD) method proposed by \citeauthor{LS15} to the L\'evy processes with jumps. This generalization involves the L\'evy measure characterizing the jumps. This leads to large complexities in the implementation of the method and then the computational time grows up with the complexity. Therefore the question was how to boost the pricing engine. The Computational Finance lesson given by the Prof. \citeauthor{Nob15} in collaboration with Prof. Pulido and Kressner from the Swiss Institute of Technology Lausanne (EPFL), gives me the idea to solve the problem with Fast Fourier Transform (FFT). At the end, the solution was found in the Convolution method proposed by \citeauthor{Lor+08} \citeyearpar{Lor+08}, where they apply a FFT based method to the early exercised option like Bermudan or American options. T hen, the combination of the methods of \citeauthor{LS15} and \citeauthor{Lor+08} allows us to develop our own method to price FX-TARN with the FFT approach.
+
+To achieve this project, it was natural to call the Prof. Fabio Nobile, who is a specialist of numerical analysis in partial differential equations (PDE), and the Prof. Julien Hugonnier, who taught me the pricing of financial derivatives. Thank's to them for their useful supervision.
 
 \section{FX-TARN Description}
 \label{sec:intro:description}
@@ -55,9 +65,13 @@ Here, $A(t_{n-1})$ is the accumulated gain immediately after the fixing date $t_
 
 Therefore, the accumulated gains $A(t)$ is a step function such that $A(t) = A(t_{n-1})$, for $t_{n-1}\leq t < t_n$ with
 \[A(t_n)= A(t_{n-1}) + C_n(S(t_n),A(t_{n-1})).\]
-In Figure \ref{fig:cash_flow}, we can see the plot of the positive cash flow $C(S(t),A(t^-)) = C(S,A)$ that counts in the accumulated amount and produces jumps in the price.
-
-
+In Figure \ref{fig:cash-flow}, we can see the plot of the positive cash flow $C(S(t),A(t^-)) = C(S,A)$ that counts in the accumulated amount and produces jumps in the price on a fixing date.
+\begin{figure}[!htb]
+\centering
+	\includegraphics[width=\textwidth]{gfx/Cash-flow}
+	\caption{Positive cash flow that produces jump on a fixing date for different type of knock-out.}
+	\label{fig:cash-flow}
+\end{figure}
 
 Finally, the net present value of FX-TARN in domestic currency for FX rate realization $\mathbf{S} = (S(t_1),S(t_2),\ldots,S(t_N))$ is
 \begin{equation}\label{eq:intro:pv}
@@ -77,8 +91,6 @@ In this section, we will give an example of a particular TARN called \textit{"Le
 Instrument Type & Leverage FX Target Accrual Redemption Note (TARN) \\
 \hline
 Trade Date & 23 May 2017\\
-\hline
-Transaction Price & 0\% (zero cost strategy) \\
 \hline
 Buyer of CHF & The Bank \\
 \hline
@@ -169,3 +181,14 @@ Schedule & \\
 
 \section{Overview of the Thesis}
 \label{sec:intro:overview}
+This thesis is organized as follow. In the Chapter \ref{sec:Levy}, we introduce the L\'evy processes used to model the asset price. We also present the main mathematical properties that are useful in the pricing methods we will study.
+
+In the Chapter \ref{sec:models}, we deal with the financial models such as jump-diffusion and pure jump models. We will see in particular the finite activity models of Merton and Kou. Then we will devote some time to the Normal Inverse Gaussian (NIG) and Variance Gamma (VG) models, that are special cases of infinite activity models. The tools characterizing the L\'evy processes such as the L\'evy densities and characteristic functions are respectively very useful in the Finite Difference method and the Convolution method.
+
+In the Chapter \ref{sec:methods}, we expose the three numerical methods, which are the Monte Carlo method, the Finite Difference method and the Convolution method, used to price our exotic options. 
+
+In the Chapter \ref{sec:calibration}, we calibrate all the models with respect to the market data in oder to be able to price the real term sheet of FX-TARN presented before.
+
+The Chapter \ref{sec:results} is devoted to the results of experimental options. This allows us to analysis the performances of the tree different methods. Then, this chapter ends up with the pricing of our real case example.
+
+Finally, the Chapter \ref{sec:conclusion} conclude this thesis with an overview of possible future works.

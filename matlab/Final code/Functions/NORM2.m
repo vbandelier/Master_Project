@@ -1,4 +1,4 @@
-function RMSE = RMSE(Model_param,Model_name, S0, Market_data,Nx)
+function NORM2 = NORM2(Model_param,Model_name, S0, Market_data,Nx)
 
 % Computes Root Mean Squared error 
 % Model_param = parameters of the model
@@ -42,5 +42,5 @@ for i = 1:Noptions
     
 end
 
-RMSE = sqrt(sum(Error));
+NORM2 = sqrt(sum(Error));
 

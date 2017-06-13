@@ -38,6 +38,11 @@ title('\fontsize{14} Balck-Scholes prices')
 %% Jump models
 figure(2)
 model = model2;
+
+Model_name  = model.name;
+Model_param = model.param;
+
+model  = Model(Model_name,Model_param);
 Noptions = size(Data,1);
 
 Pmodel = NaN(Noptions,1);

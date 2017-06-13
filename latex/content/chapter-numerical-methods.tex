@@ -3,7 +3,13 @@
 
 \cleanchapterquote{FFT is the most important numerical algorithm of our lifetime.}{Gilbert Strang}{(1934)}
 
-Section Introduction
+Several methods can be used to price an option under L\'evy process. A method easy to implement and available for exotic options it the \textit{Monte Carlo method}. In this method, we need to simulate a multitude of risk-neutral paths, and then discount the average value of all scenarios. However, this method is very expensive computationally, in particular for a large number of fixing date that forces us to discretize more the paths. The section \ref{sec:methods:MC} is dedicated to this method.
+
+A second way to price exotic options, is to derive the partial differential equation (PDE) or the partial integro differential equation (PIDE) in the case of jump processes. Then we can solve these PDE or PIDE with \textit{Finite Difference method}, for example, to get the price of the option. This method invokes the L\'evy density measure $\nu(dx)$ and could be very complex to implement. We will see that in section \ref{sec:methods:FD}.
+
+A third method, very useful since the density function is often not known in closed form, invokes the characteristic function of the L\'evy process which is always in closed form for L\'evy processes. Then we can use Fourier transform to price the option. Therefore, we will use in section \ref{sec:methods:conv} a method based on Fast Fourier Transform (FFT), which is called the \textit{Convolution method}. This method is very well performing and can be efficiently computed using fast algorithm. 
+
+Finally, we will closed this chapter by summarizing the whole algorithm used to price the FX-TARN.
 
 \section{Monte Carlo Method }
 \label{sec:methods:MC}
@@ -161,13 +167,13 @@ with $A^+(t_{n-1})=A(t_{n-1})+C_n(S,A(t_{n-1}))$ is the accumulated amount after
 Finally, the today's FX-TARN price is given by $V(S(t_0),t_0,0)$.
 
 \subsubsection{Finite difference scheme and Cubic spline interpolation}
-In order to get this final solution, the idea of \citeauthor{LS15} is to introduce an auxiliary finite grid $0 = A_1<A_2<\cdots<A_J= U$ to track the accumulated amount, where $U$ denotes the target. Then the goal is to perform $J$ finite difference solutions between all fixing dates, for each node in the accumulated amount which correspond to different "scenarios". 
+In order to get this final solution, the idea of \citeauthor{LS15} is to introduce an auxiliary finite grid $0 = A_1<A_2<\cdots<A_{N_a}= U$ to track the accumulated amount, where $U$ denotes the target. Then the goal is to perform $N_a$ finite difference solutions between all fixing dates, for each node in the accumulated amount which correspond to different "scenarios". 
 
 Let us now introduce a finite difference grid points in the spot price variable $S$, $0 = S_0 < S_1 <\cdots<S_M = S_{\max}$. For a fixed time $t_n$, if we associate the node $A_j$ to the accumulated amount $A(t_{n-1})$, the equation \eqref{eq:jump_cond} can be written as
 $$V(S_m,t^-_n,A_j) = V(S_m,t_n,A^+_j)+ \mathbf{C}^\text{tot}_n(S_m,A_j),$$
 with $A_j^+ = A_j + C_n(S_m,A_j)$, for $m=1,\ldots,M$. This quantity is used as initial condition at the beginning of each finite different scheme.
 
-Since only the value $V(S_m,t_n,A_j)$ is known after a diffusion, we have to evaluate $V(S_m,t_n,A_j^+)$ by cubic spline interpolation. Hence for a fixed $j$, we can extract $J$ values $V(S_m,t_n,A_j^+)$ from $V(S_m,t_n,A_j)$ by interpolating with respect to $A_j$.
+Since only the value $V(S_m,t_n,A_j)$ is known after a diffusion, we have to evaluate $V(S_m,t_n,A_j^+)$ by cubic spline interpolation. Hence for a fixed $j$, we can extract $N_a$ values $V(S_m,t_n,A_j^+)$ from $V(S_m,t_n,A_j)$ by interpolating with respect to $A_j$.
 
 To perform the finite difference it is common to write equation \eqref{eq:PDE} in terms of log asset price $x = \log(S)$ and time to maturity $\tau=T-t$. This gives us the following PDE
 $$\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2 V}{\partial x^2}-\left(r_d - r_f - \frac{1}{2}\sigma^2\right)\frac{\partial V}{\partial x}+r_d V = 0.$$
@@ -313,7 +319,7 @@ $$\begin{cases}
 \end{cases}$$
 
 At each iteration of this explicit-implicit scheme, we have to compute the integral term $\mathbf{F}^n_J = J\mathbf{\tilde{V}}^n$, in $\mathcal{O}(M\times \tilde{M})$ operations, and then solve the tridiagonal linear system
-$$(I+\Delta t A)\mathbf{U}^{n+1} = \mathbf{U}^n +\Delta t\left(\mathbf{F}^m_J+\mathbf{F}^{n+1}\right),$$ 
+$$(I+\Delta t A)\mathbf{U}^{n+1} = \mathbf{U}^n +\Delta t\left(\mathbf{F}^n_J+\mathbf{F}^{n+1}\right),$$ 
 in $\mathcal{O}(M)$ operations.
 However we can reduce the number of operation to $\mathcal{O}(M\log(M))$ by computing the integral term by FFT.
 
@@ -354,9 +360,9 @@ is very expensive ($\mathcal{O}(M^3)$) by $\mathcal{LU}$ factorization.
 
 Then a possible remedy is to use fixed-point iterations. In other words, at time step $\tau_{n+1}$, denote $\mathbf{V}^{n+1}_{(k)}$ the $k$-th fixed point iteration and compute $\mathbf{V}^{n+1}_{k+1}$ as
 $$(I+\Delta t A)\mathbf{V}^{n+1}_{(k+1)} = -\Delta t J\mathbf{\tilde{V}}^{n+1}_(k)+\mathbf{V}^n + \Delta t \mathbf{F}^{n+1}.$$
-The fixed point iterations can be started from $\mathbf{V}^{n+1}_{(0)}=\mathbf{V}^n$ and stopped as soon as $\parallel\mathbf{V}^{n+1}_{(k+1)}-\mathbf{V}^{n+1}_{(k)}\parallel tol$ for a prescribed tolerance.
+The fixed point iterations can be started from $\mathbf{V}^{n+1}_{(0)}=\mathbf{V}^n$ and stopped as soon as $\parallel\mathbf{V}^{n+1}_{(k+1)}-\mathbf{V}^{n+1}_{(k)}\parallel < tol$ for a prescribed tolerance.
 
-Therefore, at each iteration, we have to solve a tridiagonal system, which costs $\mathcal{O}(M)$, and compute $J\mathbf{\tilde{V}}^{n+1}_{(k)}$, which costs $\mathcal{O}(M_T \log(M_T))$ if we use FFT.
+Therefore, at each iteration, we have to solve a tridiagonal system, which costs $\mathcal{O}(M)$, and compute $J\mathbf{\tilde{V}}^{n+1}_{(k)}$, which costs $\mathcal{O}(M_T \log(M_T))$ if we use FFT. At the end, if the FX-TARN is composed of $N_\text{fix-dates}$ fixing dates, the total computational cost of the FD method is $\mathcal{O}(N_\text{fix-dates} N_a M_T\log(M_T))$, where $N_a$ is the number of grid points in the accumulated variable $A$ discretization.
 
 \subsection{Pure jump models}
 In the case of pure jump models, the L\'evy measure as the property that $\nu(\mathbb{R})= \infty$, which means that the process has infinite activity, i.e. there are infinitely many small jumps. In other words, the L\'evy density $\nu(dy)=k(y)dy$ explodes at the origin, as we can see on the Figure \ref{fig:FD:pj_density}. Unfortunately, it does not allow us to apply the preceding procedure by splitting the integral term in three parts
@@ -410,8 +416,113 @@ c(\epsilon) &\equiv \int_{-\infty}^\infty \left(y^2-1\right)k_\epsilon(y)dy,\\
 \end{align*}
 
 For more details about the consistency, stability and convergence of finite difference scheme for exponential L\'evy models, please see in the main reference of this section, \citep{CV05}.
+
 \section{The Convolution Method}
 \label{sec:methods:conv}
+The idea of this method is to replace the finite difference scheme by the convolution method proposed by \citeauthor{Lor+08} \citeyearpar{Lor+08}. The advantage of this method, based on the \textit{Fast Fourier Transform} (FFT), is that we don't need to discretize time between fixing dates. Thus, the total computational cost of the method is reduced to $\mathcal{O}(N_\text{fix-dates} N_a M \log(M))$, where $M$ and $N_a$ are respectively the number of grid points used to discretize the stock price $S$ and the accumulated amount variable $A$. 
+
+\subsection{Description of the method}
+Consider $V(S(t_n),t_n)$ the value of our FX-TARN at the $n$\textsuperscript{th} fixing date. Therefore, we can write, under risk-neutral measure $\mathbb{Q}$,
+\begin{align*}
+V(S(t_n),t_n) &= \mathbb{E}^\mathbb{Q}\left[e^{-r\Delta_t}V(S(t_{n+1}),t_{n+1}|S(t_n)\right]\\
+&=e^{-r\Delta_t}\int_{-\infty}^\infty V(y,t_{n+1})f(y|S(t_n))dy,
+\end{align*}
+where $f(y|S(t_n))$ represents the transition density from $S(t_n)$ at $t_n$ to $y$ at $t_{n+1}$. Since we use exponential L\'evy processes to characterize the stock price $S(t_n) = e^{X(t_n)}$, the stock price process has independent increments and we can write
+$$f(y|x) = f(y-x),$$
+where $x = \log(S(t_n))$ and $y = \log(S(t_{n+1}))$.
+
+By changing variables $z = y-x$, the value $V$ can be expressed as
+\begin{equation}\label{conv}
+V(x,t_n) = e^{-r\Delta_t}\int_{-\infty}^\infty V(x+z,t_{n+1})f(z)dz,
+\end{equation}
+which is a cross-correlation of the option value at time $t_{n+1}$ and the density $f(z)$. We can equivalently see that as a convolution of $V(t_{n+1})$ and the conjugate of $f(z)$.
+
+Let us now define the Fourier transform.
+
+\begin{defn}[Fourier Transform]\label{def:conv:FT}
+Given $h\in L^1(\mathbb{R})$, i.e. $h$ is an integrable function, we denote by $\hat{h}$ the \textbf{Fourier transform} of $h$, defined by
+$$\hat{h}(u) := \mathcal{F}\{h(t)\}(u) = \int_{-\infty}^\infty e^{iut} h(t) dt.$$
+Moreover, if $\hat{h}\in L^1(\mathbb{R})$, the \textbf{inverse Fourier transform} is given by
+$$h(t):=\mathcal{F}^{-1}\{\hat{h}(u)\}(t) = \frac{1}{2\pi}\int_{-\infty}^\infty e^{-iut}\hat{h}(u)du.$$
+\end{defn}
+Remark that since $f$ is the density function of the L\'evy process, the Fourier transform of $f$ correspond to the characteristic function $\Phi$ of the process $X = \{X_t,t\geq 0\}$.
+
+Now if we damped the option value by a factor $\exp(\alpha x)$ and take the Fourier transform of equation \eqref{conv}, we get
+\begin{align*}
+e^{r\Delta_t}\mathcal{F}\{v(x,t_n)\}(u) &= \int_{-\infty}^\infty e^{iux} e^{\alpha x} \int_{-\infty}^\infty V(x+z,t_{n+1})dzdx \\
+&= \int_{-\infty}^\infty e^{iu(x+z)}v(x+z,t_{n+1})e^{-iz(u-i\alpha)}f(z)dzdx,
+\end{align*}
+where $v(x,t) = e^{\alpha x}V(x,t)$ is the damped value option. Changing the order of integration, we obtain
+\begin{align*}
+e^{r\Delta_t}\mathcal{F}\{v(x,t_n)\}(u) &= \int_{-\infty}^\infty\int_{-\infty}^\infty e^{iuy}v(y,t_{n+1})dy~e^{-i(u-i\alpha) z}f(z)dz\\
+&= \int_{-\infty}^\infty e^{iuy}v(y,t_{n+1})dy \int_{-\infty}^\infty e^{-i(u-i\alpha)z}f(z)dz \\
+&= \mathcal{F}\{v(x,t_n)\}(u)\Phi(-(u-i\alpha)).
+\end{align*}
+The difference with the approach of \citeauthor{CM99} \citeyearpar{CM99} is that we take the transform with respect to the log-spot price instead the log-strike price.
+
+\subsection{Implementation of the method}
+The goal is now to compute the convolution 
+\begin{equation}\label{eq18}
+v(x) = \frac{1}{2\pi}\int_{-\infty}^\infty e^{-iux}\hat{v}(u)\Phi(-(u-i\alpha))du,
+\end{equation}
+where $\hat{v}(u)$ is the Fourier transform of $v$:
+\begin{equation}\label{eq19}
+\hat{v}(u) = \int_{-\infty}^\infty e^{iuy}v(y)dy.
+\end{equation}
+For notational convenience, we dropped the discounting factor out of the equation. We can approximate these both integrals by a discrete sum, that allows us to use FFT algorithm to compute them. Thus we have to construct uniform grids for $u,x$ and $y$:
+\begin{align*}
+u_j &= u_0 + j\Delta u,\\
+x_j &= x_0 + j\Delta x,\\
+y_j &= y_0 +j\Delta y,
+\end{align*}
+for $j = 0,\ldots,M-1$. We can take the same mesh size for the $x$- and $y$-grids, i.e. $\Delta x = \Delta y$. However, the Nyquist relation must be satisfied, i.e.
+$$\Delta u \cdot \Delta y = \frac{2\pi}{M}.$$
+The discretization of equations \eqref{eq18}, with a general Newton-C\^otes rule to approximate the equations \eqref{eq19}, gives us
+$$v(x_p)\approx\frac{\Delta u \Delta y}{2\pi}\sum_{j=0}^{M-1}e^{-iu_jx_p}\Phi(-(u_j-i\alpha))\sum_{n=0}^{M-1}w_ne^{iu_jy_n}v(y_n),$$
+for $p=0,\ldots,M-1$. 
+
+Here, we will use the trapezoidal rule with the weights $w_n$:
+$$w_0=w_{M-1} = \frac{1}{2},\qquad w_n = 1, \quad\text{for }n=1,\ldots,M-2.$$
+
+Including the grids discretization in our approximation, we have
+$$v(x_p) \approx\frac{e^{-iu_0(x_0+p\Delta y)}}{2\pi}\Delta u\sum_{j=0}^{M-1}e^{-ijp2\pi/M}e^{ij(y_0-x_0)\Delta u}\Phi(-(u_j-i\alpha))\hat{v}(u_j), $$
+where the Fourier transform of $v$ is approximated by
+$$\hat{v}(u_j) \approx e^{iu_0y_0}\Delta y \sum_{n=0}^{M-1}e^{ijn2\pi/M}e^{inu_0\Delta y}w_nv(y_n).$$
+
+Let us now define the \textit{Discrete Fourier Transform} (DFT) and its inverse.
+\begin{defn}[Discrete Fourier Transform]
+The \textbf{Discrete Fourier Transform} (DFT) of $x$ is a vector $\hat{x}\in\mathbb{R}^M$ defined by
+$$\mathcal{D}_j\{x_n\} := \hat{x}_j = \sum_{n=0}^{M-1}e^{ijn2\pi/M}x_n.$$
+
+Its inverse is given by
+$$\mathcal{D}_n^{-1}\{\hat{x}_j\} := x_n =\frac{1}{M} \sum_{j=0}^{M-1}e^{-ijn2\pi/N}x_j.$$
+
+Be careful with the \textsc{Matlab} conventions where $\mathcal{D} \equiv\texttt{ifft}$ and $\mathcal{D}^{-1}\equiv\texttt{fft}$.
+\end{defn}
+
+If we set $u_0 = -M/2\Delta u$, we have that
+\begin{align*}
+e^{inu_0\Delta y}&=e^{in\pi}\\
+&=\cos(n\pi)+i\sin(n\pi)\\
+&=(-1)^n.
+\end{align*}
+
+Finally, we obtain the result
+$$v(x_p) \approx e^{iu_0(y_0-x_0)}(-1)^p\mathcal{D}_p^{-1}\left\{e^{ij(y_0-x_0)\Delta u}\Phi(-(u_j-i\alpha))\mathcal{D}_j\left\{(-1)^nw_nv(y_n)\right\}\right\}.$$
+
+Thus, we have just to undamped the quantity $v(x,t_n)$ and discount the result to get the value $V(x,t_n)$ of the financial product.
 
 \section{Summary}
-\label{sex:methods:summary}
+\label{sec:methods:summary}
+To conclude this chapter, we can summarize the whole algorithm of the two last methods.
+\begin{enumerate}
+\item Apply the zero final condition at $T = t_N$ for all the $N_a$ solutions to equation \eqref{eq:PDE} corresponding to $A_j, 1\leq j\leq N_a$.
+\item Apply the jump condition to obtain $A^+_j = A^+_j + \tilde{C}_n$, where $\tilde{C}_n$ is the positive gain on the fixing date $t_n$.
+\item Perform the cubic spline interpolation from points $V(S_m,t_n,A_j), j = 1,\ldots,N_a,$ to new points $V(S_m,t_n,A^+_j)$ for each spot grid points $S_m$.
+
+\item Add the total cash flow $C^\text{tot}_n$ respecting the knock-out condition imposed by the accumulated amount. This leads to the value $V(S_m,t_n^-,A_j)$ expressed by equation \eqref{eq:jump_cond}.
+
+\item Perform the \textbf{finite difference} or the \textbf{convolution method} for each $N_a$ solutions $V(S_m,t_n^-,A_j),j=1,\ldots,N_a,$ corresponding to the $N_a$ grid points in the auxiliary variable $A$. This gives us the value $V(S_m,t_{n-1},A_j)$ for $m=1,\ldots,M$.
+
+\item Repeat steps 2 to 5 until $n = 0$ to get the today's value $V(S_m,t_0,A_j)$. Note that only the value for $A_0 = 0$ interests us, since at the beginning no amount is accumulated. Then the fair price of the FX-TARN is given by $V(S,t_0,0)$.
+\end{enumerate}

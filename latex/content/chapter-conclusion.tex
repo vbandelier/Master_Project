@@ -1,4 +1,26 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 
-\cleanchapterquote{Citation.}{Author}{(1***-1***)}
+\cleanchapterquote{Derivatives are financial weapons of mass destruction.}{Warren Buffett}{(1930)}
+
+This chapter closes this thesis with a brief review of the main findings in Section \ref{sec:conclusion:review} and an overview of possible further works in Section \ref{sec:conclusion:works}.
+
+\section{Review of main findings}
+\label{sec:conclusion:review}
+Firstly, we studied the exponential L\'evy processes and their characteristics used in option pricing. Then, we implemented three different methods in order to evaluate an FX-TARN. The Finite Difference method uses the L\'evy density of the process while the Convolution method is based on its characteristic function. Since the characteristic function is available in a closed form, we have seen that the Convolution method performs better than the Finite Difference or Monte Carlo methods and gives us remarkably fast and accurate results. Indeed, we have seen that the Convolution method can be nearly 15 times faster than the Finite Difference method for the same accuracy.
+
+To finally price the FX-TARN option, we calibrated our models to the market prices and have remarked that the Kou model with five parameters fitted very well. The other models were not too bad and gives us different alternatives in relation to our needs. 
+
+The conclusion of this work is that we have been able to find a fast and accurate method very flexible in function of our model to price exotic option such as FX-TARN. Indeed, if we would change the model, it suffices to change the characteristic function in the implementation of the method. The Convolution method could be also applied to another exotic options with path dependency by changing the intermediate step where the cubic interpolation is used to treat the jump condition on fixing dates.
+
+\section{Further works}
+\label{sec:conclusion:works}
+
+To go beyond the jump-diffusion and pure jump models, it could be interesting to study the hybrid models combining jumps and stochastic volatilities. The most popular of this kind of model is proposed by \citeauthor{Bat96} \citeyearpar{Bat96}. In this model, an independent jump component is added to the \citeauthor{Hes93} stochastic volatility model:
+\begin{align*}
+dX_t &= \mu dt + \sqrt{V_t}dW_t^X+dZ_t, &S_t = S_0e^{X_t},\\
+dV_t &= \xi\left(\eta-V_t\right)dt+\theta\sqrt{V_t}dW_t^V, &d\left\langle W^V,W^X\right\rangle_t=\rho dt,
+\end{align*}
+where $Z=\{Z_t,t\geq 0\}$ is a compound Poisson process with Gaussian jumps. This process is not a L\'evy process but its characteristic function is still known in closed form. Therefore, the pricing and the calibration is similar to our approach. 
+
+Finally, we didn't talk about the risk management of the FX-TARN in this thesis. Thus, we  could study the Greeks (sensitivities of the option). This can give us an idea about the hedging of this kind of option.
