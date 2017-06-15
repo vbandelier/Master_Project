@@ -1,7 +1,7 @@
 function price = Pricer(option,model,method)
 cpu_t0 = cputime;
 %% Option Parameters
-S0 = option.S0; r = option.r; q = option.q; N = option.N_fixDates; 
+S0 = option.S0; r = option.r; q = option.q; N = option.N_fixDates;
 g = option.g; gain_fun = option.gain_fun;
 loss_fun = option.loss_fun;
 K = option.K; Targ = option.Target; KO = option.KO(1);
@@ -51,7 +51,7 @@ if method.name(1) == 'M'
     end
     option.set_error(std(ApF*V)/sqrt(M-1));
     price = mean(V);
-%% Finite Difference Method -----------------------------------------------
+    %% Finite Difference Method -----------------------------------------------
 elseif method.name(1) == 'F'
     Na = method.param(1);
     Nx = method.param(2);
@@ -79,8 +79,9 @@ elseif method.name(1) == 'F'
     end
     Cgain = @(s,a,k) Cgtild(s,k) .* ( ( (a+Cgtild(s,k))<Targ )+W(s,a,k) .*( (a+Cgtild(s,k))>=Targ ) );
     Closs = @(s,a,k) Cltild(s,k) .* ( ( (a+Cgtild(s,k))<Targ )+W(s,a,k) .*( (a+Cgtild(s,k))>=Targ ) );
-    Payoff_fun = @(s,a,k,kk)Cgain(s,a,k)+kk*Closs(s,a,k);
-    ext_fun = @(x,a,k,t,kk) (a+Payoff_fun(S0*exp(x+r*(period-t)),a,k,kk))*exp(-r*(period-t));
+    Payoff_fun = @(s,a,k)Cgain(s,a,k)+Closs(s,a,k);
+    ext_fun = @(x,a,k,t,kk) Cgain(S0*exp(x+(r-q)*t),a,k)*exp(-r*t) + exp(-r*t)*sum(cell2mat(arrayfun(@(j) Closs(S0*exp(x+(r-q)*(j*period+t)),a,k)*exp(-r*j*period),0:(kk-1),'UniformOutput',0)'),1);
+%         Closs(S0*exp(x+(r-q)*t),a,k)*exp(-r*t)*(exp(r*(1-kk)*period)-exp(r*period))/(1-exp(r*period));
     
     quad_grid_right = Xmax + (0:dx:(q_max-Xmax));
     quad_grid_left = fliplr(Xmin - (0:dx:(Xmin-q_min)));
@@ -115,13 +116,13 @@ elseif method.name(1) == 'F'
     U = zeros(Nx+1,Na);
     Unew = U;
     for kk = 1:N
-      
+        
         for m = 1:Nx+1
-            Payoff = Payoff_fun(S(m),A,K(end-kk+1),1);
+            Payoff = Payoff_fun(S(m),A,K(end-kk+1));
             Aplus  = A + Cgtild(S(m),K(end-kk+1));
             if Na>1
                 Unew(m,:) = (interp1(A,U(m,:),Aplus,'spline').*(Aplus<Targ))+Payoff;
-            else 
+            else
                 Unew(m) = Payoff;
             end
         end
@@ -146,7 +147,7 @@ elseif method.name(1) == 'F'
                     fcomp = ifft(conj(fftJ).*fftV);
                     fnew = fnew + fcomp(1:Nx-1)';
                     ftot = V(2:end-1,tn) + dt*fnew;
-                
+                    
                     B = sparse(1:Nx-2,2:Nx-1,B_up,Nx-1,Nx-1) + ...
                         sparse(1:Nx-1,1:Nx-1,B_main,Nx-1,Nx-1)+...
                         sparse(2:Nx-1,1:Nx-2,B_down,Nx-1,Nx-1);
@@ -164,7 +165,7 @@ elseif method.name(1) == 'F'
     price = interp1(S,U(:,1),S0);
     option.set_error(NaN);
     plot(S,U(:,1),'linewidth',1);
-%% Convolution Method -----------------------------------------------------
+    %% Convolution Method -----------------------------------------------------
 elseif method.name(1) == 'C'
     Na = method.param(1);
     Nx = method.param(2);
@@ -227,7 +228,7 @@ elseif method.name(1) == 'C'
     %%
     price = interp1(S,Q(:,1),S0);
     option.set_error(NaN);
-   % plot(S,Q(:,1),'linewidth',1);
+    plot(S,Q(:,1),'linewidth',1);
 end
 price = ApF*price;
 option.CPU_time = cputime-cpu_t0;
