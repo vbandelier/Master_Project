@@ -10,13 +10,13 @@ T = [1.5,2];
 for k = 1:4
     switch k
         case 1
-            model = Model('Mer',[0.0649    0.1303   -0.0584    0.1603]);
+            model = Model('Mer',param_mer);
         case 2
-            model = Model('Kou',[0.0665    0.1305    0.0751    3.3154    9.0490]);
+            model = Model('Kou',param_kou);
         case 3
-            model = Model('NIG',[18.8491   -3.9281    0.1250]);
+            model = Model('NIG',param_nig);
         case 4
-            model = Model('VG',[-0.0324    0.0810    0.2451]);
+            model = Model('VG',param_vg);
     end
     for i = 1:11
         for j = 1:2
@@ -35,15 +35,15 @@ for k = 1:4
     scatter(K_Out(1,:)/S0,Pmarket(1,:),'r','marker','o')
     hold on
     scatter(K_Out(1,:)/S0,prices(1,:),'b','marker','*')
-    title(model.name)
+    title(model.name,'fontsize',14)
     figure(2)
     subplot(2,2,k)
     scatter(K_Out(2,:)/S0,Pmarket(2,:),'r','marker','o')
     hold on
     scatter(K_Out(2,:)/S0,prices(2,:),'b','marker','*')
-    title(model.name)
+    title(model.name,'fontsize',14)
 end
 figure(1)
-suptitle('Out of sample 18M');
+suptitle('\fontsize{18} Out of sample - 18M');
 figure(2)
-suptitle('Out of sample 2Y');
+suptitle('\fontsize{18} Out of sample - 2Y');

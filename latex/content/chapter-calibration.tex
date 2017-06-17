@@ -3,9 +3,9 @@
 
 \cleanchapterquote{If you want to know the value of a security, use the price of another security that is as similar to it as possible. All the rest is modelling.}{Emanuel Derman}{(1946)}
 
-In order to be able to price a FX-TARN, we have to calibrate our models to the market option prices. The aim of the calibration is to estimate the unknown parameters of the model which reproduce the same prices as in the market. This is analogous than the implied volatility in the Black-Scholes framework. For this purpose, we will use European vanilla option prices calculated from the implied volatility given by \textsc{Bloomberg}.
+In order to be able to price a FX-TARN, we have to calibrate our models to the market option prices. The aim of the calibration is to estimate the unknown parameters of the model which reproduce the same prices as in the market. This is analogous to the implied volatility in the Black-Scholes framework. For this purpose, we will use European vanilla option prices calculated from the implied volatility given by \textsc{Bloomberg}.
 
-Firstly, in section \ref{sec:calibration:inputs}, we will expose the calibration inputs and how we can compute the European vanilla option price. Secondly, in section \ref{sec:calibration:method}, we will explain the procedure that we used to calibration our models. Finally, in section \ref{sec:calibration:results}, we will discuss about the results of the calibrations of our models.
+Firstly, in Section \ref{sec:calibration:inputs}, we will present the calibration inputs and how we can compute the European vanilla option price. Secondly, in Section \ref{sec:calibration:method}, we will explain the procedure that we used to calibration our models. In Section \ref{sec:calibration:results}, we will discuss about the results of the calibrations of our models. The Section \ref{sec:calibration:analysis} concludes this chapter with the analysis of the resulting calibrated models.
 
 \section{Calibration inputs}
 \label{sec:calibration:inputs}
@@ -56,7 +56,7 @@ The delta less than 50 means that the market quotes are priced with respect to o
 
 \section{Calibration method}
 \label{sec:calibration:method}
-To calibrate our models, we search to minimize the root-mean-square error (RMSE) of the differences between the model prices and the observed prices:
+To calibrate our models, we seek to minimize the root-mean-square error (RMSE) of the differences between the model prices and the observed prices:
 $$\text{RMSE}(\Theta) = \sqrt{\sum_{i=1}^N \frac{1}{N}\left|V(\Theta;K_i,T_i)-V^\text{obs}(K_i,T_i)\right|^2},$$
 where $\Theta$ is the parameter vector of the model.
 
@@ -70,7 +70,7 @@ For example, the RMSE of the Black-Scholes model with 1Y ATM constant volatility
 
 The calibrated parameters $\hat{\Theta}$ of the model with jumps satisfy 
 $$\hat{\Theta}=\operatorname*{arg\,min}_\Theta \text{RMSE}(\Theta).$$
-We can use the \textsc{Matlab} command \texttt{fmincon} which allows us to find the minimum of constrained nonlinear multi-variable function. Note that the method used to price the European options under jump models is the convolution method with $N_x = 1'000$ and damping factor $\alpha = -\beta$, where $\beta = 1$ for a Call option and $\beta = -1$ for a Put option. This method is in fact the fastest method to apply the minimizing function.
+We can use the \textsc{Matlab} command \texttt{fmincon} which allows us to find the minimum of a constrained nonlinear multi-variable function. Note that the method used to price the European options under jump models is the convolution method with $N_x = 1'000$ and damping factor $\alpha = -\beta$, where $\beta = 1$ for a Call option and $\beta = -1$ for a Put option. This method is in fact the fastest method to apply the minimizing function.
 
 \section{Results of calibrations}
 \label{sec:calibration:results}
@@ -102,3 +102,41 @@ We can see in Figure \ref{fig:calibration:jump-prices} that all the model prices
 	\caption{Jump models calibration; model prices in blue and market prices in red.}
 	\label{fig:calibration:jump-prices}
 \end{figure}
+
+\section{Analysis of the calibration}
+\label{sec:calibration:analysis}
+As we have chosen to calibrate our models for whole structure of the implied volatility, i.e. for all tenors at the same time, the fitting with the market prices can not be perfect. We will now investigate how the L\'evy models with jumps reflect the information contained in the smile of the volatility surface. Figure \ref{fig:vol_surf} shows the original volatility surface that we used to calibrate our models.
+\begin{figure}[!htb]
+\centering
+	\includegraphics[scale = 0.2]{gfx/vol_surf}
+	\caption{Original volatility surface.}
+	\label{fig:vol_surf}
+\end{figure}
+
+By repricing all the options with the L\'evy models with jumps, it is possible to compute the volatility surface corresponding the a specific model. Figure \ref{fig:vol_models} illustrates the implied volatility surfaces of the L\'evy models with jumps. 
+\begin{figure}[!htb]
+\centering
+	\includegraphics[width=\textwidth]{gfx/vol_models}
+	\caption{Jump models implied volatility surfaces.}
+	\label{fig:vol_models}
+\end{figure}
+
+As we can see, the jump-diffusion models replicate almost the original volatility surface, which means that the Merton and Kou models can express all the information contained in the volatility smile. On the other side, the smile structure in pure jump models for long term is lost. Thus the pure jumps model can not replicate perfectly the market prices for long maturity.
+
+An other way to check the accuracy of the calibration of a model is to price an option out of the sample used for the calibration. In our case, we can price the European options for the tenor 18M and 2Y with the calibrated models on 1W to 1Y, and compare them to the market prices. The results is given by Figures \ref{fig:out_18m} and \ref{fig:out_2y}.
+
+We can conclude that the Merton and Kou models are clearly more accurate than the NIG and VG models with respect to the market. Indeed, we can see that the NIG and VG do not perform very well deep out of the money for long maturity date. Even if the tenor 18M and 2Y are not part of the sample used for calibration, the Merton and Kou models fit really good with the market prices beyond 1Y maturity. All of this confirm the choice to use jump diffusion models in the pricing of FX-TARN product.
+
+\begin{figure}[!htb]
+\centering
+	\includegraphics[width=\textwidth]{gfx/out_18m}
+	\caption{Jump models implied volatility surfaces.}
+	\label{fig:out_18m}
+\end{figure}
+\begin{figure}[!htb]
+\centering
+	\includegraphics[width=\textwidth]{gfx/out_2y}
+	\caption{Jump models implied volatility surfaces.}
+	\label{fig:out_2y}
+\end{figure}
+

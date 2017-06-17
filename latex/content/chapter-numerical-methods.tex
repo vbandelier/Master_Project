@@ -13,28 +13,28 @@ Finally, we will closed this chapter by summarizing the whole algorithm used to 
 
 \section{Monte Carlo Method }
 \label{sec:methods:MC}
-In this section we will briefly recall the principle of the Monte Carlo simulations and present algorithms to simulate the different processes that we have studied in the last chapter. The idea in the Monte Carlo method is to simulate $M$ sample paths of the stock price process $\mathbf{S}_m, m=1,\ldots,M$, under the corresponding model and for each path, compute the present value $P(\mathbf{S}_i)$ of the financial product. Then, by the law of the large numbers, we obtain the following proxy:
+In this section we will briefly recall the principle of the Monte Carlo simulations and present algorithms to simulate the different processes that we have studied in the last chapter. The idea in the Monte Carlo method is to simulate $M$ sample paths of the stock price process $\mathbf{S}_m, m=1,\ldots,M$, under the corresponding model and, for each path, compute the present value $P(\mathbf{S}_i)$ of the financial product. Then, by the law of the large numbers, we obtain the following proxy:
 $$\hat{P}(\mathbf{S})=\frac{1}{M}\sum_{m=1}^M P(\mathbf{S}_m)\xrightarrow{M\to\infty} P(\mathbf{S}),$$
 where $\mathbf{S}=(S(t_1),\ldots,S(t_N))$ is the realization of the stock price. The standard error of the estimate is given by
 $$\text{SE} = \sqrt{\frac{1}{M-1}\sum_{i=1}^M \left(\hat{P}(\mathbf{S})-P(\mathbf{S}_i)\right)^2}.$$
-Remark that the standard error decreases with the square root of the number of sample paths $M$. By the law of large numbers, we can construct the following $95\%$ confidence interval for the real price $P(\mathbf{S})$
+Remark that the standard error decreases with the square root of the number of sample paths $M$. By the central limit theorem, we can construct the following $95\%$ confidence interval for the real price $P(\mathbf{S})$
 $$\left[\hat{P}(\mathbf{S})-1.96\frac{\text{SE}}{\sqrt{M}},\hat{P}(\mathbf{S})+1.96\frac{\text{SE}}{\sqrt{M}} \right]$$
 
 Recall that in our case, the present value of the FX TARN is given by equation \eqref{eq:intro:pv}:
-$$P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C_n(S(t_n),A(t_{n-1}))+C^\ast_n(S(t_n))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,$$
-where $C_n$ and $C_n^\ast$ are respectively the gain and the loss on the $n^\text{th}$ fixing date given by equations \eqref{eq:TARN:gain} and \eqref{eq:TARN:loss}. The variable $A(t_n)$ models the accumulated gains until the date $t_n$ and $B_d(t_0,t_n)^{-1}=e^{-r_d(t_n-t_0)}$ is the domestic discounting factor from $t_n$ to $t_0$. In the rest of the thesis, we will consider the present value per unit of notional $(N_f=1)$.
+$$P(\mathbf{S}) =N_f \times \sum_{n=1}^N\frac{C^\text{pos}(S(t_n),A(t_{n-1}))+C^\text{neg}(S(t_n),A(t_{n-1}))}{B_d(t_0,t_n)}, \qquad A(t_0)=0,$$
+where $C_n$ and $C_n^\ast$ are respectively the gain and the loss on the $n^\text{th}$ fixing date given by equations \eqref{eq:TARN:gain} and \eqref{eq:TARN:loss}. The variable $A(t_n)$ models the accumulated positive cash flow until the date $t_n$ and $B_d(t_0,t_n)^{-1}=e^{-r_d(t_n-t_0)}$ is the domestic discounting factor from $t_n$ to $t_0$. In the rest of the thesis, we will consider the present value per unit of notional $(N_f=1)$.
 
 \subsection{Simulations under Black-Scholes model}
 We have seen that the L\'evy process in the Black-Scholes model is given by
-$$X_t^\text{BS} = \left(r-q-\frac{1}{2}\right)t +\sigma W_t,$$
+$$X_t^\text{BS} = \left(r-q-\frac{1}{2}\sigma^2\right)t +\sigma W_t,$$
 where $W_t$ is a Wiener process. Therefore, by discretization of time, we get
 $$\Delta X_t^\text{BS}=\left(r-q-\frac{1}{2}\sigma^2\right)\Delta t+\sigma \sqrt{\Delta t}Z,$$
 with $Z\sim\mathcal{N}(0,1)$. Finally we easily have
 \begin{align*}
-S_{t+\Delta_t} &= \exp\left\{X_t^\text{BS}+\left(r-q-\frac{1}{2}\sigma^2\right)\Delta t+\sigma\sqrt{\Delta t}Z\right\}\\
+S_{t+\Delta t} &= \exp\left\{X_t^\text{BS}+\left(r-q-\frac{1}{2}\sigma^2\right)\Delta t+\sigma\sqrt{\Delta t}Z\right\}\\
 &= S_t\exp\left\{\left(r-q-\frac{1}{2}\sigma^2\right)\Delta t+\sigma\sqrt{\Delta t}Z\right\}.
 \end{align*}
-We can use the command \textbf{\texttt{random('norm',0,1)}} in \textsc{Matlab} to generate random normal variable.
+We can use the command \textbf{\texttt{random('norm',0,1)}} in \textsc{Matlab} to generate random normal variable. Figure \ref{fig:MC:BS} shows five simulated sample paths under Black-Scholes model.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/BS_plot}
 	\caption{Simulations of stock price process under Black-Scholes model.\\ $S_0=1, r= 0.01,q = 0.02, \sigma=0.3, T = 1, dt = 0.001, M=5$.}
@@ -42,9 +42,9 @@ We can use the command \textbf{\texttt{random('norm',0,1)}} in \textsc{Matlab} t
 \end{figure}
 
 \subsection{Simulations under Jump-diffusion models}
-A jump-diffusion process is nothing else than a Brownian motion with drift to which is added by a jump process modeled by a compound Poisson process. In other words, we have
+A jump-diffusion process is nothing else than a Brownian motion with drift to which a jump process modeled by a compound Poisson process is added. In other words, we have
 $$X_t^\text{JD} = \gamma^\ast t + \sigma W_t + \sum_{i=1}^{N_t}Y_i,$$
-where $N_t\sim\text{Poisson}(\lambda t)$ and the jump size $Y_i$ has density function $f_J$. We have seen the two special case where the distribution $f_J$ is normal $\mathcal{N}(\alpha,\delta^2)$ in the Merton model and double exponential $\text{DoubleExp}(p,\eta_1,\eta_2)$ in the Kou model.
+where $N_t\sim\text{Poisson}(\lambda t)$ and the jump size $Y_i$ has density function $f_J$. We have seen the two special cases where the distribution $f_J$ is normal $\mathcal{N}(\alpha,\delta^2)$ in the Merton model and double exponential $\text{DoubleExp}(p,\eta_1,\eta_2)$ in the Kou model.
 
 Therefore, we have that
 $$\Delta X_t^\text{JD} = \gamma^\ast \Delta t + \sigma \sqrt{\Delta t} Z + J(\Delta t),$$
@@ -61,7 +61,7 @@ where $J(\Delta t)\sim\mathcal{N}(N_{\Delta_t}\alpha,N_{\Delta t}\delta)$ and $N
 Finally, we obtain the results of five simulated sample paths in figure \ref{fig:MC:Mer}.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/Merton_plot}
-	\caption{Simulations of stock price process under Merton model.\\ $S_0=1, r= 0.01,q = 0.02,\lambda = 10 , \alpha = -0.1, \delta = 0.1, \sigma=0.3,$\\$T = 1, dt = 0.001, M=5$.}
+	\caption{Simulations of stock price process under Merton model.\\ $S_0=1, r= 0.06,q = 0.02,\lambda = 10 , \alpha = 0.1, \delta = 0.05, \sigma=0.3,$\\$T = 1, dt = 0.001, M=5$.}
 	\label{fig:MC:Mer}
 \end{figure}
 
@@ -69,14 +69,14 @@ Finally, we obtain the results of five simulated sample paths in figure \ref{fig
 \subsubsection{Kou model}
 This model is very similar to the Merton's one, but \citeauthor{Kou02} proposed to use a double exponential distribution for the jump size, i.e. $Y_i\sim\text{DoubleExp}(p,\eta_1,\eta_2)$. Thus the difficulty is to simulate double exponential random variables. Note that the sum of $K$ independent exponential random variables of parameter $\eta$ has a gamma distribution with parameters $K$ and $\eta$. In other words, if $X_1,\ldots,X_K\sim\text{Exp}(\eta)$, then $Y = \sum_{i=1}^K X_i\sim\Gamma(K,\eta)$ and
 $$f_Y(y) = y^{K-1}\frac{\eta^K e^{-\eta y}}{K-1}.$$
-Hence, to simulate the jumps $J(\Delta t)$, we begin by simulating a binomial random variable $K$ that counts the number of positive jump in $[t,t+\Delta t]$,
+Hence, to simulate the jumps $J(\Delta t)$, we begin by simulating a binomial random variable $K$ that counts the number of positive jumps in $[t,t+\Delta t]$,
 $$K \sim \text{Binomial}(N_{\Delta t},p), \qquad \text{ with } N_{\Delta t}\sim \text{Poisson}(\lambda\Delta t).$$
 Then, we simulate the positive and negative jumps
 \begin{align*}
 J^+&\sim\text{Gamma}(K,\eta_1), \\
-J^-&\sim\text{Gamma}(N_{\Delta t},\eta_2).
+J^-&\sim\text{Gamma}(N_{\Delta t}-K,\eta_2).
 \end{align*}
-Be careful using the \textsc{Matlab} command \texttt{random('gam',$K,1/\eta_i$)} because the convention of the parameters (shape/scale versus shape/rate).
+This reads in \textsc{Matlab} as \texttt{random('gam',$K,1/\eta_i$)} because the convention of the parameters (shape/scale versus shape/rate).
 
 Therefore the sum of jumps in the time interval $[t,t+\Delta t]$ is given by
 $$J(\Delta t) = J^+-J^-.$$
@@ -87,14 +87,14 @@ $$ \gamma^\ast=r-q- \frac{1}{2}\sigma^2 -\lambda \left(\frac{p\cdot\eta_1}{\eta_
 The simulation of sample paths under Kou model are illustrated in figure \ref{fig:MC:Kou}
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/Kou_plot}
-	\caption{Simulations of stock price process under Kou model.\\ $S_0=1, r= 0.01,q = 0.02,\lambda = 10 , p = 0.55, \eta_1 =\eta_2= 25, \sigma=0.3,$\\$T = 1, dt = 0.001, M=5$.}
+	\caption{Simulations of stock price process under Kou model.\\ $S_0=1, r= 0.06,q = 0.02,\lambda = 10 , p = 0.55, \eta_1 =\eta_2= 25, \sigma=0.3,$\\$T = 1, dt = 0.001, M=5$.}
 	\label{fig:MC:Kou}
 \end{figure}
 
 \subsection{Simulations under Pure jump models}
-Recall that a pure jump process can be seen as a Brownian subordination
+Recall that a pure jump process, as Normal Inverse Gaussian (NIG) process or Variance Gamma (VG) process, can be seen as a Brownian subordination
 $$X_t^\text{PJ} = \theta T_t + \sigma W_{T_t},$$
-where $T=\left\{T_t,t\geq0\right\}$ is a random time process, called the \textit{subordinator}. The goal is then to simulate this subordinator and substitute it to the time into the Brownian motion with drift. In the Normal Inverse Gaussian model, this time subordinator will be a Inverse Gaussian process, and in the Variance Gamma model, it will be a Gamma process.
+where $T=\left\{T_t,t\geq0\right\}$ is a random time process, called the \textit{subordinator}. The goal is then to simulate this subordinator and substitute it to the time of a Brownian motion with drift. In the Normal Inverse Gaussian model, this time subordinator will be an Inverse Gaussian process, and in the Variance Gamma model, it will be a Gamma process.
 
 \subsubsection{Normal Inverse Gaussian model}
 First of all, recall that the L\'evy process in the Normal Inverse Gaussian model is given by
@@ -110,7 +110,7 @@ with $\gamma^\ast=r-q -\delta \left(\sqrt{\alpha^2-\beta^2}-\sqrt{\alpha^2-(\bet
 Be careful with the convention of the \textsc{Matlab} command \texttt{random('inversegaussian',$\mu,\lambda$)}, where $\mu = \frac{a}{b}$ is the mean and $\lambda = a^2$ is the shape parameter. We can see the result of five sample path in figure \ref{fig:MC:NIG}.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/NIG_plot}
-	\caption{Simulations of stock price process under NIG model.\\ $S_0=1, r= 0.01,q = 0.02,\alpha = 50 , \beta = 3, \delta = 1,$\\$T = 1, dt = 0.001, M=5$.}
+	\caption{Simulations of a stock price process under NIG model.\\ $S_0=1, r= 0.06,q = 0.02,\alpha = 50 , \beta = 3, \delta = 1,$\\$T = 1, dt = 0.001, M=5$.}
 	\label{fig:MC:NIG}
 \end{figure}
 \subsubsection{Variance Gamma model}
@@ -125,88 +125,116 @@ with $\gamma^\ast = r-q + \frac{1}{\nu}\ln\left(1-\theta\nu-\frac{\sigma^2\nu}{2
 The figure \ref{fig:MC:VG} illustrates the result of five simulations under this last model.
 \begin{figure}[!htb]
 	\includegraphics[width=\textwidth]{gfx/VG_plot}
-	\caption{Simulations of stock price process under VG model.\\ $S_0=1, r= 0.01,q = 0.02,\theta = 0.5 , \sigma = 0.3, \nu = 0.01,$\\$T = 1, dt = 0.001, M=5$.}
+	\caption{Simulations of a stock price process under VG model.\\ $S_0=1, r= 0.06,q = 0.02,\theta = 0.5 , \sigma = 0.3, \nu = 0.01,$\\$T = 1, dt = 0.001, M=5$.}
 	\label{fig:MC:VG}
 \end{figure}
 
-\subsection{Pricing FX TARN with Monte Carlo}
-Note that for the pricing of the FX TARN it suffices to take $\Delta t$ equal to the difference of two consecutive fixing dates, i.e. the length of a period (e.g. Daily/Weekly/Monthly). This is not necessary to simulate the points between these dates because the cash flows depend only on the observations on the fixing dates.
+\subsection{Pricing FX-TARN with Monte Carlo}
+Note that for the pricing of the FX TARN it suffices to take $\Delta t$ equal to the difference of two consecutive fixing dates, i.e. the length of a period (e.g. Daily/Weekly/Monthly). It is not necessary to simulate the points between these dates because the cash flows depend only on the observations on the fixing dates.
 
-From the simulations above, and equations \eqref{eq:TARN:gain} and \eqref{eq:TARN:loss}, this is easy to compute the payoff on each fixing dates $t_n, (n=1,\ldots,N)$, with respect to the realization $S_{t_n}$. This is also necessary to update the variable $A(t_n)$ that take into account the accumulated gain. 
+From the simulations above, and equations \eqref{eq:TARN:gain} and \eqref{eq:TARN:loss}, this is easy to compute the payoff on each fixing dates $t_n, (n=1,\ldots,N)$, with respect to the realization $S_{t_n}$. This is also necessary to update the variable $A(t_n)$ that takes into account the accumulated gain. 
 
 Finally, we have for each simulated scenario $\mathbf{S}_m, (m=1,\ldots,M)$, the present value from equation \eqref{eq:intro:pv}
-$$P(\mathbf{S}_m) = \sum_{n=1}^{N}e^{-r_d t_n}\mathbf{C}^\text{tot}_n(S(t_n),A(t_{n-1})),$$
-where we have taken $B_d(t_0,t_n)^{-1}=e^{-r_d (t_n-t_0)}$, with $r_d$ is the domestic risk-free rate. Hence, the value of the FX TARN obtained with Monte-Carlo method is given by
+$$P(\mathbf{S}_m) = \sum_{n=1}^{N}e^{-r_d t_n}C^\text{tot}(S(t_n),A(t_{n-1})),$$
+where we have taken $B_d(t_0,t_n)^{-1}=e^{-r_d (t_n-t_0)}$, with $r_d$ the domestic risk-free rate. Hence, the value of the FX-TARN obtained with the Monte-Carlo method is given by
 $$\hat{P}(\mathbf{S})=\frac{1}{M}\sum_{m=1}^M P(\mathbf{S}_m).$$
 
 \section{Finite Difference Method}
 \label{sec:methods:FD}
-This section is devoted to the Finite Difference (FD) method for different models. We will see how to solve numerically the PDE in Black-Scholes model and the PIDE in the jump-diffusion and pure jump models. The central tool of L\'evy processes in FD method is the L\'evy measure $\nu$ used characterized the jumps in the integral part of the PIDE. In the case of Black-Scholes, we have seen that this measure is null.
+This section is devoted to the Finite Difference (FD) method for different models. We will see how to solve numerically the PDE in Black-Scholes model and the PIDE in the jump-diffusion and pure jump models. The central tool of L\'evy processes in FD method is the L\'evy measure $\nu$ used to characterize the jumps in the integral part of the PIDE. In the case of Black-Scholes, we have seen that this measure is null.
 
 \subsection{Black-Scholes world}
-This method to price Target Accrual Redemption Note (TARN) under (generalized) Black-Scholes model was proposed by \citeauthor{LS15} \citeyearpar{LS15}. To resume their approach, consider the value of the FX-TARN $V(S,t,A)$, where $S$ is the spot rate and $A$ is the accumulated amount until time $t$. Since the accumulation $A$ has no effect in the diffusion between two fixing date, the option pricing PDE is still valid
+A Finite Difference method to price Target Accrual Redemption Note (TARN) under (generalized) Black-Scholes model was proposed by \citeauthor{LS15} \citeyearpar{LS15} \cite{LS15}. To summarize, their approach, consider the value of the FX-TARN $V(S,t,A)$, where $S$ is the spot rate and $A$ is the accumulated amount until time $t$. Since the accumulation $A$ has no effect in the diffusion between two fixing dates, the Black-Scholes option pricing PDE is still valid
 \begin{equation}\label{eq:PDE}
 \frac{\partial V}{\partial t}+\frac{1}{2}\sigma^2(S,t)S^2\frac{\partial^2 V}{\partial S^2}+\left(r_d(t) -r_f(t)\right)S\frac{\partial V}{\partial S}-r_d(t) V = 0,
 \end{equation}
 with $r_d$ and $r_f$ respectively the domestic and foreign risk free rates.
 
-The idea is to consider the terminal condition to be 
+At the end of the product's life, there is no more coming cash flow. Therefore at time $T$, the value of the option is null. Hence we can consider the terminal condition to be
 $$V(S,T,A) = 0.$$
-In fact, the value of the product at the end of its life is zero because there is no more coming cash-flow. However, just before last fixing date, at $T^-=t_N$, the value is equal to the last payment 
-$$V(S,t_N^-,A(t_N^-)) = C_N(S,A(t_{N-1})) + C^\ast_N(S,A(t_{N-1})=\mathbf{C}^\text{tot}_N(S,A(t_{N-1})),$$
-where $C_N$ and $C^\ast_N$ are respectively the gain and the loss at time $t_N$ and $\mathbf{C}^\text{tot}_N$ is the total cash-flow. Note that $A(t_N^-)=A(t_{N-1})$. 
+However, just before the  last fixing date, at $T^-=t_N^-$, the value is equal to the last payment 
+$$V(S,t_N^-,A(t_N^-)) = C^\text{pos}(S,A(t_{N-1})) + C^\text{neg}(S,A(t_{N-1})=\mathbf{C}^\text{tot}_N(S,A(t_{N-1})),$$
+where $C^\text{pos}$ and $C^\text{neg}$ are respectively the positive and the negative cash flows at time $t_N$, given by equations \eqref{eq:TARN:gain} and \eqref{eq:TARN:loss}, and $\mathbf{C}^\text{tot}_N$ is the total cash flow. Note that the accumulated amount $A$ is a discontinuous piecewise constant process. Moreover, this is a cadlag process. Then we have that $A(t_n^-) = A(t_{n-1})$ and $A(t_n^+) = A(t_n)$ for $n = 1,\ldots,N$.
 
-We can backward this reflexion for each fixing date, which gives us for the $n$-th fixing date $t_n$,
+The total cash flow on the $n$\textsuperscript{th} fixing date $t_n$ makes a jump in the value of the product. In other words, at $t_n^-$, the value is given by
 \begin{align}\label{eq:jump_cond}
-V(S,t_n^-,A(t_n^-)) &= V(S,t_n,A(t_n))+\mathbf{C}^\text{tot}_n(S,A(t_{n-1}))\nonumber\\
-&=V(S,t_n,A(t_{n-1})+C_n(S,A(t_{n-1})))+\mathbf{C}^\text{tot}_n(S,A(t_{n-1}))\nonumber\\
-&=V(S,t_n,A^+(t_{n-1}))+\mathbf{C}^\text{tot}_n(S,A(t_{n-1})),
+V(S,t_n^-,A(t_n^-)) &= V(S,t_n,A(t_n))+C^\text{tot}(S,A(t_{n-1}))\nonumber\\
+&=V(S,t_n,A(t_{n-1})+C^\text{pos}(S,A(t_{n-1})))+C^\text{tot}_n(S,A(t_{n-1})).
 \end{align}
-with $A^+(t_{n-1})=A(t_{n-1})+C_n(S,A(t_{n-1}))$ is the accumulated amount after a backward jump on a fixing date.
 
-Finally, the today's FX-TARN price is given by $V(S(t_0),t_0,0)$.
+Finally, we can get the today's FX-TARN price by taking $ V_0 = V(S(t_0),t_0,0)$.
 
 \subsubsection{Finite difference scheme and Cubic spline interpolation}
-In order to get this final solution, the idea of \citeauthor{LS15} is to introduce an auxiliary finite grid $0 = A_1<A_2<\cdots<A_{N_a}= U$ to track the accumulated amount, where $U$ denotes the target. Then the goal is to perform $N_a$ finite difference solutions between all fixing dates, for each node in the accumulated amount which correspond to different "scenarios". 
+First of all, consider the time interval between two successive fixing dates $[t_n,t_{n+1}]$ on which the diffusion by Finite Difference method is done. An uniform discretization gives us the time grid $t_k = t_n + k\Delta t, k = 0,1,\ldots,N_t$. Then a discretization in the spot price variable $S$ is given by a grid $0<S_{\min}=S_1<\cdots<S_M=S_{\max}$.
 
-Let us now introduce a finite difference grid points in the spot price variable $S$, $0 = S_0 < S_1 <\cdots<S_M = S_{\max}$. For a fixed time $t_n$, if we associate the node $A_j$ to the accumulated amount $A(t_{n-1})$, the equation \eqref{eq:jump_cond} can be written as
-$$V(S_m,t^-_n,A_j) = V(S_m,t_n,A^+_j)+ \mathbf{C}^\text{tot}_n(S_m,A_j),$$
-with $A_j^+ = A_j + C_n(S_m,A_j)$, for $m=1,\ldots,M$. This quantity is used as initial condition at the beginning of each finite different scheme.
+In order to get this final solution, the idea of \citeauthor{LS15} is to introduce an auxiliary finite grid $0 = A_1<A_2<\cdots<A_{N_a}= U$ to track the accumulated amount, where $U$ denotes the target. Then the goal is to perform $N_a$ finite difference solutions between all fixing dates, for each value $A_j$ of accumulated amount, which correspond to a different "scenario". 
 
-Since only the value $V(S_m,t_n,A_j)$ is known after a diffusion, we have to evaluate $V(S_m,t_n,A_j^+)$ by cubic spline interpolation. Hence for a fixed $j$, we can extract $N_a$ values $V(S_m,t_n,A_j^+)$ from $V(S_m,t_n,A_j)$ by interpolating with respect to $A_j$.
+For the fixing date $t_{n+1}$, if we associate the node $A_j$ to the accumulated amount $A(t_{n})$, the equation \eqref{eq:jump_cond} can be written as
+$$V(S_m,t^-_{n+1},A_j) = V(S_m,t_{n+1},A^+_j)+ C^\text{tot}(S_m,A_j),$$
+with $A_j^+ = A_j + C^\text{pos}(S_m,A_j)$, for $m=1,\ldots,M$. This quantity is used as initial condition at the beginning of each finite difference scheme.
 
-To perform the finite difference it is common to write equation \eqref{eq:PDE} in terms of log asset price $x = \log(S)$ and time to maturity $\tau=T-t$. This gives us the following PDE
+Since only the value $V(S_m,t_{n+1},A_j)$ is known after a diffusion step, we have to evaluate $V(S_m,t_{n+1},A_j^+)$ by cubic spline interpolation. Hence for a fixed $j$, we can extract $N_a$ values $V(S_m,t_{n+1},A_j^+)$ by interpolating $V(S_m,t_{n+1},A_j)$ with respect to $A_j$.
+
+To perform the finite difference step, it is common to write equation \eqref{eq:PDE} in terms of log asset price $x = \log(S)$ and time to maturity $\tau=T-t$. However, here we do not consider the Finite Different scheme until the maturity $T$. Then we will use $\tau = t_{n+1}-t$ for $t\in(t_n,t_{n+1})$. This gives us the following PDE
 $$\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2 V}{\partial x^2}-\left(r_d - r_f - \frac{1}{2}\sigma^2\right)\frac{\partial V}{\partial x}+r_d V = 0.$$
 The advantage of this representation is that in a Black-Scholes world with constant parameters, all the coefficient are constant. Therefore the finite difference grid in $x$ is given by $\log(S_{\min}) = x_0 < x_1<\cdots<x_M = \log(S_{\max})$. 
 
-Let denote the option price at time $\tau_n = T-t_n$ and grid point $x_i$ as $V_i^n$, $n=0,1,\ldots, N$. Hence, for an uniform grid, $\Delta x_i = x_i-X_{i-1} = \Delta x$, we get the finite difference approximation with second order accuracy 
+Let us denote the option price at time $\tau_k = t_{n+1}-t_k$, and grid point $x_i$ as $V_i^k$, for $k=0,1,\ldots, N_t$. Hence, for an uniform grid, $\Delta x_i = x_i-x_{i-1} = \Delta x$, we get the finite difference approximation with second order accuracy 
 \begin{align*}
-\frac{\partial V}{\partial x}(x_i,\tau_n) &= \frac{V^n_{i+1}-V^n_{i-1}}{2\Delta x}+\mathcal{O}(\Delta x^2),\\
-\frac{\partial^2 V}{\partial x^2}(x_i,\tau_n) &= \frac{V^n_{i+1}-2V_i^n+V^n_{i-1}}{\Delta x^2}+\mathcal{O}(\Delta x^2).
+\frac{\partial V}{\partial x}(x_i,\tau_k,A_j) &= \mathcal{D}_{\Delta x} V +\mathcal{O}(\Delta x^2),\\
+\frac{\partial^2 V}{\partial x^2}(x_i,\tau_n) &= \mathcal{D}_{\Delta x}^2 V+\mathcal{O}(\Delta x^2),
+\end{align*}
+where 
+\begin{align*}
+\mathcal{D}_{\Delta x} V&= \frac{V_{i+1}^k-V_{i-1}^k}{2\Delta x},\\
+\mathcal{D}^2_{\Delta x}V &= \frac{V_{i+1}^k-2V_i^k+V_{i-1}^k}{\Delta x^2}.
 \end{align*}
 
 Then with the finite difference operator $F_i^n$ defined as
-$$F_i^n \equiv -\frac{1}{2}\sigma^2\frac{\partial^2 V}{\partial x^2}-\left(r_d - r_f - \frac{1}{2}\sigma^2\right)\frac{\partial V}{\partial x}+r_d V,$$
+$$F_i^k \equiv -\frac{1}{2}\sigma^2\mathcal{D}_{\Delta x}^2V-\left(r_d - r_f - \frac{1}{2}\sigma^2\right)\mathcal{D}_{\Delta x}V+r_d V,$$
 the $\theta$-scheme can be expressed as
-$$\frac{V_i^{n+1}-V_i^n}{\Delta t}+\theta F_i^{n+1} +(1-\theta)F_i^n=0,$$
+$$\frac{V_i^{n+1}-V_i^n}{\Delta t}+\theta F_i^{n+1} +(1-\theta)F_i^n=0,\qquad \begin{cases}i = 1,\ldots, M-1\\k = 0,\ldots,N_t-1 \end{cases}$$
 with $\theta\in[0,1]$. The special cases $\theta=0,\theta=0.5$ and $\theta=1$ correspond respectively to the fully explicit, Crank-Nicholson and fully implicit scheme.
 
 \subsubsection{Boundary Conditions}
-Here we have used Dirichlet boundary conditions between two consecutive fixing dates $\tau_{n}$ and $\tau_{n+1}$ and defining the length of the period as $\tau^\ast = \tau_{n}-\tau_{n+1}$, we get
+Recall that the fixing dates in time to maturity notation can be written as
 \begin{align*}
-V(x_{\min},\tau,A_j) &= \Psi(x_{\min},\tau,A_j),\\
-V(x_{\max},\tau,A_j) &= \Psi(x_{\max},\tau,A_j),
+\tau_0 &= T-t_N = 0,\\
+\tau_1 &= T-t_{N-1},\\ 
+&\quad\vdots\\ 
+\tau_N &= T-t_0 = T.
 \end{align*}
-where 
-$$ \Psi(x,\tau,A_j) = \exp\{-r_d (\tau^\ast-\tau)\}\left(A_j + \mathbf{C}^\text{tot}(\exp\{r_d (\tau^\ast-\tau) + x\},A_j)\right)$$
-for $t\in[\tau_n,\tau_{n+1}]$. In fact, the quantity $(\tau^\ast-t)$ is the left time in the bucket time until the next fixing date. We just have to discount the value of the option between fixing date because the interpolation initialize a new value for the next step.
+
+Hence, for $\tau \in (\tau_0,\tau_1)$, the value of the product depends only on the last expected cash flow. Therefore, the Dirichlet boundary conditions are given by
+\begin{align*}
+V(x_{\max},\tau,A) &= C^\text{tot}\left(e^{x_{\max}+(r_d-r_f)\tau},A\right)e^{-r_d\tau}\\
+&= \left(C^\text{pos}\left(e^{x_{\max}+(r_d-r_f)\tau},A\right)+C^\text{neg}\left(e^{x_{\max}+(r_d-r_f)\tau},A\right)\right)e^{-r_d\tau},
+\end{align*}
+and
+\begin{align*}
+V(x_{\min},\tau,A) &= C^\text{tot}(e^{x_{\min}+(r_d-r_f)\tau},A)e^{-r_d\tau}\\
+&= \left(C^\text{pos}\left(e^{x_{\min}+(r_d-r_f)\tau},A\right)+C^\text{neg}\left(e^{x_{\min}+(r_d-r_f)\tau},A\right)\right)e^{-r_d\tau}.
+\end{align*}
+
+For $\tau \in (\tau_n,\tau_{n+1}), n= 1,\ldots,N-1$, the expected value at maturity depends only on the next positive cash flow, since then the product knocks out after a large gain, and on all coming negative cash flows, since there is no decumulation in the accumulation variable $A$ due to a loss. Thus the boundary condition are this time
+\begin{align*}
+V(x_{\max},\tau,A) &= C^\text{pos}\left(e^{x_{\max}+(r_d-r_f)(\tau-\tau_n)},A\right)e^{-r_d(\tau-\tau_n)}\\
+&\quad + \sum_{j = 0}^n C^\text{neg}\left(e^{x_{\max}+(r_d-r_f)(\tau-\tau_j)},A\right)e^{-r_d(\tau-\tau_j)},
+\end{align*}
+and
+\begin{align*}
+V(x_{\min},\tau,A) &= C^\text{pos}\left(e^{x_{\min}+(r_d-r_f)(\tau-\tau_n)},A\right)e^{-r_d(\tau-\tau_n)}\\
+&\quad + \sum_{j = 0}^n C^\text{neg}\left(e^{x_{\min}+(r_d-r_f)(\tau-\tau_j)},A\right)e^{-r_d(\tau-\tau_j)}.
+\end{align*}
+
+Note that we do not have to discount the cash flows until maturity, because they are made on the fixing dates.
 
 \subsection{Jump-diffusion models}
-To go beyond the Black-Scholes world, we can generalize this method to the jump-diffusion models. As proposed by \citeauthor{CV05} \citeyearpar{CV05}, we can solve numerical the Partial Integro Differential equation (PIDE) evolving under L\'evy processes. The PIDE is given by
-\begin{align*}\frac{\partial V}{\partial \tau}&-\frac{1}{2}\sigma^2\frac{\partial^2V}{x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2\right)\frac{\partial V}{\partial x}+r_d V \\
-&-\int_{-\infty}^\infty \left[V(x+y,\tau)-V(x,\tau)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)\right]\nu(dy) = 0,
+To go beyond the Black-Scholes world, we can generalize this method to the jump-diffusion models. As proposed by \citeauthor{CV05} \citeyearpar{CV05} \cite{CV05}, we can solve numerical the Partial Integro Differential equation (PIDE) evolving under L\'evy processes. The PIDE is given by
+\begin{align*}\frac{\partial V}{\partial \tau}&-\frac{1}{2}\sigma^2\frac{\partial^2V}{\partial x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2\right)\frac{\partial V}{\partial x}+r_d V \\
+&-\int_{-\infty}^\infty \left[V(x+y,\tau,A)-V(x,\tau,A)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)\right]\nu(dy) = 0,
 \end{align*}
-where $\nu(\cdot)$ is the L\'evy measure of the process $X =\{X_t,t\geq0\}$ that characterized the log asset price. Recall that in the Merton and Kou models, the L\'evy density are respectively given by
+where $\nu(\cdot)$ is the L\'evy measure of the process $X =\{X_t,t\geq0\}$ that characterizes the log asset price. Recall that in the Merton and Kou models, the L\'evy density is, respectively, given by
 \begin{align*}
 \nu^\text{Mer}(dy) &= \frac{\lambda}{\sqrt{2\pi}\delta}e^{-\frac{(y-\alpha)^2}{2\delta^2}}dy,\\
 \nu^\text{Kou}(dy) &= \lambda\left(p\cdot\eta_1e^{-\eta_1 y} \mathbf{1}_{y\geq0}+(1-p)\cdot\eta_2e^{\eta_2y}\mathbf{1}_{y<0}\right)dy.
@@ -214,43 +242,43 @@ where $\nu(\cdot)$ is the L\'evy measure of the process $X =\{X_t,t\geq0\}$ that
 
 Therefore, some integral terms can be analytically computed as
 \begin{align*}
-\int_{-\infty}^\infty \nu^\ast(dy) &= \lambda,\\
+\int_{-\infty}^\infty \nu^\ast(dy) &= \lambda, \qquad \text{with } \nu^\ast = \nu^\text{Mer} \text{ or } \nu^\text{Kou},\\
 \int_{-\infty}^\infty (e^y-1)\nu^\text{Mer}(dy) &= \lambda\left(e^{\alpha +\frac{1}{2}\delta^2}-1\right)\equiv c,\\
 \int_{-\infty}^\infty (e^y-1)\nu^\text{Kou}(dy) &= \lambda\left(\frac{p\eta_1}{\eta_1-1}+\frac{(1-p)\eta_2}{\eta_2+1}-1\right)\equiv c.
 \end{align*}
 
 Hence, we can rewrite the PIDE in the form
-\begin{align*}\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{x^2}&-\left(r_d-r_f-\frac{1}{2}\sigma^2 -c\right)\frac{\partial V}{\partial x}+(r_d +\lambda)V \\
-&-\int_{-\infty}^\infty V(x+y,\tau)\nu(dy) = 0,
+\begin{align*}\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{\partial x^2}&-\left(r_d-r_f-\frac{1}{2}\sigma^2 -c\right)\frac{\partial V}{\partial x}+(r_d +\lambda)V \\
+&-\int_{-\infty}^\infty V(x+y,\tau,A)\nu(dy) = 0,
 \end{align*}
 
-Note that in the log asset price form, the last integral term $\int_{-\infty}^\infty V(x+y)\nu(dy)$ has a convolution structure that allows us to compute it by Fast Fourier Transform (FFT). This is not the case in the asset price PIDE.
+Note that in the log asset price form, the last integral term $\int_{-\infty}^\infty V(x+y,\tau,A)\nu(dy)$ has a convolution structure that allows us to compute it by Fast Fourier Transform (FFT). This is not the case in the asset price PIDE.
 
 \subsubsection{Localization to a bounded domain}
-To solve this numerical problem, we first truncate the space domain to a bounded interval $x\in(x_{\min},x_{\max})$ as usually. The boundary conditions are the same as the Black-Scholes case. Hence the truncated Cauchy problem reads
+To solve this numerical problem, we first truncate the space domain to a bounded interval $x\in(x_{\min},x_{\max})$ as usually. The boundary conditions are the same as in the Black-Scholes case. Hence the truncated Cauchy problem reads
 $$\begin{cases}
-\displaystyle{\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{\partial V}{\partial x}+(r_d+\lambda) V} \\
-\hspace{3cm}\displaystyle{-\int_{-\infty}^\infty V(x+y,\tau)\nu(dy) = 0}, \hspace{2cm}x\in(x_{\min},x_{\max}),\\
-V(x,\tau) = \Psi(x,\tau,A_j), \hspace{6.3cm} x \not\in (x_{\min},x_{\max}),
+\displaystyle{\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{\partial x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{\partial V}{\partial x}+(r_d+\lambda) V} \\
+\hspace{3cm}\displaystyle{-\int_{-\infty}^\infty V(x+y,\tau,A)\nu(dy) = 0}, \hspace{2cm}x\in(x_{\min},x_{\max}),\\
+V(x,\tau,A) = \Psi(x,\tau,A), \hspace{6.3cm} x \not\in (x_{\min},x_{\max}),
 \end{cases}$$
-where $$ \Psi(x,\tau,A_j) = \exp\{-r_d (\tau^\ast-\tau)\}\left(A_j + \mathbf{C}^\text{tot}(\exp\{r_d (\tau^\ast-t) + x\},A_j)\right).$$
-Observe that the integral term $\int_{-\infty}^\infty V(x+y,\tau)\nu(dy)$ still involves the values of $V(x,t)$ outside of the truncated domain. Hence the boundary conditions have to be imposed for all $x\not\in(x_{\min},x_{\max})$ and not only at the two boundary points $x_{\min}$ and $x_{\max}$.
+where $$ \Psi(x,\tau,A) = .$$
+Observe that the integral term $\int_{-\infty}^\infty V(x+y,\tau)\nu(dy)$ still involves the values of $V(x,t,A)$ outside of the truncated domain. Hence the boundary conditions have to be imposed for all $x\not\in(x_{\min},x_{\max})$ and not only at the two boundary points $x_{\min}$ and $x_{\max}$.
 
 \subsubsection{Truncation of the integral}
 For computational purpose, we need to truncate the integral term,
 $$J = \int_{-\infty}^\infty V(x+y,\tau)\nu(dy),$$
 as
-$$J_{B_l,B_r} = \int_{-B_l}^{B_r} V(x+y,\tau)\nu(dy).$$
-In practice, it is more convenient to use a variable truncation on $$[-(x-x_{\min}-B_l, (x_{\max}-x+B_r] \supset [-B_l,B_r].$$
+$$J_{B_l,B_r} = \int_{-B_l}^{B_r} V(x+y,\tau,A)\nu(dy).$$
+In practice, it is more convenient to use a variable truncation on $$[-(x-x_{\min})-B_l, (x_{\max}-x)+B_r] \supset [-B_l,B_r].$$
 Therefore, we get
-$$J\approx \int_{-(x-x_{\min})-B_l}^{(x_{\max}-x)+B_r} V(x+y,\tau)-V(x,\tau)\nu(dy).$$
+$$J\approx \int_{-(x-x_{\min})-B_l}^{(x_{\max}-x)+B_r} V(x+y,\tau,A)\nu(dy).$$
 If the L\'evy measure $\nu$ has density $\nu(dy) = k(y) dy$, which is the case in Merton or Kou model, we have 
-$$J\approx \int_{x_{\min}-B_l}^{x_{\max}+B_r} V(z,\tau)-V(x,\tau)k(z-x)(dz).$$
+$$J\approx \int_{x_{\min}-B_l}^{x_{\max}+B_r} V(z,\tau,A)k(z-x)dz.$$
 Hence, the fully truncated problem can be written as
 $$\begin{cases}
-\displaystyle{\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{\partial V}{\partial x}+(r_d + \lambda) V} \\
-\hspace{3cm}\displaystyle{-\int_{x_{\min}-B_l}^{x_{\max}+B_r} V(z,\tau)k(z-x)dz = 0}, \hspace{1cm} x\in(x_{\min},x_{\max}),\\
-V(x,\tau) = \Psi(x,\tau,A_j), \hspace{2.3cm} x \in [x_{\min}-B_l,x_{\min}]\cup[x_{\max},x_{\max}+B_r].
+\displaystyle{\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2\frac{\partial^2V}{\partial x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{\partial V}{\partial x}+(r_d + \lambda) V} \\
+\hspace{3cm}\displaystyle{-\int_{x_{\min}-B_l}^{x_{\max}+B_r} V(z,\tau,A)k(z-x)dz = 0}, \hspace{1cm} x\in(x_{\min},x_{\max}),\\
+V(x,\tau,A) = \Psi(x,\tau,A), \hspace{2.3cm} x \in [x_{\min}-B_l,x_{\min}]\cup[x_{\max},x_{\max}+B_r].
 \end{cases}$$
 
 \subsubsection{Finite difference approximation}
@@ -265,21 +293,21 @@ Hence our integral can be approximated by
 $$\int_{x_{\min}-B_l}^{x_{\max}+B_r} V(z,\tau_n)k(z-x)dz\approx \Delta x \sum_{l=-K_l}^{M+K_r} V^n_l k_{l-i}.$$
 This development brings us to the \textit{Forward Euler} finite difference approximation
 $$\begin{cases}
-\displaystyle{\frac{V_i^{n+1}-V_i^n}{\Delta t}-\frac{1}{2}\sigma^2\frac{V_{i+1}^n-2V_i^n+V_{i-1}^n}{\Delta x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{V_{i+1}^n-V_{i-1}^n}{2\Delta x}} \\
-\hspace{3cm}\displaystyle{+(r_d + \lambda) V_i^n
--\Delta x \sum_{l=-K_l}^{M+K_r}V_l^nk_{l-i} = 0}, \hspace{1cm} i \in I,\\
-V_i^n = \Psi(x_i,\tau_n,A_j), \hspace{7cm} i\in\tilde{I}\backslash I.
+\displaystyle{\frac{V_i^{k+1}-V_i^k}{\Delta t}-\frac{1}{2}\sigma^2\frac{V_{i+1}^k-2V_i^k+V_{i-1}^k}{\Delta x^2}-\left(r_d-r_f-\frac{1}{2}\sigma^2-c\right)\frac{V_{i+1}^k-V_{i-1}^k}{2\Delta x}} \\
+\hspace{3cm}\displaystyle{+(r_d + \lambda) V_i^k
+-\Delta x \sum_{l=-K_l}^{M+K_r}V_l^k k_{l-i} = 0}, \hspace{1cm} i \in I,\\
+V_i^k = \Psi(x_i,\tau_k,A), \hspace{7cm} i\in\tilde{I}\backslash I.
 \end{cases}$$
 
 With the following vectorial notation 
 \begin{align*}
-\mathbf{V}^n = \{V_i^n, i \in I\} & \text{: vector of unknowns on internal nodes},\\
-\mathbf{\tilde{V}}^n = \{V_i^n, i \in \tilde{I}\}& \text{: vector of nodal values on the extended grid},
+\mathbf{V}^k = \{V_i^k, i \in I\} & \text{: vector of unknowns on internal nodes},\\
+\mathbf{\tilde{V}}^k = \{V_i^k, i \in \tilde{I}\}& \text{: vector of nodal values on the extended grid},
 \end{align*}
 we can write the Forward Euler finite difference in the algebraic form as
 $$\begin{cases}
-\displaystyle{\frac{\mathbf{V}^{n+1}-\mathbf{V}^n}{\Delta t}+ A\mathbf{V}^n-J\mathbf{\tilde{V}}^n = \mathbf{F}^n},&n = 0,\ldots, N-1,\\
-\mathbf{\tilde{V}}_I^{n+1} = \mathbf{V}^{n+1},\qquad \mathbf{\tilde{V}}_{\tilde{I}\backslash I}^{n+1}=\mathbf{\Psi}_{\tilde{I}\backslash I}^{n+1}, &n = 0,\ldots, N-1,
+\displaystyle{\frac{\mathbf{V}^{k+1}-\mathbf{V}^k}{\Delta t}+ A\mathbf{V}^k-J\mathbf{\tilde{V}}^k = \mathbf{F}^k},&k = 0,\ldots, N_t-1,\\
+\mathbf{\tilde{V}}_I^{k+1} = \mathbf{V}^{k+1},\qquad \mathbf{\tilde{V}}_{\tilde{I}\backslash I}^{k+1}=\mathbf{\Psi}_{\tilde{I}\backslash I}^{k+1}, &k = 0,\ldots, N_t-1,
 \end{cases}$$
 with the matrix $A\in\mathbb{R}^{(M-1)\times(M-1)}$ and right hand side vector $\mathbf{F}^n\in\mathbb{R}^{M-1}$
 $$ A = \left[\begin{matrix} 
@@ -295,14 +323,14 @@ $$ A = \left[\begin{matrix}
 \delta = -\frac{\sigma^2}{2\Delta x^2}+\frac{1}{2\Delta x}\left(r_d-r_f-\frac{\sigma^2}{2}-c\right),
 \end{cases}$$
 and
-$$\mathbf{F}^n = \left[\begin{matrix}
+$$\mathbf{F}^k = \left[\begin{matrix}
 -\delta \Psi(x_0, \tau_n)\\
 0\\
 \vdots\\
 0\\
--\gamma\Psi(X_M,\tau_n)
+-\gamma\Psi(x_M,\tau_n)
 \end{matrix}\right].$$
-The matrix $J=\{J_{il}\}=\{k_{l-i}\}$ is a rectangular, Toepliz matrix, $J\in\mathbb{R}^{(M-1)\times(\tilde{M}+1}$, with $\tilde{M}=M+K_l+K_r$ the number of intervals in the extended grid.
+The matrix $J=\{J_{il}\}=\{k_{l-i}\}$ is a rectangular, Toepliz matrix, $J\in\mathbb{R}^{(M-1)\times(\tilde{M}+1)}$, with $\tilde{M}=M+K_l+K_r$ the number of intervals in the extended grid.
 $$J = \Delta x \left[
 \begin{matrix}
 k_{-K_l-1} & k_{-K_l} & \cdots & \cdots &\cdots &\cdots & k_{M+K_r-1}\\
@@ -314,12 +342,12 @@ k_{-K_l-M+1} & \cdots & \cdots & k_{-K_l-1} & k_{-K_l} &\cdots & k_{K_r+1}
 
 Finally it is common to use an Explicit-Implicit scheme to reduce instability. The idea is to treat implicitly the convection-diffusion term and explicitly the integral term.
 $$\begin{cases}
-\displaystyle{\frac{\mathbf{V}^{n+1}-\mathbf{V}^n}{\Delta t}+ A\mathbf{V}^{n+1}-J\mathbf{\tilde{V}}^n = \mathbf{F}^n},&n = 0,\ldots, N-1,\\
-\mathbf{\tilde{V}}_I^{n+1} = \mathbf{V}^{n+1},\qquad \mathbf{\tilde{V}}_{\tilde{I}\backslash I}^{n+1}=\mathbf{\Psi}_{\tilde{I}\backslash I}^{n+1}, &n = 0,\ldots, N-1,
+\displaystyle{\frac{\mathbf{V}^{k+1}-\mathbf{V}^k}{\Delta t}+ A\mathbf{V}^{k+1}-J\mathbf{\tilde{V}}^k = \mathbf{F}^k},&k = 0,\ldots, N_t-1,\\
+\mathbf{\tilde{V}}_I^{k+1} = \mathbf{V}^{k+1},\qquad \mathbf{\tilde{V}}_{\tilde{I}\backslash I}^{k+1}=\mathbf{\Psi}_{\tilde{I}\backslash I}^{k+1}, &k = 0,\ldots, N_t-1,
 \end{cases}$$
 
-At each iteration of this explicit-implicit scheme, we have to compute the integral term $\mathbf{F}^n_J = J\mathbf{\tilde{V}}^n$, in $\mathcal{O}(M\times \tilde{M})$ operations, and then solve the tridiagonal linear system
-$$(I+\Delta t A)\mathbf{U}^{n+1} = \mathbf{U}^n +\Delta t\left(\mathbf{F}^n_J+\mathbf{F}^{n+1}\right),$$ 
+At each iteration of this explicit-implicit scheme, we have to compute the integral term $\mathbf{F}^k_J = J\mathbf{\tilde{V}}^n$, in $\mathcal{O}(M\times \tilde{M})$ operations, and then solve the tridiagonal linear system
+$$(I+\Delta t A)\mathbf{U}^{k+1} = \mathbf{U}^k +\Delta t\left(\mathbf{F}^k_J+\mathbf{F}^{k+1}\right),$$ 
 in $\mathcal{O}(M)$ operations.
 However we can reduce the number of operation to $\mathcal{O}(M\log(M))$ by computing the integral term by FFT.
 
@@ -345,30 +373,30 @@ In our case, let $M_T = 2M+K_l+K_r-1$ and define the vector
 $$\mathbf{k} = (k_{-K_l-M+1},\ldots,k_{-1},k_0,k_1,\ldots,k_{M+K_r-1})\in\mathbb{R}^{M_T},$$
 and the circulant matrix $J_c(\mathbf{k})\in\mathbb{R}^{M_T\times M_T}$.
 
-Moreover, given $\mathbf{\tilde{V}}^n\in\mathbb{\tilde{M}}$, extend it by zero as
-$$\mathbf{\tilde{V}}^n_{\text{ext}}=(\underbrace{0,\ldots,0}_{M-2},\mathbf{\tilde{U}}^n)\in \mathbb{R}^{M_T}.$$
+Moreover, given $\mathbf{\tilde{V}}^k\in\mathbb{\tilde{M}}$, extend it by zero as
+$$\mathbf{\tilde{V}}^k_{\text{ext}}=(\underbrace{0,\ldots,0}_{M-2},\mathbf{\tilde{U}}^k)\in \mathbb{R}^{M_T}.$$
 
 At the end, we have that 
-$$J\mathbf{\tilde{V}}^n = \left(J_c(\mathbf{k})\mathbf{\tilde{V}}^n_\text{ext}\right)_{1:M-1},$$
-and we have computed the integral term in $\mathcal{O}(M\log(M))$.
+$$J\mathbf{\tilde{V}}^k = \left(J_c(\mathbf{k})\mathbf{\tilde{V}}^k_\text{ext}\right)_{1:M-1},$$
+and we have computed the integral term in $\mathcal{O}(M_T\log(M_T))$.
 
 \subsubsection{Fixed point iterations for implicit scheme}
 
 In order to avoid all stability constrains, we have to solve the numerical problem with an implicit scheme. However, the resolution of the linear system of equations, which can be written as
-$$B\mathbf{V}^{n+1}=\mathbf{\tilde{F}}^{n+1},$$
+$$B\mathbf{V}^{k+1}=\mathbf{\tilde{F}}^{k+1},$$
 is very expensive ($\mathcal{O}(M^3)$) by $\mathcal{LU}$ factorization.
 
-Then a possible remedy is to use fixed-point iterations. In other words, at time step $\tau_{n+1}$, denote $\mathbf{V}^{n+1}_{(k)}$ the $k$-th fixed point iteration and compute $\mathbf{V}^{n+1}_{k+1}$ as
-$$(I+\Delta t A)\mathbf{V}^{n+1}_{(k+1)} = -\Delta t J\mathbf{\tilde{V}}^{n+1}_(k)+\mathbf{V}^n + \Delta t \mathbf{F}^{n+1}.$$
-The fixed point iterations can be started from $\mathbf{V}^{n+1}_{(0)}=\mathbf{V}^n$ and stopped as soon as $\parallel\mathbf{V}^{n+1}_{(k+1)}-\mathbf{V}^{n+1}_{(k)}\parallel < tol$ for a prescribed tolerance.
+Then a possible remedy is to use fixed-point iterations. In other words, at time step $\tau_{k+1}$, denote $\mathbf{V}^{k+1}_{(j)}$ the $j$-th fixed point iteration and compute $\mathbf{V}^{k+1}_{(j+1)}$ as
+$$(I+\Delta t A)\mathbf{V}^{k+1}_{(j+1)} = -\Delta t J\mathbf{\tilde{V}}^{k+1}_{(j)}+\mathbf{V}^k + \Delta t \mathbf{F}^{k+1}.$$
+The fixed point iterations can be started from $\mathbf{V}^{k+1}_{(0)}=\mathbf{V}^k$ and stopped as soon as $\parallel\mathbf{V}^{k+1}_{(j+1)}-\mathbf{V}^{k+1}_{(j)}\parallel < tol$ for a prescribed tolerance.
 
-Therefore, at each iteration, we have to solve a tridiagonal system, which costs $\mathcal{O}(M)$, and compute $J\mathbf{\tilde{V}}^{n+1}_{(k)}$, which costs $\mathcal{O}(M_T \log(M_T))$ if we use FFT. At the end, if the FX-TARN is composed of $N_\text{fix-dates}$ fixing dates, the total computational cost of the FD method is $\mathcal{O}(N_\text{fix-dates} N_a M_T\log(M_T))$, where $N_a$ is the number of grid points in the accumulated variable $A$ discretization.
+Therefore, at each iteration, we have to solve a tridiagonal system, which costs $\mathcal{O}(M)$, and compute $J\mathbf{\tilde{V}}^{k+1}_{(j)}$, which costs $\mathcal{O}(M_T \log(M_T))$ if we use FFT. At the end, if the FX-TARN is composed of $N$ fixing dates, the total computational cost of the FD method is $\mathcal{O}(N N_a M_T\log(M_T))$, where $N_a$ is the number of grid points in the accumulated variable $A$ discretization. Thus this methods becomes very expensive in computational time versus the Finite Difference method under Black-Scholes model.
 
 \subsection{Pure jump models}
-In the case of pure jump models, the L\'evy measure as the property that $\nu(\mathbb{R})= \infty$, which means that the process has infinite activity, i.e. there are infinitely many small jumps. In other words, the L\'evy density $\nu(dy)=k(y)dy$ explodes at the origin, as we can see on the Figure \ref{fig:FD:pj_density}. Unfortunately, it does not allow us to apply the preceding procedure by splitting the integral term in three parts
+In the case of pure jump models, the L\'evy measure has the property that $\nu(\mathbb{R})= \infty$, which means that the process has infinite activity, i.e. there are infinitely many small jumps. In other words, the L\'evy density $\nu(dy)=k(y)dy$ explodes at the origin, as we can see on the Figure \ref{fig:FD:pj_density}. Unfortunately, it does not allow us to apply the preceding procedure by splitting the integral term in three parts
 \begin{align*}
-\int_{-\infty}^\infty &\left[V(x+y,\tau)-V(x,\tau)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)\right]\nu(dy) = \\
-&\int_{-\infty}^\infty V(x+y,\tau)k(y) dy -\int_{-\infty}^\infty V(x,\tau)k(y)dy-\int_{-\infty}^\infty\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)k(y)dy,
+\int_{-\infty}^\infty &\left[V(x+y,\tau,A)-V(x,\tau,A)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)\right]\nu(dy) = \\
+&\int_{-\infty}^\infty V(x+y,\tau,A)k(y) dy -\int_{-\infty}^\infty V(x,\tau,A)k(y)dy-\int_{-\infty}^\infty\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)k(y)dy,
 \end{align*}
 as each of them is unbounded.
 
@@ -377,7 +405,7 @@ The idea is thus to come down to a non-singular case by approximating the proces
 \citeauthor{CV05} propose a possible strategy consisting in cutting out the small jumps, i.e. the singular part of $k(y)$ and approximating them with a Wiener process. Let us now define the truncated density 
 $$k_\epsilon(y)=\begin{cases}
 k(y), &\text{for }|y|\geq\epsilon\\
-\frac{k(\epsilon)-k(-\epsilon)}{2}y+\frac{k(\epsilon)+k(-\epsilon}{2}, &|y|<\epsilon,
+\frac{k(\epsilon)-k(-\epsilon)}{2\epsilon}y+\frac{k(\epsilon)+k(-\epsilon)}{2}, &|y|<\epsilon,
 \end{cases}$$
 so that $k_\epsilon(y)$ corresponds to a finite activity L\'evy process with intensity $\lambda(\epsilon) = \int k_\epsilon(y)dy < \infty$. This truncated density is illustrated on the Figure \ref{fig:FD:pj_density}.
 \begin{figure}[!htb]
@@ -388,25 +416,25 @@ so that $k_\epsilon(y)$ corresponds to a finite activity L\'evy process with int
 \end{figure}
 
 We set now $\tilde{k}(y) = k(y) -k_\epsilon(y)$, which is non zero only for $|y|\leq\epsilon$, and split the integral terms as
-$$\int_{-\infty}^\infty \left[V(x+y,\tau)-V(x,\tau)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)\right]k(y)dy =I_1+I_2,$$
+$$\int_{-\infty}^\infty \left[V(x+y,\tau,A)-V(x,\tau,A)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)\right]k(y)dy =I_1+I_2,$$
 with
 \begin{align*}
-I_1 &= \int_{-\infty}^{\infty}\left[V(x+y,\tau)-V(x,\tau)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)\right]k_\epsilon(y)dy\\
-I_2 &= \int_{-\epsilon}^{\epsilon}\left[V(x+y,\tau)-V(x,\tau)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau)\right]\tilde{k}(y)dy.
+I_1 &= \int_{-\infty}^{\infty}\left[V(x+y,\tau,A)-V(x,\tau,A)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)\right]k_\epsilon(y)dy\\
+I_2 &= \int_{-\epsilon}^{\epsilon}\left[V(x+y,\tau,A)-V(x,\tau,A)-\left(e^y-1\right)\frac{\partial V}{\partial x}(x,\tau,A)\right]\tilde{k}(y)dy.
 \end{align*}
 The first term corresponds to the finite activity L\'evy process $X^\epsilon$ and can be treated as the previous case.
 
-The second integral requires a bit more intention. By summing and subtracting the term $y\frac{\partial V}{\partial x}$, we have
+The second integral requires a bit more work. By summing and subtracting the term $y\frac{\partial V}{\partial x}$, we have
 \begin{align*}
-I_2 &= \int_{-\epsilon}^{\epsilon}\Bigg[\underbrace{(x+y,\tau)-V(x,\tau)-y\frac{\partial V}{\partial x}(x,\tau)}_{\frac{y^2}{2}\frac{\partial^2y}{\partial x^2}+\mathcal{O}(y^3)}-\underbrace{\left(e^y-1-y\right)}_{\frac{y^2}{2}+\mathcal{O}(y^3)}\frac{\partial V}{\partial x}(x,\tau)\Bigg]\tilde{k}(y)dy\\
+I_2 &= \int_{-\epsilon}^{\epsilon}\Bigg[\underbrace{V(x+y,\tau,A)-V(x,\tau,A)-y\frac{\partial V}{\partial x}(x,\tau,A)}_{\frac{y^2}{2}\frac{\partial^2V}{\partial x^2}+\mathcal{O}(y^3)}-\underbrace{\left(e^y-1-y\right)}_{\frac{y^2}{2}+\mathcal{O}(y^3)}\frac{\partial V}{\partial x}(x,\tau)\Bigg]\tilde{k}(y)dy\\
 &=\left(\frac{\partial^2 V}{\partial x^2}-\frac{\partial V}{\partial x}\right)\frac{\sigma^2(\epsilon)}{2}+\int_{-\epsilon}^\epsilon \mathcal{O}(y^3)\tilde{k}(y)dy,
 \end{align*}
 with $$\sigma^2(\epsilon) = \int_{-\epsilon}^\epsilon y^2\tilde{k}(y)dy.$$
 
-Therefore, we can treat the infinite activity case with a finite activity process $X^\epsilon$ characterized by the L\'evy triplet $(\gamma^\ast,\sigma(\epsilon),k_\epsilon(y))$. Hence, up to $\mathcal{O}(y^3)$ terms, the option price $V(x,t)$ satisfies the modified PIDE
+Therefore, we can treat the infinite activity case with a finite activity process $X^\epsilon$ characterized by the L\'evy triplet $(\gamma^\ast,\sigma(\epsilon),k_\epsilon(y))$. Hence, up to $\mathcal{O}(\epsilon^3)$ terms, the option price $V(x,t)$ satisfies the modified PIDE
 
-\begin{align*}\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2(\epsilon)\frac{\partial^2V}{x^2}&-\left(r_d-r_f-\frac{1}{2}\sigma^2(\epsilon) -c(\epsilon)\right)\frac{\partial V}{\partial x}+(r_d +\lambda(\epsilon))V \\
-&-\int_{-\infty}^\infty V(x+y,\tau)\nu(dy) = 0,
+\begin{align*}\frac{\partial V}{\partial \tau}-\frac{1}{2}\sigma^2(\epsilon)\frac{\partial^2V}{\partial x^2}&-\left(r_d-r_f-\frac{1}{2}\sigma^2(\epsilon) -c(\epsilon)\right)\frac{\partial V}{\partial x}+(r_d +\lambda(\epsilon))V \\
+&-\int_{-\infty}^\infty V(x+y,\tau,A)k_\epsilon(y) dy = 0,
 \end{align*}
 with
 \begin{align*}
@@ -419,13 +447,13 @@ For more details about the consistency, stability and convergence of finite diff
 
 \section{The Convolution Method}
 \label{sec:methods:conv}
-The idea of this method is to replace the finite difference scheme by the convolution method proposed by \citeauthor{Lor+08} \citeyearpar{Lor+08}. The advantage of this method, based on the \textit{Fast Fourier Transform} (FFT), is that we don't need to discretize time between fixing dates. Thus, the total computational cost of the method is reduced to $\mathcal{O}(N_\text{fix-dates} N_a M \log(M))$, where $M$ and $N_a$ are respectively the number of grid points used to discretize the stock price $S$ and the accumulated amount variable $A$. 
+The idea of this method is to replace the finite difference scheme by the convolution method proposed by \citeauthor{Lor+08} \citeyearpar{Lor+08} \cite{Lor+08}, based on the \textit{Fast Fourier Transform} (FFT), is that we don't need to discretize time between fixing dates. Thus, the total computational cost of the method is reduced to $\mathcal{O}(N_\text{fix-dates} N_a M \log(M))$, where $M$ and $N_a$ are respectively the number of grid points used to discretize the stock price $S$ and the accumulated amount variable $A$. 
 
 \subsection{Description of the method}
-Consider $V(S(t_n),t_n)$ the value of our FX-TARN at the $n$\textsuperscript{th} fixing date. Therefore, we can write, under risk-neutral measure $\mathbb{Q}$,
+Consider $V(S(t_n),t_n,A)$ the value of our FX-TARN at the $n$\textsuperscript{th} fixing date. Therefore, we can write, under risk-neutral measure $\mathbb{Q}$,
 \begin{align*}
-V(S(t_n),t_n) &= \mathbb{E}^\mathbb{Q}\left[e^{-r\Delta_t}V(S(t_{n+1}),t_{n+1}|S(t_n)\right]\\
-&=e^{-r\Delta_t}\int_{-\infty}^\infty V(y,t_{n+1})f(y|S(t_n))dy,
+V(S(t_n),t_n,A) &= \mathbb{E}^\mathbb{Q}\left[e^{-r\Delta_t}V(S(t_{n+1}),t_{n+1},A|S(t_n)\right]\\
+&=e^{-r\Delta_t}\int_{-\infty}^\infty V(y,t_{n+1},A)f(y|S(t_n))dy,
 \end{align*}
 where $f(y|S(t_n))$ represents the transition density from $S(t_n)$ at $t_n$ to $y$ at $t_{n+1}$. Since we use exponential L\'evy processes to characterize the stock price $S(t_n) = e^{X(t_n)}$, the stock price process has independent increments and we can write
 $$f(y|x) = f(y-x),$$
@@ -433,7 +461,7 @@ where $x = \log(S(t_n))$ and $y = \log(S(t_{n+1}))$.
 
 By changing variables $z = y-x$, the value $V$ can be expressed as
 \begin{equation}\label{conv}
-V(x,t_n) = e^{-r\Delta_t}\int_{-\infty}^\infty V(x+z,t_{n+1})f(z)dz,
+V(x,t_n,A) = e^{-r\Delta_t}\int_{-\infty}^\infty V(x+z,t_{n+1},A)f(z)dz,
 \end{equation}
 which is a cross-correlation of the option value at time $t_{n+1}$ and the density $f(z)$. We can equivalently see that as a convolution of $V(t_{n+1})$ and the conjugate of $f(z)$.
 
@@ -449,16 +477,16 @@ Remark that since $f$ is the density function of the L\'evy process, the Fourier
 
 Now if we damped the option value by a factor $\exp(\alpha x)$ and take the Fourier transform of equation \eqref{conv}, we get
 \begin{align*}
-e^{r\Delta_t}\mathcal{F}\{v(x,t_n)\}(u) &= \int_{-\infty}^\infty e^{iux} e^{\alpha x} \int_{-\infty}^\infty V(x+z,t_{n+1})dzdx \\
-&= \int_{-\infty}^\infty e^{iu(x+z)}v(x+z,t_{n+1})e^{-iz(u-i\alpha)}f(z)dzdx,
+e^{r\Delta_t}\mathcal{F}\{v(x,t_n,A)\}(u) &= \int_{-\infty}^\infty e^{iux} e^{\alpha x} \int_{-\infty}^\infty V(x+z,t_{n+1},A)dzdx \\
+&= \int_{-\infty}^\infty e^{iu(x+z)}v(x+z,t_{n+1},A)e^{-iz(u-i\alpha)}f(z)dzdx,
 \end{align*}
-where $v(x,t) = e^{\alpha x}V(x,t)$ is the damped value option. Changing the order of integration, we obtain
+where $v(x,t,A) = e^{\alpha x}V(x,t,A)$ is the damped value option. Changing the order of integration, we obtain
 \begin{align*}
-e^{r\Delta_t}\mathcal{F}\{v(x,t_n)\}(u) &= \int_{-\infty}^\infty\int_{-\infty}^\infty e^{iuy}v(y,t_{n+1})dy~e^{-i(u-i\alpha) z}f(z)dz\\
-&= \int_{-\infty}^\infty e^{iuy}v(y,t_{n+1})dy \int_{-\infty}^\infty e^{-i(u-i\alpha)z}f(z)dz \\
-&= \mathcal{F}\{v(x,t_n)\}(u)\Phi(-(u-i\alpha)).
+e^{r\Delta_t}\mathcal{F}\{v(x,t_n,A)\}(u) &= \int_{-\infty}^\infty\int_{-\infty}^\infty e^{iuy}v(y,t_{n+1},A)dy~e^{-i(u-i\alpha) z}f(z)dz\\
+&= \int_{-\infty}^\infty e^{iuy}v(y,t_{n+1},A)dy \int_{-\infty}^\infty e^{-i(u-i\alpha)z}f(z)dz \\
+&= \mathcal{F}\{v(x,t_n,A)\}(u)\Phi(-(u-i\alpha)).
 \end{align*}
-The difference with the approach of \citeauthor{CM99} \citeyearpar{CM99} is that we take the transform with respect to the log-spot price instead the log-strike price.
+The difference with the approach of \citeauthor{CM99} \citeyearpar{CM99} \cite{CM99} is that we take the transform with respect to the log-spot price instead the log-strike price.
 
 \subsection{Implementation of the method}
 The goal is now to compute the convolution 
@@ -510,7 +538,7 @@ e^{inu_0\Delta y}&=e^{in\pi}\\
 Finally, we obtain the result
 $$v(x_p) \approx e^{iu_0(y_0-x_0)}(-1)^p\mathcal{D}_p^{-1}\left\{e^{ij(y_0-x_0)\Delta u}\Phi(-(u_j-i\alpha))\mathcal{D}_j\left\{(-1)^nw_nv(y_n)\right\}\right\}.$$
 
-Thus, we have just to undamped the quantity $v(x,t_n)$ and discount the result to get the value $V(x,t_n)$ of the financial product.
+Thus, we have just to undamped the quantity $v(x,t_n,A)$ and discount the result to get the value $V(x,t_n,A)$ of the financial product.
 
 \section{Summary}
 \label{sec:methods:summary}

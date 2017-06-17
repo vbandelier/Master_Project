@@ -8,8 +8,8 @@ q = 0.02;
 sigma = 0.3;
 lambda = 10;
 % Merton
-alpha = -0.1;
-delta = 0.1;
+alpha = 0.1;
+delta = 0.05;
 % Kou
 p = 0.5;
 eta1 = 25;

@@ -16,7 +16,10 @@ q = [ 0.00707  0.00584  0.00712  0.00867  0.01002  0.01023  0.01065  0.01094  0.
 
 figure(1)
 surf(delta, T', vol)
-title('Implied vol surface')
+title('\fontsize{20} Implied volatility surface')
+xlabel('\fontsize{16} Delta')
+ylabel('\fontsize{16} T')
+zlabel('\fontsize{16} Volatility')
 
 S0 = 0.9730;
 
@@ -63,6 +66,11 @@ for k = 1:4
     delta_model = 100*(delta_model+[0,0,0,0,0,0,1,1,1,1,1]);
     subplot(2,2,k)
     surf(delta_model, T', imp_vol)
+    ylim([4/12,1])
+    zlim([0.05,0.12])
     hold on
-    title(model.name)
+    title(model.name,'fontsize',14)
+    xlabel('\fontsize{12} Delta')
+    ylabel('\fontsize{12} T')
+    zlabel('\fontsize{12} Volatility')
 end

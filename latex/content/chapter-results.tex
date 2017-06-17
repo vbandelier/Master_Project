@@ -178,10 +178,10 @@ We use, as discussed before, the Convolution method, with $N_x = 2000$ and $N_a 
     \bottomrule
   \end{tabular}
   \vspace{5pt}
-  \caption{\label{tab:prices} Prices of the FX-TARN for all the models. The RMSE is the mean of the three RMSE per model. Each price is computed in 19 seconds.}
+  \caption{\label{tab:prices} Prices of the FX-TARN for all the models. The RMSE is the deviation of the calibrated model prices with respect to the market prices. Each price is computed in 19 seconds.}
 \end{table}
 
-The negative value means that the client will receive a premium when signing the contract. The price given by a trader to the client will depend on his book and the risk premium he would like to take. The most representative price with respect to the market is the prices given by the Kou model because its RMSE is the smallest. Then, a fair premium for the client would be around CHF 18'300.-, where the risk is include in the volatility price. Then, the risk premium of the trader would be around CHF 5'500.-, which is the difference with the ask price.
+The negative value means that the client will receive a premium when signing the contract. The price given by a trader to the client will depend on his book and the risk premium he would like to take. The most representative price with respect to the market is the prices given by the Kou model because its RMSE, which quantify the deviation between the European options model prices and the market prices, is the smallest. Then, a fair premium for the client would be around CHF 18'300.-, where the risk is include in the volatility price. Then, the risk premium of the trader would be around CHF 5'500.-, which is the difference with the ask price.
 
 \begin{sidewaystable}[!ht]
 \centering

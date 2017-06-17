@@ -20,30 +20,41 @@ for j = 1:Nx
     PartGain(:,j) = (max(S(j)-K,0).*((S(j)-K) < Targ-A)+(Targ-A).*((S(j)-K) > Targ-A));
     FullGain(:,j) = (max(S(j)-K,0));
 end
-subplot(1,3,1)
+subplot(3,1,1)
 surf(S,A,NoGain,'EdgeColor','none','LineStyle','none');
 xlim([0,2])
+ylim([0,0.5])
 zlim([0 0.5])
-view(-50,60)
-title('\fontsize{14} No gain cash flow')
-xlabel('\fontsize{12} Stock S')
-ylabel('\fontsize{12} Accumulated amount A')
-zlabel('\fontsize{12} Cash flow C')
-subplot(1,3,2)
+view(-20,55)
+title('\fontsize{18} No gain cash flow')
+xlabel('\fontsize{14} S')
+ylabel('\fontsize{14} A')
+zlabel('\fontsize{14} Cash flow C')
+
+set(gca,'fontsize',14)
+
+subplot(3,1,2)
 surf(S,A,PartGain,'EdgeColor','none','LineStyle','none');
 xlim([0,2])
+ylim([0,0.5])
 zlim([0 0.5])
-view(-50,60)
-title('\fontsize{14} Part gain cash flow')
-xlabel('\fontsize{12} Stock S')
-ylabel('\fontsize{12} Accumulated amount A')
-zlabel('\fontsize{12} Cash flow C')
-subplot(1,3,3)
+view(-20,55)
+title('\fontsize{18} Part gain cash flow')
+xlabel('\fontsize{14} S')
+ylabel('\fontsize{14} A')
+zlabel('\fontsize{14} Cash flow C')
+
+set(gca,'fontsize',14)
+
+subplot(3,1,3)
 surf(S,A,FullGain,'EdgeColor','none','LineStyle','none');
 xlim([0,2])
+ylim([0,0.5])
 zlim([0 1])
-view(-50,60)
-title('\fontsize{14} Full gain cash flow')
-xlabel('\fontsize{12} Stock S')
-ylabel('\fontsize{12} Accumulated amount A')
-zlabel('\fontsize{12} C')
+view(-20,55)
+title('\fontsize{18} Full gain cash flow')
+xlabel('\fontsize{14} S')
+ylabel('\fontsize{14} A')
+zlabel('\fontsize{14} Cash flow C')
+
+set(gca,'fontsize',14)
