@@ -228,7 +228,7 @@ elseif method.name(1) == 'C'
     %%
     price = interp1(S,Q(:,1),S0);
     option.set_error(NaN);
-    %plot(S,Q(:,1),'linewidth',1);
+    plot(S,Q(:,1),'linewidth',1);
 end
 price = ApF*price;
 option.CPU_time = cputime-cpu_t0;
