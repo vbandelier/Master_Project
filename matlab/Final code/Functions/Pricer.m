@@ -11,12 +11,12 @@ if length(K) == 1
     K = K*ones(N,1);
 end
 
+
 Xmin = -5;
 Xmax = 1;
 q_min = -7;
 q_max = 3;
 q_inf = 10;
-epsi = 0.05;
 tol = 0.0001;
 fix_pt_iter = 200;
 %% Monte Carlo Method -----------------------------------------------------
@@ -63,6 +63,9 @@ elseif method.name(1) == 'F'
     end
     dt = period/Nt;
     dx = (Xmax-Xmin)/Nx;
+    
+    epsi = 0.05;
+    
     FD_grid = Xmin:dx:Xmax;
     inner_grid = FD_grid(2:end-1);
     S = S0*exp(FD_grid);
@@ -164,7 +167,7 @@ elseif method.name(1) == 'F'
     end
     price = interp1(S,U(:,1),S0);
     option.set_error(NaN);
-    plot(S,U(:,1),'linewidth',1);
+    %plot(S,U(:,1),'linewidth',1);
     %% Convolution Method -----------------------------------------------------
 elseif method.name(1) == 'C'
     Na = method.param(1);

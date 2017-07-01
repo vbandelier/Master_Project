@@ -1,5 +1,5 @@
 % clear
-clc
+%clc
 close all
 %% Market data
 [Prices,Strikes,Maturity,r,q,OptioType] = importfile('USDCHF_20170523_mid.csv',2, 122);
@@ -14,15 +14,15 @@ S0  = 0.9730;
 K   = [0.9275*ones(1,2) 0.935*ones(1,4) 0.942*ones(1,46)];
 r   = -0.01237;
 q   =  0.01197;
-F_fixDates = 52;
-Period = 1/52;
-T = Period*F_fixDates;
+N_fixDates = 6;
+Period = 1/6;
+T = Period*N_fixDates;
 gain_fun = @(S,K) max(S-K,0);
 loss_fun = @(S,K) max(K-S,0);
-g = 2;
+g = 0;
 Targ = 0.4;
 KO = 'F';
-ApF = 40000;
+ApF = 1;
 %% Models
 %  Black-Scholes
 sigma = 0.07908; %bid = 0.07636; mid = 0.7908; ask = 0.08181
@@ -103,29 +103,29 @@ alpha = 0;
 method3 = Method('Conv',[Na, Nx, alpha]);
 
 %% Pricing
-TARN_MC_BS  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_MC_Mer = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_MC_Kou = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_MC_NIG = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_MC_VG  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_MC_BS  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_MC_Mer = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_MC_Kou = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_MC_NIG = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_MC_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
 
-TARN_FD_BS  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_FD_Mer = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_FD_Kou = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_FD_NIG = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_FD_VG  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_FD_BS  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_FD_Mer = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_FD_Kou = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_FD_NIG = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_FD_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
 %
-TARN_Conv_BS  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_Conv_Mer = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_Conv_Kou = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_Conv_NIG = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-TARN_Conv_VG  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_Conv_BS  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_Conv_Mer = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_Conv_Kou = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_Conv_NIG = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+TARN_Conv_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
 
-Nref_TARN_BS  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-Nref_TARN_Mer  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-Nref_TARN_Kou  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-Nref_TARN_NIG  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
-Nref_TARN_VG  = Option(S0,r,q,K,Period,F_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+Nref_TARN_BS  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+Nref_TARN_Mer  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+Nref_TARN_Kou  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+Nref_TARN_NIG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
+Nref_TARN_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,ApF);
 
 figure
 hold on
@@ -136,8 +136,8 @@ disp('---------- Black-Scholes ----------')
 % 
 % TARN_FD_BS.set_price(model1,method2);
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_BS.price)));
-TARN_Conv_BS.set_price(model1,method3);
-disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_BS.price)));
+% TARN_Conv_BS.set_price(model1,method3);
+% disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_BS.price)));
 
 % Nref_TARN_BS.set_price(model1,method3);
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_BS.price)));
@@ -148,8 +148,8 @@ disp('---------- Merton -----------------')
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Mer.price)));
 % TARN_FD_Mer.set_price(model2,method2);
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_Mer.price)));
-TARN_Conv_Mer.set_price(model2,method3);
-disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Mer.price)));
+% TARN_Conv_Mer.set_price(model2,method3);
+% disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Mer.price)));
 
 % Nref_TARN_Mer.set_price(model2,method3);
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_Mer.price)));
@@ -159,15 +159,15 @@ disp('---------- Kou --------------------')
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Kou.price)));
 % TARN_FD_Kou.set_price(model3,method2);
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_Kou.price)));
-TARN_Conv_Kou.set_price(model3,method3);
-disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Kou.price)));
+% TARN_Conv_Kou.set_price(model3,method3);
+% disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_Kou.price)));
 
 % Nref_TARN_Kou.set_price(model3,method3);
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_Kou.price)));
 %%
 disp('---------- NIG --------------------')
-% TARN_MC_NIG.set_price(model4,method1);
-% disp(strcat('TARN price with MC  = ',num2str(TARN_MC_NIG.price)));
+TARN_MC_NIG.set_price(model4,method1);
+disp(strcat('TARN price with MC  = ',num2str(TARN_MC_NIG.price)));
 % TARN_FD_NIG.set_price(model4,method2);
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_NIG.price)));
 TARN_Conv_NIG.set_price(model4,method3);
@@ -177,8 +177,8 @@ disp(strcat('TARN price with Conv= ',num2str(TARN_Conv_NIG.price)));
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_NIG.price)));
 
 disp('---------- VG ---------------------')
-% TARN_MC_VG.set_price(model5,method1);
-% disp(strcat('TARN price with MC  = ',num2str(TARN_MC_VG.price)));
+TARN_MC_VG.set_price(model5,method1);
+disp(strcat('TARN price with MC  = ',num2str(TARN_MC_VG.price)));
 % TARN_FD_VG.set_price(model5,method2);
 % disp(strcat('TARN price with FD  = ',num2str(TARN_FD_VG.price)));
 TARN_Conv_VG.set_price(model5,method3);

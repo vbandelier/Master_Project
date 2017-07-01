@@ -24,15 +24,15 @@ VG_errors = [  N1_TARN_MC_VG.error, ...
                 N4_TARN_MC_VG.error,...
                 N5_TARN_MC_VG.error];
 subplot(1,3,1)     
-plot(2:6,BS_errors,'linewidth',2)
+semilogy(2:6,BS_errors,'linewidth',2)
 hold on
-plot(2:6,Mer_errors,'linewidth',2)
-plot(2:6,Kou_errors,'linewidth',2)
-plot(2:6,NIG_errors,'linewidth',2)
-plot(2:6,VG_errors,'linewidth',2)
-plot(2:0.01:6,0.13*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
+semilogy(2:6,Mer_errors,'linewidth',2)
+semilogy(2:6,Kou_errors,'linewidth',2)
+semilogy(2:6,NIG_errors,'linewidth',2)
+semilogy(2:6,VG_errors,'linewidth',2)
+semilogy(2:0.01:6,0.13*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
 title('\fontsize{14} No gain')
-ylabel('\fontsize{12} Standard Error (SE)')
+ylabel('\fontsize{12} log Standard Error (SE)')
 xlab = xlabel('$\log_{10}(M)$');
 set(xlab,'Interpreter','latex','fontsize',14)
 
@@ -62,15 +62,15 @@ VG_errors = [  P1_TARN_MC_VG.error, ...
                 P4_TARN_MC_VG.error,...
                 P5_TARN_MC_VG.error];
 subplot(1,3,2)
-plot(2:6,BS_errors,'linewidth',2)
+semilogy(2:6,BS_errors,'linewidth',2)
 hold on
-plot(2:6,Mer_errors,'linewidth',2)
-plot(2:6,Kou_errors,'linewidth',2)
-plot(2:6,NIG_errors,'linewidth',2)
-plot(2:6,VG_errors,'linewidth',2)
-plot(2:0.01:6,0.14*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
+semilogy(2:6,Mer_errors,'linewidth',2)
+semilogy(2:6,Kou_errors,'linewidth',2)
+semilogy(2:6,NIG_errors,'linewidth',2)
+semilogy(2:6,VG_errors,'linewidth',2)
+semilogy(2:0.01:6,0.14*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
 title('\fontsize{14} Part gain')
-ylabel('\fontsize{12} Standard Error (SE)')
+ylabel('\fontsize{12} log Standard Error (SE)')
 xlab = xlabel('$\log_{10}(M)$');
 set(xlab,'Interpreter','latex','fontsize',14)
 
@@ -100,15 +100,15 @@ VG_errors = [  F1_TARN_MC_VG.error, ...
                 F4_TARN_MC_VG.error,...
                 F5_TARN_MC_VG.error];
 subplot(1,3,3)
-plot(2:6,BS_errors,'linewidth',2)
+semilogy(2:6,BS_errors,'linewidth',2)
 hold on
-plot(2:6,Mer_errors,'linewidth',2)
-plot(2:6,Kou_errors,'linewidth',2)
-plot(2:6,NIG_errors,'linewidth',2)
-plot(2:6,VG_errors,'linewidth',2)
-plot(2:0.01:6,0.15*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
+semilogy(2:6,Mer_errors,'linewidth',2)
+semilogy(2:6,Kou_errors,'linewidth',2)
+semilogy(2:6,NIG_errors,'linewidth',2)
+semilogy(2:6,VG_errors,'linewidth',2)
+semilogy(2:0.01:6,0.15*1./sqrt(10.^(2:0.01:6)),'-.k','linewidth',1)
 title('\fontsize{14} Full gain')
-ylabel('\fontsize{12} Standard Error (SE)')
+ylabel('\fontsize{12} log Standard Error (SE)')
 xlab = xlabel('$\log_{10}(M)$');
 set(xlab,'Interpreter','latex','fontsize',14)
 suptitle('\fontsize{14} Monte Carlo simulations standard errors')
