@@ -305,17 +305,17 @@ Conv_time_5 = [N5_TARN_Conv_BS.CPU_time,...
     F5_TARN_Conv_NIG.CPU_time,...
     F5_TARN_Conv_VG.CPU_time];
 Conv_time = [mean(Conv_time_1),mean(Conv_time_2),mean(Conv_time_3),mean(Conv_time_4),mean(Conv_time_5)];
-subplot(2,1,1)
+figure
 loglog(FD_time,FD_err,'-*','linewidth',1)
 hold on
 loglog(Conv_time,Conv_err,'-*','linewidth',1)
 xlabel('\fontsize{12} Time (in seconds)')
-ylabel('\fontsize{12} Error')
+ylabel('\fontsize{12} |Error|')
 title('\fontsize{14} Speed and accuracy comparison')
 l = legend('FD','Conv')
 set(l,'Interpreter','latex','fontsize',14)
 
-subplot(2,1,2)
+figure
 loglog([250,500,1000,2000,4000],FD_time,'-*','linewidth',1)
 hold on
 loglog([250,500,1000,2000,4000],Conv_time,'-*','linewidth',1)

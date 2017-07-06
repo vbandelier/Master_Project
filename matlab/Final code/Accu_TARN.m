@@ -130,7 +130,7 @@ Nref_TARN_VG  = Option(S0,r,q,K,Period,N_fixDates,gain_fun,loss_fun,g,Targ,KO,Ap
 figure
 hold on
 %
-disp('---------- Black-Scholes ----------')
+% disp('---------- Black-Scholes ----------')
 % TARN_MC_BS.set_price(model1,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_BS.price)));
 % 
@@ -143,7 +143,7 @@ disp('---------- Black-Scholes ----------')
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_BS.price)));
 % figure
 % hold on
-disp('---------- Merton -----------------')
+% disp('---------- Merton -----------------')
 % TARN_MC_Mer.set_price(model2,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Mer.price)));
 % TARN_FD_Mer.set_price(model2,method2);
@@ -154,7 +154,7 @@ disp('---------- Merton -----------------')
 % Nref_TARN_Mer.set_price(model2,method3);
 % disp(strcat('Ref TARN price with Conv= ',num2str(Nref_TARN_Mer.price)));
 
-disp('---------- Kou --------------------')
+% disp('---------- Kou --------------------')
 % TARN_MC_Kou.set_price(model3,method1);
 % disp(strcat('TARN price with MC  = ',num2str(TARN_MC_Kou.price)));
 % TARN_FD_Kou.set_price(model3,method2);
